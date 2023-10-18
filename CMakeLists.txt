@@ -43,4 +43,5 @@ set_property(TARGET usd-c-test01 PROPERTY C_STANDARD 99)
 
 # This is just here to trigger generation of compile commands for the bind file so we get LSP functionality in the bind file
 add_library(bind-dummy ${bindfiles})
-target_link_libraries(bind-dummy usd babble::bbl)
+target_link_libraries(bind-dummy babble::bind)
+target_include_directories(bind-dummy PRIVATE $<TARGET_PROPERTY:usd,INCLUDE_DIRECTORIES>)
