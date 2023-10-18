@@ -1,0 +1,17 @@
+#pragma once
+
+#include "babble"
+
+// Bind std::vector<TY>
+#define VTARRAY_METHODS(TY)                                                                                             \
+    .ctor(bbl::Ctor<PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>>(), "new")                              \
+    .m((bbl::detail::argument_type<void(TY)>::type* (PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::*)()) \
+        &PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::data)                                             \
+    .m((bbl::detail::argument_type<void(TY)>::type const* (PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::*)() const) \
+        &PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::data, "data_const")                               \
+    .m(&PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::size)                                              \
+    .m((bbl::detail::argument_type<void(TY)>::type& (PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::*)(size_t)) \
+        &PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::operator[], "op_index")                           \
+    .m((bbl::detail::argument_type<void(TY)>::type const& (PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::*)(size_t) const) \
+        &PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::operator[], "op_index_const")                     \
+;

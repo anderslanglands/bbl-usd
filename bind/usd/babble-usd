@@ -1,0 +1,62 @@
+#pragma once
+
+#define OBJECT_METHODS(CLS)                                                    \
+    .m((bool(CLS::*)(PXR_NS::TfToken const&, PXR_NS::VtValue*) const) & CLS::GetMetadata,          \
+       "GetMetadata_value")                                                    \
+        .m((bool(CLS::*)(PXR_NS::TfToken const&, PXR_NS::VtValue const&) const) &                  \
+               CLS::SetMetadata,                                               \
+           "SetMetadata_value")                                                \
+        .m(&CLS::ClearMetadata)                                                \
+        .m(&CLS::HasMetadata)                                                  \
+        .m(&CLS::HasAuthoredMetadata)                                          \
+        .m((bool(CLS::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&, PXR_NS::VtValue*) const) &          \
+               CLS::GetMetadataByDictKey,                                      \
+           "GetMetadataByDictKey_value")                                       \
+        .m((bool(CLS::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&, PXR_NS::VtValue const&) const) &    \
+               CLS::SetMetadataByDictKey,                                      \
+           "SetMetadataByDictKey_value")                                       \
+        .m(&CLS::ClearMetadataByDictKey)                                       \
+        .m(&CLS::HasMetadataDictKey)                                           \
+        .m(&CLS::HasAuthoredMetadataDictKey)                                   \
+        .m(&CLS::GetAllMetadata)                                               \
+        .m(&CLS::GetAllAuthoredMetadata)                                       \
+        .m(&CLS::IsHidden)                                                     \
+        .m(&CLS::SetHidden)                                                    \
+        .m(&CLS::ClearHidden)                                                  \
+        .m(&CLS::HasAuthoredHidden)                                            \
+        .m(&CLS::GetCustomData)                                                \
+        .m(&CLS::GetCustomDataByKey)                                           \
+        .m(&CLS::SetCustomData)                                                \
+        .m(&CLS::SetCustomDataByKey)                                           \
+        .m(&CLS::ClearCustomData)                                              \
+        .m(&CLS::ClearCustomDataByKey)                                         \
+        .m(&CLS::HasCustomData)                                                \
+        .m(&CLS::HasCustomDataKey)                                             \
+        .m(&CLS::HasAuthoredCustomData)                                        \
+        .m(&CLS::HasAuthoredCustomDataKey)                                     \
+        .m(&CLS::GetAssetInfo)                                                 \
+        .m(&CLS::GetAssetInfoByKey)                                            \
+        .m(&CLS::SetAssetInfo)                                                 \
+        .m(&CLS::SetAssetInfoByKey)                                            \
+        .m(&CLS::ClearAssetInfo)                                               \
+        .m(&CLS::ClearAssetInfoByKey)                                          \
+        .m(&CLS::HasAssetInfo)                                                 \
+        .m(&CLS::HasAssetInfoKey)                                              \
+        .m(&CLS::HasAuthoredAssetInfo)                                         \
+        .m(&CLS::HasAuthoredAssetInfoKey)                                      \
+        .m(&CLS::GetDocumentation)                                             \
+        .m(&CLS::SetDocumentation)                                             \
+        .m(&CLS::ClearDocumentation)                                           \
+        .m(&CLS::HasAuthoredDocumentation)                                     \
+        .m(&CLS::GetDisplayName)                                               \
+        .m(&CLS::SetDisplayName)                                               \
+        .m(&CLS::ClearDisplayName)                                             \
+        .m(&CLS::HasAuthoredDisplayName)                                       \
+        .m(&CLS::IsValid)                                                      \
+        .m(&CLS::GetStage)                                                     \
+        .m(&CLS::GetPath)                                                      \
+        .m(&CLS::GetPrimPath)                                                  \
+        .m(&CLS::GetPrim)                                                      \
+        .m(&CLS::GetName)                                                      \
+        .m(&CLS::GetNamespaceDelimiter)                                        \
+        .m(&CLS::GetDescription)
