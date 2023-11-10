@@ -2,7 +2,6 @@
 
 #include "babble"
 #include "babble-std"
-#include "babble-usd"
 
 #include <pxr/usd/usd/primTypeInfo.h>
 #include <pxr/usd/sdf/proxyTypes.h>
@@ -63,7 +62,6 @@ BBL_MODULE(usd) {
         .m(&Prim::IsGroup)
         .m(&Prim::IsAbstract)
         .m(&Prim::IsDefined)
-        .m(&Prim::GetName)
         .m(&Prim::HasDefiningSpecifier)
         .m(&Prim::GetAppliedSchemas)
         // Can't handle std::function properly yet...
@@ -278,8 +276,6 @@ BBL_MODULE(usd) {
         .m(&Prim::ComputeExpandedPrimIndex)
         .m(&Prim::MakeResolveTargetUpToEditTarget)
         .m(&Prim::MakeResolveTargetStrongerThanEditTarget)
-        
-        OBJECT_METHODS(PXR_NS::UsdPrim)
         ;
 
     // end Prim

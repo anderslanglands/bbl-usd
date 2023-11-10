@@ -35,6 +35,10 @@ bbl_translate_binding(
 target_link_libraries(usd-c PUBLIC usd sdf js usdGeom)
 target_compile_definitions(usd-c PRIVATE NOMINMAX BOOST_ALL_NO_LIB __TBB_show_deprecation_message_task_H)
 
+if (MSVC)
+    target_compile_options(usd-c PRIVATE /bigobj)
+endif()
+
 # Compile a simple test program to exercise the generated library
 add_executable(usd-c-test01 usd-c-test01.c)
 target_link_libraries(usd-c-test01 PUBLIC usd-c)

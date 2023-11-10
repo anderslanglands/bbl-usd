@@ -47,12 +47,12 @@ BBL_MODULE(pcp) {
     bbl::Class<PXR_NS::PcpArc>("Arc")
         ;
 
-    bbl::fn(&bblext::Arc_get_type);
-    bbl::fn(&bblext::Arc_get_parent);
-    bbl::fn(&bblext::Arc_get_origin);
-    bbl::fn(&bblext::Arc_get_map_to_parent);
-    bbl::fn(&bblext::Arc_get_sibling_num_at_origin);
-    bbl::fn(&bblext::Arc_get_namespace_depth);
+    bbl::fn(&bblext::Arc_get_type, "Arc_get_type");
+    bbl::fn(&bblext::Arc_get_parent, "Arc_get_parent");
+    bbl::fn(&bblext::Arc_get_origin, "Arc_get_origin");
+    bbl::fn(&bblext::Arc_get_map_to_parent, "Arc_get_map_to_parent");
+    bbl::fn(&bblext::Arc_get_sibling_num_at_origin, "Arc_get_sibling_num_at_origin");
+    bbl::fn(&bblext::Arc_get_namespace_depth, "Arc_get_namespace_depth");
 
     bbl::Enum<PXR_NS::PcpArcType>("ArcType");
 

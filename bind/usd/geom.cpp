@@ -13,6 +13,7 @@
 #include <pxr/usd/usd/attribute.h>
 #include <pxr/usd/usd/prim.h>
 #include <pxr/usd/usd/timeCode.h>
+#include <pxr/usd/usd/apiSchemaBase.h>
 #include <pxr/usd/usdGeom/basisCurves.h>
 #include <pxr/usd/usdGeom/bboxCache.h>
 #include <pxr/usd/usdGeom/boundable.h>
@@ -50,115 +51,20 @@
 BBL_MODULE(usdGeom) {
     // clang-format off
 
-    #define APISCHEMABASE_METHODS(CLS) \
-        .m(&CLS::IsConcrete) \
-        .m(&CLS::IsTyped) \
-        .m(&CLS::IsAPISchema) \
-        .m(&CLS::IsAppliedAPISchema) \
-        .m(&CLS::IsMultipleApplyAPISchema) \
-        .m(&CLS::GetSchemaKind) \
-        .m(&CLS::GetPrim) \
-        .m(&CLS::GetPath) \
-        .m(&CLS::GetSchemaClassPrimDefinition)
+    bbl::Class<PXR_NS::UsdSchemaBase>("SchemaBase")
+        .m(&PXR_NS::UsdSchemaBase::IsConcrete) 
+        .m(&PXR_NS::UsdSchemaBase::IsTyped) 
+        .m(&PXR_NS::UsdSchemaBase::IsAPISchema) 
+        .m(&PXR_NS::UsdSchemaBase::IsAppliedAPISchema) 
+        .m(&PXR_NS::UsdSchemaBase::IsMultipleApplyAPISchema) 
+        .m(&PXR_NS::UsdSchemaBase::GetSchemaKind) 
+        .m(&PXR_NS::UsdSchemaBase::GetPrim) 
+        .m(&PXR_NS::UsdSchemaBase::GetPath) 
+        .m(&PXR_NS::UsdSchemaBase::GetSchemaClassPrimDefinition)
+        ;
 
-    #define IMAGEABLE_METHODS(CLS) \
-        .m(&CLS::GetVisibilityAttr) \
-        .m(&CLS::CreateVisibilityAttr) \
-        .m(&CLS::GetPurposeAttr) \
-        .m(&CLS::CreatePurposeAttr) \
-        .m(&CLS::GetProxyPrimRel) \
-        .m(&CLS::CreateProxyPrimRel) \
-        .m(&CLS::MakeVisible) \
-        .m(&CLS::MakeInvisible) \
-        .m(&CLS::ComputeVisibility) \
-        .m(&CLS::GetPurposeVisibilityAttr) \
-        .m((PXR_NS::UsdGeomImageable::PurposeInfo (PXR_NS::UsdGeomImageable::*)() const) \
-            &CLS::ComputePurposeInfo) \
-        .m((PXR_NS::UsdGeomImageable::PurposeInfo (PXR_NS::UsdGeomImageable::*)(PXR_NS::UsdGeomImageable::PurposeInfo const&) const) \
-            &CLS::ComputePurposeInfo, "ComputePurposeInfo_given_parent") \
-        .m(&CLS::ComputePurpose) \
-        .m(&CLS::ComputeProxyPrim) \
-        .m((bool (PXR_NS::UsdGeomImageable::*)(PXR_NS::UsdPrim const&) const) \
-            &CLS::SetProxyPrim) \
-        .m(&CLS::ComputeWorldBound) \
-        .m(&CLS::ComputeLocalBound) \
-        .m(&CLS::ComputeUntransformedBound) \
-        .m(&CLS::ComputeLocalToWorldTransform) \
-        .m(&CLS::ComputeParentToWorldTransform)
-
-    #define BOUNDABLE_METHODS(CLS)\
-        .m(&CLS::GetExtentAttr) \
-        .m(&CLS::CreateExtentAttr)
-        // XXX: ComputeExtent
-
-    #define GPRIM_METHODS(CLS) \
-        .m(&CLS::GetDisplayColorAttr) \
-        .m(&CLS::CreateDisplayColorAttr) \
-        .m(&CLS::GetDisplayOpacityAttr) \
-        .m(&CLS::CreateDisplayOpacityAttr) \
-        .m(&CLS::GetDoubleSidedAttr) \
-        .m(&CLS::CreateDoubleSidedAttr) \
-        .m(&CLS::GetOrientationAttr) \
-        .m(&CLS::CreateOrientationAttr) \
-        .m(&CLS::GetDisplayColorPrimvar) \
-        .m(&CLS::CreateDisplayColorPrimvar)
- 
-    #define POINTBASED_METHODS(CLS) \
-        .m(&CLS::GetPointsAttr) \
-        .m(&CLS::CreatePointsAttr) \
-        .m(&CLS::GetVelocitiesAttr) \
-        .m(&CLS::CreateVelocitiesAttr) \
-        .m(&CLS::GetAccelerationsAttr) \
-        .m(&CLS::CreateAccelerationsAttr) \
-        .m(&CLS::GetNormalsAttr) \
-        .m(&CLS::CreateNormalsAttr) \
-        .m(&CLS::GetNormalsInterpolation) \
-        .m(&CLS::SetNormalsInterpolation) \
-        .m((bool (PXR_NS::UsdGeomPointBased::*)(PXR_NS::VtArray<PXR_NS::GfVec3f>*, PXR_NS::UsdTimeCode const, PXR_NS::UsdTimeCode const) const) \
-            &CLS::ComputePointsAtTime)
-
-    #define CURVES_METHODS(CLS) \
-        .m(&CLS::GetCurveVertexCountsAttr) \
-        .m(&CLS::CreateCurveVertexCountsAttr) \
-        .m(&CLS::GetWidthsAttr) \
-        .m(&CLS::CreateWidthsAttr) \
-        .m(&CLS::GetWidthsInterpolation) \
-        .m(&CLS::SetWidthsInterpolation) \
-        .m(&CLS::GetCurveCount)
-
-    #define XFORMABLE_METHODS(CLS) \
-        .m(&CLS::GetXformOpOrderAttr) \
-        .m(&CLS::AddXformOp) \
-        .m(&CLS::AddTranslateOp) \
-        .m(&CLS::AddScaleOp) \
-        .m(&CLS::AddRotateXOp) \
-        .m(&CLS::AddRotateYOp) \
-        .m(&CLS::AddRotateZOp) \
-        .m(&CLS::AddRotateXYZOp) \
-        .m(&CLS::AddRotateXZYOp) \
-        .m(&CLS::AddRotateYXZOp) \
-        .m(&CLS::AddRotateYZXOp) \
-        .m(&CLS::AddRotateZXYOp) \
-        .m(&CLS::AddRotateZYXOp) \
-        .m(&CLS::AddOrientOp) \
-        .m(&CLS::AddTransformOp) \
-        .m(&CLS::SetResetXformStack) \
-        .m(&CLS::SetXformOpOrder) \
-        .m(&CLS::GetOrderedXformOps) \
-        .m(&CLS::ClearXformOpOrder) \
-        .m(&CLS::MakeMatrixXform) \
-        .m((bool (PXR_NS::UsdGeomXformable::*)() const) \
-            &CLS::TransformMightBeTimeVarying) \
-        .m((bool (PXR_NS::UsdGeomXformable::*)(std::vector<PXR_NS::UsdGeomXformOp> const&) const) \
-            &CLS::TransformMightBeTimeVarying, "TransformMightBeTimeVarying_using") \
-        .m((bool (PXR_NS::UsdGeomXformable::*)(std::vector<double>*) const) \
-            &CLS::GetTimeSamples) \
-        .m((bool (PXR_NS::UsdGeomXformable::*)(PXR_NS::GfInterval const&, std::vector<double>*) const) \
-            &CLS::GetTimeSamplesInInterval) \
-        .m((bool (PXR_NS::UsdGeomXformable::*)(PXR_NS::GfMatrix4d*, bool*, PXR_NS::UsdTimeCode const) const) \
-            &CLS::GetLocalTransformation) \
-        .m((bool (PXR_NS::UsdGeomXformable::*)(PXR_NS::GfMatrix4d*, bool*, std::vector<PXR_NS::UsdGeomXformOp> const&, PXR_NS::UsdTimeCode const) const) \
-            &CLS::GetLocalTransformation, "GetLocalTransformation_with_ops")
+    bbl::Class<PXR_NS::UsdAPISchemaBase>("APISchemaBase")
+        ;
 
     bbl::Class<PXR_NS::UsdGeomBasisCurves>("BasisCurves")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomBasisCurves, PXR_NS::UsdPrim const&>(), "new")
@@ -169,14 +75,6 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomBasisCurves::CreateBasisAttr)
         .m(&PXR_NS::UsdGeomBasisCurves::GetWrapAttr)
         .m(&PXR_NS::UsdGeomBasisCurves::CreateWrapAttr)
-
-        CURVES_METHODS(PXR_NS::UsdGeomBasisCurves)
-        POINTBASED_METHODS(PXR_NS::UsdGeomBasisCurves)
-        GPRIM_METHODS(PXR_NS::UsdGeomBasisCurves)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomBasisCurves)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomBasisCurves)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomBasisCurves)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomBasisCurves)
         ;
 
     bbl::Class<PXR_NS::UsdGeomBBoxCache>("BBoxCache")
@@ -214,10 +112,10 @@ BBL_MODULE(usdGeom) {
     bbl::Class<PXR_NS::UsdGeomBoundable>("Boundable")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomBoundable, PXR_NS::UsdPrim const&>(), "new")
 
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomBoundable)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomBoundable)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomBoundable)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomBoundable)
+        .m(&PXR_NS::UsdGeomBoundable::GetExtentAttr)
+        .m(&PXR_NS::UsdGeomBoundable::CreateExtentAttr)
+        // XXX: ComputeExtent
+
         ;
 
     bbl::Class<PXR_NS::UsdGeomCamera>("Camera")
@@ -253,10 +151,6 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomCamera::CreateExposureAttr)
         .m(&PXR_NS::UsdGeomCamera::GetCamera)
         .m(&PXR_NS::UsdGeomCamera::SetFromCamera)
-
-        XFORMABLE_METHODS(PXR_NS::UsdGeomCamera)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomCamera)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomCamera)
         ;
 
     bbl::Class<PXR_NS::UsdGeomCapsule>("Capsule")
@@ -268,12 +162,6 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomCapsule::CreateRadiusAttr)
         .m(&PXR_NS::UsdGeomCapsule::GetAxisAttr)
         .m(&PXR_NS::UsdGeomCapsule::CreateAxisAttr)
-
-        GPRIM_METHODS(PXR_NS::UsdGeomCapsule)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomCapsule)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomCapsule)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomCapsule)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomCapsule)
         ;
 
     bbl::Class<PXR_NS::UsdGeomCone>("Cone")
@@ -285,12 +173,6 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomCone::CreateRadiusAttr)
         .m(&PXR_NS::UsdGeomCone::GetAxisAttr)
         .m(&PXR_NS::UsdGeomCone::CreateAxisAttr)
-
-        GPRIM_METHODS(PXR_NS::UsdGeomCone)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomCone)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomCone)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomCone)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomCone)
         ;
 
     bbl::Class<PXR_NS::UsdGeomConstraintTarget>("ConstraintTarget")
@@ -315,24 +197,17 @@ BBL_MODULE(usdGeom) {
 
         .m(&PXR_NS::UsdGeomCube::GetSizeAttr)
         .m(&PXR_NS::UsdGeomCube::CreateSizeAttr)
-
-        GPRIM_METHODS(PXR_NS::UsdGeomCube)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomCube)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomCube)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomCube)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomCube)
         ;
 
     bbl::Class<PXR_NS::UsdGeomCurves>("Curves")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomCurves, PXR_NS::UsdPrim const&>(), "new")
-
-        CURVES_METHODS(PXR_NS::UsdGeomCurves)
-        POINTBASED_METHODS(PXR_NS::UsdGeomCurves)
-        GPRIM_METHODS(PXR_NS::UsdGeomCurves)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomCurves)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomCurves)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomCurves)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomCurves)
+        .m(&PXR_NS::UsdGeomCurves::GetCurveVertexCountsAttr) 
+        .m(&PXR_NS::UsdGeomCurves::CreateCurveVertexCountsAttr) 
+        .m(&PXR_NS::UsdGeomCurves::GetWidthsAttr) 
+        .m(&PXR_NS::UsdGeomCurves::CreateWidthsAttr) 
+        .m(&PXR_NS::UsdGeomCurves::GetWidthsInterpolation) 
+        .m(&PXR_NS::UsdGeomCurves::SetWidthsInterpolation) 
+        .m(&PXR_NS::UsdGeomCurves::GetCurveCount)
         ;
 
     bbl::Class<PXR_NS::UsdGeomCylinder>("Cylinder")
@@ -344,51 +219,61 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomCylinder::CreateRadiusAttr)
         .m(&PXR_NS::UsdGeomCylinder::GetAxisAttr)
         .m(&PXR_NS::UsdGeomCylinder::CreateAxisAttr)
-
-        GPRIM_METHODS(PXR_NS::UsdGeomCylinder)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomCylinder)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomCylinder)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomCylinder)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomCylinder)
         ;
 
 
     bbl::Class<PXR_NS::UsdGeomGprim>("Gprim")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomGprim, PXR_NS::UsdPrim const&>(), "new")
-
-        GPRIM_METHODS(PXR_NS::UsdGeomGprim)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomGprim)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomGprim)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomGprim)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomGprim)
+        .m(&PXR_NS::UsdGeomGprim::GetDisplayColorAttr) 
+        .m(&PXR_NS::UsdGeomGprim::CreateDisplayColorAttr) 
+        .m(&PXR_NS::UsdGeomGprim::GetDisplayOpacityAttr) 
+        .m(&PXR_NS::UsdGeomGprim::CreateDisplayOpacityAttr) 
+        .m(&PXR_NS::UsdGeomGprim::GetDoubleSidedAttr) 
+        .m(&PXR_NS::UsdGeomGprim::CreateDoubleSidedAttr) 
+        .m(&PXR_NS::UsdGeomGprim::GetOrientationAttr) 
+        .m(&PXR_NS::UsdGeomGprim::CreateOrientationAttr) 
+        .m(&PXR_NS::UsdGeomGprim::GetDisplayColorPrimvar) 
+        .m(&PXR_NS::UsdGeomGprim::CreateDisplayColorPrimvar)
         ;
 
     bbl::Class<PXR_NS::UsdGeomHermiteCurves>("HermiteCurves")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomHermiteCurves, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomHermiteCurves::GetTangentsAttr)
         .m(&PXR_NS::UsdGeomHermiteCurves::CreateTangentsAttr)
-
-        CURVES_METHODS(PXR_NS::UsdGeomHermiteCurves)
-        POINTBASED_METHODS(PXR_NS::UsdGeomHermiteCurves)
-        GPRIM_METHODS(PXR_NS::UsdGeomHermiteCurves)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomHermiteCurves)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomHermiteCurves)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomHermiteCurves)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomHermiteCurves)
         ;
 
 
     bbl::Class<PXR_NS::UsdGeomImageable>("Imageable")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomImageable, PXR_NS::UsdPrim const&>(), "new")
-
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomImageable)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomImageable)
+        .m(&PXR_NS::UsdGeomImageable::GetVisibilityAttr) 
+        .m(&PXR_NS::UsdGeomImageable::CreateVisibilityAttr) 
+        .m(&PXR_NS::UsdGeomImageable::GetPurposeAttr) 
+        .m(&PXR_NS::UsdGeomImageable::CreatePurposeAttr) 
+        .m(&PXR_NS::UsdGeomImageable::GetProxyPrimRel) 
+        .m(&PXR_NS::UsdGeomImageable::CreateProxyPrimRel) 
+        .m(&PXR_NS::UsdGeomImageable::MakeVisible) 
+        .m(&PXR_NS::UsdGeomImageable::MakeInvisible) 
+        .m(&PXR_NS::UsdGeomImageable::ComputeVisibility) 
+        .m(&PXR_NS::UsdGeomImageable::GetPurposeVisibilityAttr) 
+        .m((PXR_NS::UsdGeomImageable::PurposeInfo (PXR_NS::UsdGeomImageable::*)() const) 
+            &PXR_NS::UsdGeomImageable::ComputePurposeInfo) 
+        .m((PXR_NS::UsdGeomImageable::PurposeInfo (PXR_NS::UsdGeomImageable::*)(PXR_NS::UsdGeomImageable::PurposeInfo const&) const) 
+            &PXR_NS::UsdGeomImageable::ComputePurposeInfo, "ComputePurposeInfo_given_parent") 
+        .m(&PXR_NS::UsdGeomImageable::ComputePurpose) 
+        .m(&PXR_NS::UsdGeomImageable::ComputeProxyPrim) 
+        .m((bool (PXR_NS::UsdGeomImageable::*)(PXR_NS::UsdPrim const&) const) 
+            &PXR_NS::UsdGeomImageable::SetProxyPrim) 
+        .m(&PXR_NS::UsdGeomImageable::ComputeWorldBound) 
+        .m(&PXR_NS::UsdGeomImageable::ComputeLocalBound) 
+        .m(&PXR_NS::UsdGeomImageable::ComputeUntransformedBound) 
+        .m(&PXR_NS::UsdGeomImageable::ComputeLocalToWorldTransform) 
+        .m(&PXR_NS::UsdGeomImageable::ComputeParentToWorldTransform)
         ;
 
     bbl::Class<PXR_NS::UsdGeomImageable::PurposeInfo>("ImageablePurposeInfo");
 
     bbl::Class<PXR_NS::UsdGeomMesh>("Mesh")
+
         .ctor(bbl::Ctor<PXR_NS::UsdGeomMesh, PXR_NS::UsdPrim const&>(), "new")
 
         .m(&PXR_NS::UsdGeomMesh::GetFaceVertexIndicesAttr)
@@ -416,16 +301,10 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomMesh::GetCreaseSharpnessesAttr)
         .m(&PXR_NS::UsdGeomMesh::CreateCreaseSharpnessesAttr)
         .m(&PXR_NS::UsdGeomMesh::GetFaceCount)
-
-        POINTBASED_METHODS(PXR_NS::UsdGeomMesh)
-        GPRIM_METHODS(PXR_NS::UsdGeomMesh)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomMesh)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomMesh)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomMesh)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomMesh)
         ;
 
     bbl::Class<PXR_NS::UsdGeomModelAPI>("ModelAPI")
+
         .ctor(bbl::Ctor<PXR_NS::UsdGeomModelAPI, PXR_NS::UsdPrim const&>(), "new")
 
         .m(&PXR_NS::UsdGeomModelAPI::GetModelDrawModeAttr)
@@ -456,11 +335,10 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomModelAPI::GetConstraintTarget)
         .m(&PXR_NS::UsdGeomModelAPI::GetConstraintTargets)
         .m(&PXR_NS::UsdGeomModelAPI::CreateConstraintTarget)
-
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomModelAPI)
         ;
 
     bbl::Class<PXR_NS::UsdGeomMotionAPI>("MotionAPI")
+
         .ctor(bbl::Ctor<PXR_NS::UsdGeomMotionAPI, PXR_NS::UsdPrim const&>(), "new")
 
         .m(&PXR_NS::UsdGeomMotionAPI::GetMotionBlurScaleAttr)
@@ -472,11 +350,10 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomMotionAPI::ComputeVelocityScale)
         .m(&PXR_NS::UsdGeomMotionAPI::ComputeMotionBlurScale)
         .m(&PXR_NS::UsdGeomMotionAPI::ComputeNonlinearSampleCount)
-
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomMotionAPI)
         ;
 
     bbl::Class<PXR_NS::UsdGeomNurbsCurves>("NurbsCurves")
+
         .ctor(bbl::Ctor<PXR_NS::UsdGeomNurbsCurves, PXR_NS::UsdPrim const&>(), "new")
 
         .m(&PXR_NS::UsdGeomNurbsCurves::GetOrderAttr)
@@ -487,17 +364,10 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomNurbsCurves::CreateRangesAttr)
         .m(&PXR_NS::UsdGeomNurbsCurves::GetPointWeightsAttr)
         .m(&PXR_NS::UsdGeomNurbsCurves::CreatePointWeightsAttr)
-
-        CURVES_METHODS(PXR_NS::UsdGeomNurbsCurves)
-        POINTBASED_METHODS(PXR_NS::UsdGeomNurbsCurves)
-        GPRIM_METHODS(PXR_NS::UsdGeomNurbsCurves)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomNurbsCurves)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomNurbsCurves)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomNurbsCurves)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomNurbsCurves)
         ;
 
     bbl::Class<PXR_NS::UsdGeomNurbsPatch>("NurbsPatch")
+
         .ctor(bbl::Ctor<PXR_NS::UsdGeomNurbsPatch, PXR_NS::UsdPrim const&>(), "new")
 
         .m(&PXR_NS::UsdGeomNurbsPatch::GetUVertexCountAttr)
@@ -534,16 +404,10 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomNurbsPatch::CreateTrimCurveRangesAttr)
         .m(&PXR_NS::UsdGeomNurbsPatch::GetTrimCurvePointsAttr)
         .m(&PXR_NS::UsdGeomNurbsPatch::CreateTrimCurvePointsAttr)
-
-        POINTBASED_METHODS(PXR_NS::UsdGeomNurbsPatch)
-        GPRIM_METHODS(PXR_NS::UsdGeomNurbsPatch)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomNurbsPatch)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomNurbsPatch)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomNurbsPatch)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomNurbsPatch)
         ;
 
     bbl::Class<PXR_NS::UsdGeomPlane>("Plane")
+
         .ctor(bbl::Ctor<PXR_NS::UsdGeomPlane, PXR_NS::UsdPrim const&>(), "new")
 
         .m(&PXR_NS::UsdGeomPlane::GetWidthAttr)
@@ -552,24 +416,25 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomPlane::CreateLengthAttr)
         .m(&PXR_NS::UsdGeomPlane::GetAxisAttr)
         .m(&PXR_NS::UsdGeomPlane::CreateAxisAttr)
-
-        GPRIM_METHODS(PXR_NS::UsdGeomPlane)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomPlane)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomPlane)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomPlane)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomPlane)
         ;
 
 
     bbl::Class<PXR_NS::UsdGeomPointBased>("PointBased")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomPointBased, PXR_NS::UsdPrim const&>(), "new")
 
-        POINTBASED_METHODS(PXR_NS::UsdGeomPointBased)
-        GPRIM_METHODS(PXR_NS::UsdGeomPointBased)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomPointBased)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomPointBased)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomPointBased)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomPointBased)
+        .m(&PXR_NS::UsdGeomPointBased::GetPointsAttr) 
+        .m(&PXR_NS::UsdGeomPointBased::CreatePointsAttr) 
+        .m(&PXR_NS::UsdGeomPointBased::GetVelocitiesAttr) 
+        .m(&PXR_NS::UsdGeomPointBased::CreateVelocitiesAttr) 
+        .m(&PXR_NS::UsdGeomPointBased::GetAccelerationsAttr) 
+        .m(&PXR_NS::UsdGeomPointBased::CreateAccelerationsAttr) 
+        .m(&PXR_NS::UsdGeomPointBased::GetNormalsAttr) 
+        .m(&PXR_NS::UsdGeomPointBased::CreateNormalsAttr) 
+        .m(&PXR_NS::UsdGeomPointBased::GetNormalsInterpolation) 
+        .m(&PXR_NS::UsdGeomPointBased::SetNormalsInterpolation) 
+        .m((bool (PXR_NS::UsdGeomPointBased::*)(PXR_NS::VtArray<PXR_NS::GfVec3f>*, PXR_NS::UsdTimeCode const, PXR_NS::UsdTimeCode const) const) 
+            &PXR_NS::UsdGeomPointBased::ComputePointsAtTime)
+
         ;
 
     bbl::Class<PXR_NS::UsdGeomPointInstancer>("PointInstancer")
@@ -605,11 +470,6 @@ BBL_MODULE(usdGeom) {
         .m((bool (PXR_NS::UsdGeomPointInstancer::*)(std::vector<PXR_NS::VtVec3fArray>*, std::vector<PXR_NS::UsdTimeCode> const&, PXR_NS::UsdTimeCode const, PXR_NS::GfMatrix4d const&) const)
             &PXR_NS::UsdGeomPointInstancer::ComputeExtentAtTimes, "ComputeExtentAtTimes_with_transform")
         .m(&PXR_NS::UsdGeomPointInstancer::GetInstanceCount)
-
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomPointInstancer)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomPointInstancer)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomPointInstancer)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomPointInstancer)
         ;
     
     bbl::Enum<PXR_NS::UsdGeomPointInstancer::ProtoXformInclusion>("ProtoXformInclusion");
@@ -625,13 +485,6 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomPoints::GetWidthsInterpolation)
         .m(&PXR_NS::UsdGeomPoints::SetWidthsInterpolation)
         .m(&PXR_NS::UsdGeomPoints::GetPointCount)
-
-        POINTBASED_METHODS(PXR_NS::UsdGeomPoints)
-        GPRIM_METHODS(PXR_NS::UsdGeomPoints)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomPoints)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomPoints)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomPoints)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomPoints)
         ;
 
     bbl::Class<PXR_NS::UsdGeomPrimvar>("Primvar")
@@ -707,8 +560,6 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomPrimvarsAPI::GetSchemaAttributeNames)
         .m(&PXR_NS::UsdGeomPrimvarsAPI::Get)
         .m(&PXR_NS::UsdGeomPrimvarsAPI::CanContainPropertyName)
-
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomPrimvarsAPI)
         ;
 
     bbl::Class<PXR_NS::UsdGeomScope>("Scope")
@@ -717,9 +568,6 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomScope::Get)
         .m(&PXR_NS::UsdGeomScope::GetSchemaAttributeNames)
         .m(&PXR_NS::UsdGeomScope::Define)
-
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomScope)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomScope)
         ;
 
     bbl::Class<PXR_NS::UsdGeomSphere>("Sphere")
@@ -727,12 +575,6 @@ BBL_MODULE(usdGeom) {
 
         .m(&PXR_NS::UsdGeomSphere::GetRadiusAttr)
         .m(&PXR_NS::UsdGeomSphere::CreateRadiusAttr)
-
-        GPRIM_METHODS(PXR_NS::UsdGeomSphere)
-        BOUNDABLE_METHODS(PXR_NS::UsdGeomSphere)
-        XFORMABLE_METHODS(PXR_NS::UsdGeomSphere)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomSphere)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomSphere)
         ;
 
     bbl::Class<PXR_NS::UsdGeomSubset>("Subset")
@@ -745,7 +587,7 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomSubset::GetFamilyNameAttr)
         .m(&PXR_NS::UsdGeomSubset::CreateFamilyNameAttr)
 
-        // sttic
+        // static
         .m(&PXR_NS::UsdGeomSubset::Get)
         .m(&PXR_NS::UsdGeomSubset::GetSchemaAttributeNames)
         .m(&PXR_NS::UsdGeomSubset::Define)
@@ -758,8 +600,6 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomSubset::GetUnassignedIndices)
         .m(&PXR_NS::UsdGeomSubset::ValidateSubsets)
         .m(&PXR_NS::UsdGeomSubset::ValidateFamily)
-
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomSubset)
         ;
 
     bbl::Class<std::vector<PXR_NS::UsdGeomSubset>>("SubsetVector")
@@ -785,8 +625,6 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomVisibilityAPI::Get)
         .m(&PXR_NS::UsdGeomVisibilityAPI::CanApply)
         .m(&PXR_NS::UsdGeomVisibilityAPI::Apply)
-
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomVisibilityAPI)
         ;
 
 
@@ -796,10 +634,6 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomXform::GetSchemaAttributeNames)
         .m(&PXR_NS::UsdGeomXform::Get)
         .m(&PXR_NS::UsdGeomXform::Define)
-
-        XFORMABLE_METHODS(PXR_NS::UsdGeomXform)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomXform)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomXform)
         ;
 
     bbl::Class<PXR_NS::UsdGeomXformCache>("XformCache")
@@ -842,8 +676,6 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomXformCommonAPI::ConvertOpTypeToRotationOrder)
         .m(&PXR_NS::UsdGeomXformCommonAPI::CanConvertOpTypeToRotationOrder)
         .m(&PXR_NS::UsdGeomXformCommonAPI::GetRotationTransform)
-
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomXformCommonAPI)
         ;
 
     bbl::Class<PXR_NS::UsdGeomXformCommonAPI::Ops>("XformCommonAPIOps");
@@ -854,9 +686,39 @@ BBL_MODULE(usdGeom) {
     bbl::Class<PXR_NS::UsdGeomXformable>("Xformable")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomXformable>(), "new")
 
-        XFORMABLE_METHODS(PXR_NS::UsdGeomXformable)
-        IMAGEABLE_METHODS(PXR_NS::UsdGeomXformable)
-        APISCHEMABASE_METHODS(PXR_NS::UsdGeomXformable)
+        .m(&PXR_NS::UsdGeomXformable::GetXformOpOrderAttr) \
+        .m(&PXR_NS::UsdGeomXformable::AddXformOp) \
+        .m(&PXR_NS::UsdGeomXformable::AddTranslateOp) \
+        .m(&PXR_NS::UsdGeomXformable::AddScaleOp) \
+        .m(&PXR_NS::UsdGeomXformable::AddRotateXOp) \
+        .m(&PXR_NS::UsdGeomXformable::AddRotateYOp) \
+        .m(&PXR_NS::UsdGeomXformable::AddRotateZOp) \
+        .m(&PXR_NS::UsdGeomXformable::AddRotateXYZOp) \
+        .m(&PXR_NS::UsdGeomXformable::AddRotateXZYOp) \
+        .m(&PXR_NS::UsdGeomXformable::AddRotateYXZOp) \
+        .m(&PXR_NS::UsdGeomXformable::AddRotateYZXOp) \
+        .m(&PXR_NS::UsdGeomXformable::AddRotateZXYOp) \
+        .m(&PXR_NS::UsdGeomXformable::AddRotateZYXOp) \
+        .m(&PXR_NS::UsdGeomXformable::AddOrientOp) \
+        .m(&PXR_NS::UsdGeomXformable::AddTransformOp) \
+        .m(&PXR_NS::UsdGeomXformable::SetResetXformStack) \
+        .m(&PXR_NS::UsdGeomXformable::SetXformOpOrder) \
+        .m(&PXR_NS::UsdGeomXformable::GetOrderedXformOps) \
+        .m(&PXR_NS::UsdGeomXformable::ClearXformOpOrder) \
+        .m(&PXR_NS::UsdGeomXformable::MakeMatrixXform) \
+        .m((bool (PXR_NS::UsdGeomXformable::*)() const) \
+            &PXR_NS::UsdGeomXformable::TransformMightBeTimeVarying) \
+        .m((bool (PXR_NS::UsdGeomXformable::*)(std::vector<PXR_NS::UsdGeomXformOp> const&) const) \
+            &PXR_NS::UsdGeomXformable::TransformMightBeTimeVarying, "TransformMightBeTimeVarying_using") \
+        .m((bool (PXR_NS::UsdGeomXformable::*)(std::vector<double>*) const) \
+            &PXR_NS::UsdGeomXformable::GetTimeSamples) \
+        .m((bool (PXR_NS::UsdGeomXformable::*)(PXR_NS::GfInterval const&, std::vector<double>*) const) \
+            &PXR_NS::UsdGeomXformable::GetTimeSamplesInInterval) \
+        .m((bool (PXR_NS::UsdGeomXformable::*)(PXR_NS::GfMatrix4d*, bool*, PXR_NS::UsdTimeCode const) const) \
+            &PXR_NS::UsdGeomXformable::GetLocalTransformation) \
+        .m((bool (PXR_NS::UsdGeomXformable::*)(PXR_NS::GfMatrix4d*, bool*, std::vector<PXR_NS::UsdGeomXformOp> const&, PXR_NS::UsdTimeCode const) const) \
+            &PXR_NS::UsdGeomXformable::GetLocalTransformation, "GetLocalTransformation_with_ops")
+
         ;
 
     bbl::Class<PXR_NS::UsdGeomXformOp>("XformOp")
