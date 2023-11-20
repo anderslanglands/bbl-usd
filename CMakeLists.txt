@@ -21,7 +21,7 @@ set(bindfiles
 )
 
 bbl_translate_binding(
-    usd-c
+    openusd
     BINDFILES 
         ${bindfiles}
     COMPILE_ARGS 
@@ -32,20 +32,20 @@ bbl_translate_binding(
         -D__TBB_show_deprecation_message_task_H 
 )
 
-target_link_libraries(usd-c PUBLIC usd sdf js usdGeom)
-target_compile_definitions(usd-c PRIVATE NOMINMAX BOOST_ALL_NO_LIB __TBB_show_deprecation_message_task_H)
+target_link_libraries(openusd-c PUBLIC usd sdf js usdGeom)
+target_compile_definitions(openusd-c PRIVATE NOMINMAX BOOST_ALL_NO_LIB __TBB_show_deprecation_message_task_H)
 
 if (MSVC)
-    target_compile_options(usd-c PRIVATE /bigobj)
+    target_compile_options(openusd-c PRIVATE /bigobj)
 endif()
 
 # Compile a simple test program to exercise the generated library
 add_executable(usd-c-test01 usd-c-test01.c)
-target_link_libraries(usd-c-test01 PUBLIC usd-c)
+target_link_libraries(usd-c-test01 PUBLIC openusd-c)
 target_include_directories(usd-c-test01 PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 set_property(TARGET usd-c-test01 PROPERTY C_STANDARD 99)
 
 # This is just here to trigger generation of compile commands for the bind file so we get LSP functionality in the bind file
 add_library(bind-dummy ${bindfiles})
 target_link_libraries(bind-dummy babble::bind)
-target_include_directories(bind-dummy PRIVATE $<TARGET_PROPERTY:usd-c,INCLUDE_DIRECTORIES>)
+target_include_directories(bind-dummy PRIVATE $<TARGET_PROPERTY:openusd-c,INCLUDE_DIRECTORIES>)
