@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <usd-c.h>
+#include <openusd-c.h>
 
 void print_attribute(usd_Attribute_t* attr, usd_TimeCode_t tc);
 
