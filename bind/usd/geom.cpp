@@ -1,5 +1,7 @@
 #if defined(__clang__)
 
+#define NOMINMAX
+
 #include "babble"
 #include "babble-std"
 
@@ -212,7 +214,6 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomCylinder>("Cylinder")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomCylinder, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomCylinder::GetHeightAttr)
         .m(&PXR_NS::UsdGeomCylinder::CreateHeightAttr)
         .m(&PXR_NS::UsdGeomCylinder::GetRadiusAttr)
@@ -273,9 +274,7 @@ BBL_MODULE(usdGeom) {
     bbl::Class<PXR_NS::UsdGeomImageable::PurposeInfo>("ImageablePurposeInfo");
 
     bbl::Class<PXR_NS::UsdGeomMesh>("Mesh")
-
         .ctor(bbl::Ctor<PXR_NS::UsdGeomMesh, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomMesh::GetFaceVertexIndicesAttr)
         .m(&PXR_NS::UsdGeomMesh::CreateFaceVertexIndicesAttr)
         .m(&PXR_NS::UsdGeomMesh::GetFaceVertexCountsAttr)
@@ -304,9 +303,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomModelAPI>("ModelAPI")
-
         .ctor(bbl::Ctor<PXR_NS::UsdGeomModelAPI, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomModelAPI::GetModelDrawModeAttr)
         .m(&PXR_NS::UsdGeomModelAPI::CreateModelDrawModeAttr)
         .m(&PXR_NS::UsdGeomModelAPI::GetModelDrawModeColorAttr)
@@ -338,9 +335,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomMotionAPI>("MotionAPI")
-
         .ctor(bbl::Ctor<PXR_NS::UsdGeomMotionAPI, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomMotionAPI::GetMotionBlurScaleAttr)
         .m(&PXR_NS::UsdGeomMotionAPI::CreateMotionBlurScaleAttr)
         .m(&PXR_NS::UsdGeomMotionAPI::GetVelocityScaleAttr)
@@ -353,9 +348,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomNurbsCurves>("NurbsCurves")
-
         .ctor(bbl::Ctor<PXR_NS::UsdGeomNurbsCurves, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomNurbsCurves::GetOrderAttr)
         .m(&PXR_NS::UsdGeomNurbsCurves::CreateOrderAttr)
         .m(&PXR_NS::UsdGeomNurbsCurves::GetKnotsAttr)
@@ -367,9 +360,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomNurbsPatch>("NurbsPatch")
-
         .ctor(bbl::Ctor<PXR_NS::UsdGeomNurbsPatch, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomNurbsPatch::GetUVertexCountAttr)
         .m(&PXR_NS::UsdGeomNurbsPatch::CreateUVertexCountAttr)
         .m(&PXR_NS::UsdGeomNurbsPatch::GetVVertexCountAttr)
@@ -407,9 +398,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomPlane>("Plane")
-
         .ctor(bbl::Ctor<PXR_NS::UsdGeomPlane, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomPlane::GetWidthAttr)
         .m(&PXR_NS::UsdGeomPlane::CreateWidthAttr)
         .m(&PXR_NS::UsdGeomPlane::GetLengthAttr)
@@ -421,7 +410,6 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomPointBased>("PointBased")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomPointBased, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomPointBased::GetPointsAttr) 
         .m(&PXR_NS::UsdGeomPointBased::CreatePointsAttr) 
         .m(&PXR_NS::UsdGeomPointBased::GetVelocitiesAttr) 
@@ -439,7 +427,6 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomPointInstancer>("PointInstancer")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomPointInstancer, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomPointInstancer::GetProtoIndicesAttr)
         .m(&PXR_NS::UsdGeomPointInstancer::CreateProtoIndicesAttr)
         .m(&PXR_NS::UsdGeomPointInstancer::GetIdsAttr)
@@ -477,7 +464,6 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomPoints>("Points")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomPoints, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomPoints::GetWidthsAttr)
         .m(&PXR_NS::UsdGeomPoints::CreateWidthsAttr)
         .m(&PXR_NS::UsdGeomPoints::GetIdsAttr)
@@ -489,7 +475,6 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomPrimvar>("Primvar")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomPrimvar, PXR_NS::UsdAttribute const&>(), "new")
-
         .m(&PXR_NS::UsdGeomPrimvar::GetInterpolation)
         .m(&PXR_NS::UsdGeomPrimvar::SetInterpolation)
         .m(&PXR_NS::UsdGeomPrimvar::HasAuthoredInterpolation)
@@ -534,7 +519,6 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomPrimvarsAPI>("PrimvarsAPI")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomPrimvarsAPI, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomPrimvarsAPI::CreatePrimvar)
         .m(&PXR_NS::UsdGeomPrimvarsAPI::RemovePrimvar)
         .m(&PXR_NS::UsdGeomPrimvarsAPI::BlockPrimvar)
@@ -564,7 +548,6 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomScope>("Scope")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomScope, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomScope::Get)
         .m(&PXR_NS::UsdGeomScope::GetSchemaAttributeNames)
         .m(&PXR_NS::UsdGeomScope::Define)
@@ -572,14 +555,12 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomSphere>("Sphere")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomSphere, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomSphere::GetRadiusAttr)
         .m(&PXR_NS::UsdGeomSphere::CreateRadiusAttr)
         ;
 
     bbl::Class<PXR_NS::UsdGeomSubset>("Subset")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomSubset, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomSubset::GetElementTypeAttr)
         .m(&PXR_NS::UsdGeomSubset::CreateElementTypeAttr)
         .m(&PXR_NS::UsdGeomSubset::GetIndicesAttr)
@@ -611,7 +592,6 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomVisibilityAPI>("VisibilityAPI")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomVisibilityAPI, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomVisibilityAPI::GetGuideVisibilityAttr)
         .m(&PXR_NS::UsdGeomVisibilityAPI::CreateGuideVisibilityAttr)
         .m(&PXR_NS::UsdGeomVisibilityAPI::GetProxyVisibilityAttr)
@@ -630,7 +610,6 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomXform>("Xform")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomXform>(), "new")
-
         .m(&PXR_NS::UsdGeomXform::GetSchemaAttributeNames)
         .m(&PXR_NS::UsdGeomXform::Get)
         .m(&PXR_NS::UsdGeomXform::Define)
@@ -638,7 +617,6 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomXformCache>("XformCache")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomXformCache, PXR_NS::UsdTimeCode>("time"), "new")
-
         .m(&PXR_NS::UsdGeomXformCache::GetLocalToWorldTransform)
         .m(&PXR_NS::UsdGeomXformCache::GetParentToWorldTransform)
         .m(&PXR_NS::UsdGeomXformCache::GetLocalTransformation)
@@ -654,7 +632,6 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomXformCommonAPI>("XformCommonAPI")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomXformCommonAPI, PXR_NS::UsdPrim const&>(), "new")
-
         .m(&PXR_NS::UsdGeomXformCommonAPI::SetXformVectors)
         // .m(&PXR_NS::UsdGeomXformCommonAPI::GetXformVectors)
         // .m(&PXR_NS::UsdGeomXformCommonAPI::GetXformVectorsByAccumulation)
@@ -685,40 +662,38 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomXformable>("Xformable")
         .ctor(bbl::Ctor<PXR_NS::UsdGeomXformable>(), "new")
-
-        .m(&PXR_NS::UsdGeomXformable::GetXformOpOrderAttr) \
-        .m(&PXR_NS::UsdGeomXformable::AddXformOp) \
-        .m(&PXR_NS::UsdGeomXformable::AddTranslateOp) \
-        .m(&PXR_NS::UsdGeomXformable::AddScaleOp) \
-        .m(&PXR_NS::UsdGeomXformable::AddRotateXOp) \
-        .m(&PXR_NS::UsdGeomXformable::AddRotateYOp) \
-        .m(&PXR_NS::UsdGeomXformable::AddRotateZOp) \
-        .m(&PXR_NS::UsdGeomXformable::AddRotateXYZOp) \
-        .m(&PXR_NS::UsdGeomXformable::AddRotateXZYOp) \
-        .m(&PXR_NS::UsdGeomXformable::AddRotateYXZOp) \
-        .m(&PXR_NS::UsdGeomXformable::AddRotateYZXOp) \
-        .m(&PXR_NS::UsdGeomXformable::AddRotateZXYOp) \
-        .m(&PXR_NS::UsdGeomXformable::AddRotateZYXOp) \
-        .m(&PXR_NS::UsdGeomXformable::AddOrientOp) \
-        .m(&PXR_NS::UsdGeomXformable::AddTransformOp) \
-        .m(&PXR_NS::UsdGeomXformable::SetResetXformStack) \
-        .m(&PXR_NS::UsdGeomXformable::SetXformOpOrder) \
-        .m(&PXR_NS::UsdGeomXformable::GetOrderedXformOps) \
-        .m(&PXR_NS::UsdGeomXformable::ClearXformOpOrder) \
-        .m(&PXR_NS::UsdGeomXformable::MakeMatrixXform) \
-        .m((bool (PXR_NS::UsdGeomXformable::*)() const) \
-            &PXR_NS::UsdGeomXformable::TransformMightBeTimeVarying) \
-        .m((bool (PXR_NS::UsdGeomXformable::*)(std::vector<PXR_NS::UsdGeomXformOp> const&) const) \
-            &PXR_NS::UsdGeomXformable::TransformMightBeTimeVarying, "TransformMightBeTimeVarying_using") \
-        .m((bool (PXR_NS::UsdGeomXformable::*)(std::vector<double>*) const) \
-            &PXR_NS::UsdGeomXformable::GetTimeSamples) \
-        .m((bool (PXR_NS::UsdGeomXformable::*)(PXR_NS::GfInterval const&, std::vector<double>*) const) \
-            &PXR_NS::UsdGeomXformable::GetTimeSamplesInInterval) \
-        .m((bool (PXR_NS::UsdGeomXformable::*)(PXR_NS::GfMatrix4d*, bool*, PXR_NS::UsdTimeCode const) const) \
-            &PXR_NS::UsdGeomXformable::GetLocalTransformation) \
-        .m((bool (PXR_NS::UsdGeomXformable::*)(PXR_NS::GfMatrix4d*, bool*, std::vector<PXR_NS::UsdGeomXformOp> const&, PXR_NS::UsdTimeCode const) const) \
+        .m(&PXR_NS::UsdGeomXformable::GetXformOpOrderAttr) 
+        .m(&PXR_NS::UsdGeomXformable::AddXformOp) 
+        .m(&PXR_NS::UsdGeomXformable::AddTranslateOp) 
+        .m(&PXR_NS::UsdGeomXformable::AddScaleOp) 
+        .m(&PXR_NS::UsdGeomXformable::AddRotateXOp) 
+        .m(&PXR_NS::UsdGeomXformable::AddRotateYOp) 
+        .m(&PXR_NS::UsdGeomXformable::AddRotateZOp) 
+        .m(&PXR_NS::UsdGeomXformable::AddRotateXYZOp) 
+        .m(&PXR_NS::UsdGeomXformable::AddRotateXZYOp) 
+        .m(&PXR_NS::UsdGeomXformable::AddRotateYXZOp) 
+        .m(&PXR_NS::UsdGeomXformable::AddRotateYZXOp) 
+        .m(&PXR_NS::UsdGeomXformable::AddRotateZXYOp) 
+        .m(&PXR_NS::UsdGeomXformable::AddRotateZYXOp) 
+        .m(&PXR_NS::UsdGeomXformable::AddOrientOp) 
+        .m(&PXR_NS::UsdGeomXformable::AddTransformOp) 
+        .m(&PXR_NS::UsdGeomXformable::SetResetXformStack) 
+        .m(&PXR_NS::UsdGeomXformable::SetXformOpOrder) 
+        .m(&PXR_NS::UsdGeomXformable::GetOrderedXformOps) 
+        .m(&PXR_NS::UsdGeomXformable::ClearXformOpOrder) 
+        .m(&PXR_NS::UsdGeomXformable::MakeMatrixXform) 
+        .m((bool (PXR_NS::UsdGeomXformable::*)() const) 
+            &PXR_NS::UsdGeomXformable::TransformMightBeTimeVarying) 
+        .m((bool (PXR_NS::UsdGeomXformable::*)(std::vector<PXR_NS::UsdGeomXformOp> const&) const) 
+            &PXR_NS::UsdGeomXformable::TransformMightBeTimeVarying, "TransformMightBeTimeVarying_using") 
+        .m((bool (PXR_NS::UsdGeomXformable::*)(std::vector<double>*) const) 
+            &PXR_NS::UsdGeomXformable::GetTimeSamples) 
+        .m((bool (PXR_NS::UsdGeomXformable::*)(PXR_NS::GfInterval const&, std::vector<double>*) const) 
+            &PXR_NS::UsdGeomXformable::GetTimeSamplesInInterval) 
+        .m((bool (PXR_NS::UsdGeomXformable::*)(PXR_NS::GfMatrix4d*, bool*, PXR_NS::UsdTimeCode const) const) 
+            &PXR_NS::UsdGeomXformable::GetLocalTransformation) 
+        .m((bool (PXR_NS::UsdGeomXformable::*)(PXR_NS::GfMatrix4d*, bool*, std::vector<PXR_NS::UsdGeomXformOp> const&, PXR_NS::UsdTimeCode const) const) 
             &PXR_NS::UsdGeomXformable::GetLocalTransformation, "GetLocalTransformation_with_ops")
-
         ;
 
     bbl::Class<PXR_NS::UsdGeomXformOp>("XformOp")

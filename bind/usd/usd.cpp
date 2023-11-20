@@ -1,5 +1,7 @@
 #if defined(__clang__)
 
+#define NOMINMAX
+
 #include "babble"
 #include "babble-std"
 
@@ -216,16 +218,20 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdObject::As<PXR_NS::UsdProperty>, "As_Property")
         .m(&PXR_NS::UsdObject::As<PXR_NS::UsdPrim>, "As_Prim")
         .m((bool(PXR_NS::UsdObject::*)(PXR_NS::TfToken const&, PXR_NS::VtValue*) const) 
-            &PXR_NS::UsdObject::GetMetadata, "GetMetadata_value")                                                    
+            &PXR_NS::UsdObject::GetMetadata, "GetMetadata_value"
+        )
         .m((bool(PXR_NS::UsdObject::*)(PXR_NS::TfToken const&, PXR_NS::VtValue const&) const) 
-            &PXR_NS::UsdObject::SetMetadata, "SetMetadata_value")                                                
+            &PXR_NS::UsdObject::SetMetadata, "SetMetadata_value"
+        )
         .m(&PXR_NS::UsdObject::ClearMetadata)                                                
         .m(&PXR_NS::UsdObject::HasMetadata)                                                  
         .m(&PXR_NS::UsdObject::HasAuthoredMetadata)                                          
         .m((bool(PXR_NS::UsdObject::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&, PXR_NS::VtValue*) const) 
-            &PXR_NS::UsdObject::GetMetadataByDictKey, "GetMetadataByDictKey_value")                                       
+            &PXR_NS::UsdObject::GetMetadataByDictKey, "GetMetadataByDictKey_value"
+        )
         .m((bool(PXR_NS::UsdObject::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&, PXR_NS::VtValue const&) const)
-            &PXR_NS::UsdObject::SetMetadataByDictKey, "SetMetadataByDictKey_value")                                       
+            &PXR_NS::UsdObject::SetMetadataByDictKey, "SetMetadataByDictKey_value"
+        )                                       
         .m(&PXR_NS::UsdObject::ClearMetadataByDictKey)                                       
         .m(&PXR_NS::UsdObject::HasMetadataDictKey)                                           
         .m(&PXR_NS::UsdObject::HasAuthoredMetadataDictKey)                                   
@@ -314,14 +320,15 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdProperty::IsDefined)                                                    
         .m(&PXR_NS::UsdProperty::IsAuthored)                                                   
         .m(&PXR_NS::UsdProperty::IsAuthoredAt)                                                 
-        .m((PXR_NS::UsdProperty (PXR_NS::UsdProperty::*)(PXR_NS::UsdPrim const&) const) & PXR_NS::UsdProperty::FlattenTo,  
-           "FlattenTo_prim")                                                   
-        .m((PXR_NS::UsdProperty(PXR_NS::UsdProperty::*)(PXR_NS::UsdPrim const&, PXR_NS::TfToken const&) const) &    
-               PXR_NS::UsdProperty::FlattenTo,                                                 
-           "FlattenTo_named_property")                                         
-        .m((PXR_NS::UsdProperty(PXR_NS::UsdProperty::*)(PXR_NS::UsdProperty const&) const) & PXR_NS::UsdProperty::FlattenTo,         
-           "FlattenTo_property")
-        // OBJECT_METHODS(Property)
+        .m((PXR_NS::UsdProperty (PXR_NS::UsdProperty::*)(PXR_NS::UsdPrim const&) const) 
+            &PXR_NS::UsdProperty::FlattenTo, "FlattenTo_prim"
+        )                                                   
+        .m((PXR_NS::UsdProperty(PXR_NS::UsdProperty::*)(PXR_NS::UsdPrim const&, PXR_NS::TfToken const&) const)
+            & PXR_NS::UsdProperty::FlattenTo, "FlattenTo_named_property"
+        )  
+        .m((PXR_NS::UsdProperty(PXR_NS::UsdProperty::*)(PXR_NS::UsdProperty const&) const) 
+            &PXR_NS::UsdProperty::FlattenTo, "FlattenTo_property"
+        )
         ;
 
     bbl::Class<PXR_NS::UsdPrim::PropertyPredicateFunc>("PropertyPredicateFunc");
@@ -382,8 +389,7 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdResolveTarget::IsNull)
     ;
 
-    bbl::Enum<PXR_NS::UsdSchemaRegistry::VersionPolicy>(
-        "SchemaRegistryVersionPolicy");
+    bbl::Enum<PXR_NS::UsdSchemaRegistry::VersionPolicy>("SchemaRegistryVersionPolicy");
 
     bbl::Enum<PXR_NS::UsdSchemaKind>("SchemaKind");
 
@@ -400,11 +406,8 @@ BBL_MODULE(usd) {
 
     bbl::Class<PXR_NS::UsdVariantSets>("VariantSets");
 
-
-    // bbl::Class<std::function<bool(PXR_NS::UsdAttribute const&)>>(
-    //     "FindAttributePredicate");
-    // bbl::Class<std::function<bool(PXR_NS::UsdRelationship const&)>>(
-    //     "FindRelationshipPredicate");
+    bbl::Class<std::function<bool(PXR_NS::UsdAttribute const&)>>("FindAttributePredicate");
+    bbl::Class<std::function<bool(PXR_NS::UsdRelationship const&)>>("FindRelationshipPredicate");
 
     bbl::Class<PXR_NS::UsdStage>("Stage")
         // Layer Serialization
