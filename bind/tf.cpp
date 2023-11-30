@@ -13,7 +13,7 @@ BBL_MODULE(tf) {
     // clang-format off
 
     bbl::Class<PXR_NS::TfEnum>("Enum")
-        .ctor(bbl::Ctor<PXR_NS::TfEnum>(), "new")
+        .ctor(bbl::Class<PXR_NS::TfEnum>::Ctor<>(), "new")
         .m(&PXR_NS::TfEnum::GetValueAsInt)
         .m(&PXR_NS::TfEnum::GetName)
         .m(&PXR_NS::TfEnum::GetDisplayName)
@@ -22,7 +22,7 @@ BBL_MODULE(tf) {
 
     bbl::Class<PXR_NS::TfToken>("Token")
         .opaque_ptr()
-        .ctor(bbl::Ctor<Token>(), "new")
+        .ctor(bbl::Class<Token>::Ctor<>(), "new")
         .m((Token& (Token::*)(Token const&))&Token::operator=, "op_assign")
         .m(&Token::GetText)
         ;

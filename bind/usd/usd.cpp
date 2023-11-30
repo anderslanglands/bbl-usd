@@ -88,7 +88,7 @@ BBL_MODULE(usd) {
     using StagePopulationMask = PXR_NS::UsdStagePopulationMask;
 
     bbl::Class<PXR_NS::UsdAttribute>("Attribute")
-        .ctor(bbl::Ctor<Attribute>(), "default")
+        .ctor(bbl::Class<Attribute>::Ctor<>(), "default")
         .m(&PXR_NS::UsdAttribute::GetVariability)                                                   
         .m(&PXR_NS::UsdAttribute::SetVariability)                                               
         .m(&PXR_NS::UsdAttribute::GetTypeName)                                                  
@@ -135,9 +135,9 @@ BBL_MODULE(usd) {
     ;
 
     bbl::Class<PXR_NS::UsdAttributeQuery>("AttributeQuery")
-        .ctor(bbl::Ctor<PXR_NS::UsdAttributeQuery>(), "default")
-        .ctor(bbl::Ctor<PXR_NS::UsdAttributeQuery, PXR_NS::UsdPrim const&, PXR_NS::TfToken const&>(), "from_prim_and_attribute_name")
-        .ctor(bbl::Ctor<PXR_NS::UsdAttributeQuery, PXR_NS::UsdAttribute const&, PXR_NS::UsdResolveTarget const&>(), "from_attribute_and_resolve_target")
+        .ctor(bbl::Class<PXR_NS::UsdAttributeQuery>::Ctor<>(), "default")
+        .ctor(bbl::Class<PXR_NS::UsdAttributeQuery>::Ctor<PXR_NS::UsdPrim const&, PXR_NS::TfToken const&>(), "from_prim_and_attribute_name")
+        .ctor(bbl::Class<PXR_NS::UsdAttributeQuery>::Ctor<PXR_NS::UsdAttribute const&, PXR_NS::UsdResolveTarget const&>(), "from_attribute_and_resolve_target")
         .m(&PXR_NS::UsdAttributeQuery::GetAttribute)
         .m(&PXR_NS::UsdAttributeQuery::IsValid)
         // Value and Time Sample Accessors
@@ -165,9 +165,9 @@ BBL_MODULE(usd) {
         BBL_STD_VECTOR_METHODS(PXR_NS::UsdAttribute);
 
     bbl::Class<PXR_NS::UsdEditTarget>("EditTarget")
-        .ctor(bbl::Ctor<EditTarget>(), "default")
-        .ctor(bbl::Ctor<EditTarget, LayerHandle, LayerOffset>(), "from_layer")
-        .ctor(bbl::Ctor<EditTarget, LayerHandle, NodeRef>(), "from_layer_and_node")
+        .ctor(bbl::Class<EditTarget>::Ctor<>(), "default")
+        .ctor(bbl::Class<EditTarget>::Ctor<LayerHandle, LayerOffset>(), "from_layer")
+        .ctor(bbl::Class<EditTarget>::Ctor<LayerHandle, NodeRef>(), "from_layer_and_node")
         .m(&EditTarget::operator==, "op_eq")
         .m(&EditTarget::IsNull)
         .m(&EditTarget::IsValid)
@@ -208,7 +208,7 @@ BBL_MODULE(usd) {
         ;
 
     bbl::Class<PXR_NS::UsdObject>("Object")
-        .ctor(bbl::Ctor<Object>(), "default")
+        .ctor(bbl::Class<Object>::Ctor<>(), "default")
         .m(&PXR_NS::UsdObject::Is<PXR_NS::UsdAttribute>, "Is_Attribute")
         .m(&PXR_NS::UsdObject::Is<PXR_NS::UsdRelationship>, "Is_Relationship")
         .m(&PXR_NS::UsdObject::Is<PXR_NS::UsdProperty>, "Is_Property")
@@ -280,7 +280,7 @@ BBL_MODULE(usd) {
         ;
 
     bbl::Class<std::set<PXR_NS::UsdObject>>("ObjectSet")
-        .ctor(bbl::Ctor<std::set<PXR_NS::UsdObject>>(), "default")
+        .ctor(bbl::Class<std::set<PXR_NS::UsdObject>>::Ctor<>(), "default")
         ;
 
     bbl::Class<PXR_NS::UsdPayloads>("Payloads")
@@ -303,7 +303,7 @@ BBL_MODULE(usd) {
         ;
 
     bbl::Class<PXR_NS::UsdProperty>("Property")
-        .ctor(bbl::Ctor<Property>(), "default")
+        .ctor(bbl::Class<Property>::Ctor<>(), "default")
         .m(&PXR_NS::UsdProperty::GetPropertyStack)                                                 
         .m(&PXR_NS::UsdProperty::GetPropertyStackWithLayerOffsets)                             
         .m(&PXR_NS::UsdProperty::GetBaseName)                                                  
@@ -356,7 +356,7 @@ BBL_MODULE(usd) {
     ;
 
     bbl::Class<PXR_NS::UsdRelationship>("Relationship")
-        .ctor(bbl::Ctor<Relationship>(), "default")
+        .ctor(bbl::Class<Relationship>::Ctor<>(), "default")
         .m(&Relationship::AddTarget)
         .m(&Relationship::RemoveTarget)
         .m(&Relationship::SetTargets)
@@ -596,7 +596,7 @@ BBL_MODULE(usd) {
     bbl::Enum<PXR_NS::UsdStage::InitialLoadSet>("StageInitialLoadSet");
 
     bbl::Class<PXR_NS::UsdStageCache>("StageCache")
-        .ctor(bbl::Ctor<PXR_NS::UsdStageCache>(), "default")
+        .ctor(bbl::Class<PXR_NS::UsdStageCache>::Ctor<>(), "default")
         .m(&PXR_NS::UsdStageCache::GetAllStages)
         .m(&PXR_NS::UsdStageCache::Size)
         .m(&PXR_NS::UsdStageCache::IsEmpty)
@@ -662,7 +662,7 @@ BBL_MODULE(usd) {
         ;
 
     bbl::Class<PXR_NS::UsdStageLoadRules>("StageLoadRules")
-        .ctor(bbl::Ctor<PXR_NS::UsdStageLoadRules>(), "default")
+        .ctor(bbl::Class<PXR_NS::UsdStageLoadRules>::Ctor<>(), "default")
         .m(&PXR_NS::UsdStageLoadRules::LoadWithDescendants)
         .m(&PXR_NS::UsdStageLoadRules::LoadWithoutDescendants)
         .m(&PXR_NS::UsdStageLoadRules::Unload)
@@ -687,12 +687,12 @@ BBL_MODULE(usd) {
     bbl::Enum<PXR_NS::UsdStageLoadRules::Rule>("StageLoadRulesRule");
 
     bbl::Class<PXR_NS::UsdStagePopulationMask>("StagePopulationMask")
-        .ctor(bbl::Ctor<PXR_NS::UsdStagePopulationMask>(), "default")
-        .ctor(bbl::Ctor<PXR_NS::UsdStagePopulationMask, PXR_NS::SdfPathVector>(), "from_path_vector")
+        .ctor(bbl::Class<PXR_NS::UsdStagePopulationMask>::Ctor<>(), "default")
+        .ctor(bbl::Class<PXR_NS::UsdStagePopulationMask>::Ctor<PXR_NS::SdfPathVector>(), "from_path_vector")
         ;
 
     bbl::Class<PXR_NS::UsdStageRefPtr>("StageRefPtr")
-        .ctor(bbl::Ctor<StageRefPtr>(), "ctor")
+        .ctor(bbl::Class<StageRefPtr>::Ctor<>(), "ctor")
         .smartptr_to<PXR_NS::UsdStage>()
         .m(&StageRefPtr::operator->, "get")
         .m(&StageRefPtr::operator!, "is_invalid")
@@ -703,13 +703,13 @@ BBL_MODULE(usd) {
         ;
 
     bbl::Class<PXR_NS::UsdStageWeakPtr>("StageWeakPtr")
-        .ctor(bbl::Ctor<PXR_NS::UsdStageWeakPtr>(), "ctor")
+        .ctor(bbl::Class<PXR_NS::UsdStageWeakPtr>::Ctor<>(), "ctor")
         .m(&PXR_NS::UsdStageWeakPtr::operator->, "get");
 
     bbl::Class<PXR_NS::UsdTimeCode>("TimeCode")
         .replace_with<TimeCode>()
-        .ctor(bbl::Ctor<PXR_NS::UsdTimeCode, double>(), "from_time")
-        .ctor(bbl::Ctor<PXR_NS::UsdTimeCode, PXR_NS::SdfTimeCode>(), "from_sdf_timecode")
+        .ctor(bbl::Class<PXR_NS::UsdTimeCode>::Ctor<double>(), "from_time")
+        .ctor(bbl::Class<PXR_NS::UsdTimeCode>::Ctor<PXR_NS::SdfTimeCode>(), "from_sdf_timecode")
         .m(&PXR_NS::UsdTimeCode::IsEarliestTime)
         .m(&PXR_NS::UsdTimeCode::IsDefault)
         .m(&PXR_NS::UsdTimeCode::IsNumeric)

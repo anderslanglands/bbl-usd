@@ -69,7 +69,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomBasisCurves>("BasisCurves")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomBasisCurves, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomBasisCurves>::Ctor<PXR_NS::UsdPrim const&>(), "new")
 
         .m(&PXR_NS::UsdGeomBasisCurves::GetTypeAttr)
         .m(&PXR_NS::UsdGeomBasisCurves::CreateTypeAttr)
@@ -80,7 +80,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomBBoxCache>("BBoxCache")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomBBoxCache, PXR_NS::UsdTimeCode, PXR_NS::TfTokenVector, bool, bool>("time", "includedPurposes", "useExtentsHint", "ignoreVisibility"))
+        .ctor(bbl::Class<PXR_NS::UsdGeomBBoxCache>::Ctor<PXR_NS::UsdTimeCode, PXR_NS::TfTokenVector, bool, bool>("time", "includedPurposes", "useExtentsHint", "ignoreVisibility"))
         .m(&PXR_NS::UsdGeomBBoxCache::ComputeWorldBound)
         .m(&PXR_NS::UsdGeomBBoxCache::ComputeWorldBoundWithOverrides)
         .m(&PXR_NS::UsdGeomBBoxCache::ComputeRelativeBound)
@@ -112,7 +112,7 @@ BBL_MODULE(usdGeom) {
 
 
     bbl::Class<PXR_NS::UsdGeomBoundable>("Boundable")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomBoundable, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomBoundable>::Ctor<PXR_NS::UsdPrim const&>(), "new")
 
         .m(&PXR_NS::UsdGeomBoundable::GetExtentAttr)
         .m(&PXR_NS::UsdGeomBoundable::CreateExtentAttr)
@@ -121,7 +121,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomCamera>("Camera")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomCamera, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomCamera>::Ctor<PXR_NS::UsdPrim const&>(), "new")
 
         .m(&PXR_NS::UsdGeomCamera::GetProjectionAttr)
         .m(&PXR_NS::UsdGeomCamera::CreateProjectionAttr)
@@ -156,7 +156,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomCapsule>("Capsule")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomCapsule, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomCapsule>::Ctor<PXR_NS::UsdPrim const&>(), "new")
 
         .m(&PXR_NS::UsdGeomCapsule::GetHeightAttr)
         .m(&PXR_NS::UsdGeomCapsule::CreateHeightAttr)
@@ -167,7 +167,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomCone>("Cone")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomCone, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomCone>::Ctor<PXR_NS::UsdPrim const&>(), "new")
 
         .m(&PXR_NS::UsdGeomCone::GetHeightAttr)
         .m(&PXR_NS::UsdGeomCone::CreateHeightAttr)
@@ -178,7 +178,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomConstraintTarget>("ConstraintTarget")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomConstraintTarget, PXR_NS::UsdAttribute const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomConstraintTarget>::Ctor<PXR_NS::UsdAttribute const&>(), "new")
         .m(&PXR_NS::UsdGeomConstraintTarget::IsValid)
         .m(&PXR_NS::UsdGeomConstraintTarget::GetAttr)
         .m(&PXR_NS::UsdGeomConstraintTarget::IsDefined)
@@ -195,14 +195,14 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomCube>("Cube")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomCube, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomCube>::Ctor<PXR_NS::UsdPrim const&>(), "new")
 
         .m(&PXR_NS::UsdGeomCube::GetSizeAttr)
         .m(&PXR_NS::UsdGeomCube::CreateSizeAttr)
         ;
 
     bbl::Class<PXR_NS::UsdGeomCurves>("Curves")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomCurves, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomCurves>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomCurves::GetCurveVertexCountsAttr) 
         .m(&PXR_NS::UsdGeomCurves::CreateCurveVertexCountsAttr) 
         .m(&PXR_NS::UsdGeomCurves::GetWidthsAttr) 
@@ -213,7 +213,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomCylinder>("Cylinder")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomCylinder, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomCylinder>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomCylinder::GetHeightAttr)
         .m(&PXR_NS::UsdGeomCylinder::CreateHeightAttr)
         .m(&PXR_NS::UsdGeomCylinder::GetRadiusAttr)
@@ -224,7 +224,7 @@ BBL_MODULE(usdGeom) {
 
 
     bbl::Class<PXR_NS::UsdGeomGprim>("Gprim")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomGprim, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomGprim>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomGprim::GetDisplayColorAttr) 
         .m(&PXR_NS::UsdGeomGprim::CreateDisplayColorAttr) 
         .m(&PXR_NS::UsdGeomGprim::GetDisplayOpacityAttr) 
@@ -238,14 +238,14 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomHermiteCurves>("HermiteCurves")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomHermiteCurves, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomHermiteCurves>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomHermiteCurves::GetTangentsAttr)
         .m(&PXR_NS::UsdGeomHermiteCurves::CreateTangentsAttr)
         ;
 
 
     bbl::Class<PXR_NS::UsdGeomImageable>("Imageable")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomImageable, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomImageable>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomImageable::GetVisibilityAttr) 
         .m(&PXR_NS::UsdGeomImageable::CreateVisibilityAttr) 
         .m(&PXR_NS::UsdGeomImageable::GetPurposeAttr) 
@@ -274,7 +274,7 @@ BBL_MODULE(usdGeom) {
     bbl::Class<PXR_NS::UsdGeomImageable::PurposeInfo>("ImageablePurposeInfo");
 
     bbl::Class<PXR_NS::UsdGeomMesh>("Mesh")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomMesh, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomMesh>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomMesh::GetFaceVertexIndicesAttr)
         .m(&PXR_NS::UsdGeomMesh::CreateFaceVertexIndicesAttr)
         .m(&PXR_NS::UsdGeomMesh::GetFaceVertexCountsAttr)
@@ -303,7 +303,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomModelAPI>("ModelAPI")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomModelAPI, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomModelAPI>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomModelAPI::GetModelDrawModeAttr)
         .m(&PXR_NS::UsdGeomModelAPI::CreateModelDrawModeAttr)
         .m(&PXR_NS::UsdGeomModelAPI::GetModelDrawModeColorAttr)
@@ -335,7 +335,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomMotionAPI>("MotionAPI")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomMotionAPI, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomMotionAPI>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomMotionAPI::GetMotionBlurScaleAttr)
         .m(&PXR_NS::UsdGeomMotionAPI::CreateMotionBlurScaleAttr)
         .m(&PXR_NS::UsdGeomMotionAPI::GetVelocityScaleAttr)
@@ -348,7 +348,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomNurbsCurves>("NurbsCurves")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomNurbsCurves, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomNurbsCurves>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomNurbsCurves::GetOrderAttr)
         .m(&PXR_NS::UsdGeomNurbsCurves::CreateOrderAttr)
         .m(&PXR_NS::UsdGeomNurbsCurves::GetKnotsAttr)
@@ -360,7 +360,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomNurbsPatch>("NurbsPatch")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomNurbsPatch, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomNurbsPatch>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomNurbsPatch::GetUVertexCountAttr)
         .m(&PXR_NS::UsdGeomNurbsPatch::CreateUVertexCountAttr)
         .m(&PXR_NS::UsdGeomNurbsPatch::GetVVertexCountAttr)
@@ -398,7 +398,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomPlane>("Plane")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomPlane, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomPlane>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomPlane::GetWidthAttr)
         .m(&PXR_NS::UsdGeomPlane::CreateWidthAttr)
         .m(&PXR_NS::UsdGeomPlane::GetLengthAttr)
@@ -409,7 +409,7 @@ BBL_MODULE(usdGeom) {
 
 
     bbl::Class<PXR_NS::UsdGeomPointBased>("PointBased")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomPointBased, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomPointBased>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomPointBased::GetPointsAttr) 
         .m(&PXR_NS::UsdGeomPointBased::CreatePointsAttr) 
         .m(&PXR_NS::UsdGeomPointBased::GetVelocitiesAttr) 
@@ -426,7 +426,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomPointInstancer>("PointInstancer")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomPointInstancer, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomPointInstancer>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomPointInstancer::GetProtoIndicesAttr)
         .m(&PXR_NS::UsdGeomPointInstancer::CreateProtoIndicesAttr)
         .m(&PXR_NS::UsdGeomPointInstancer::GetIdsAttr)
@@ -463,7 +463,7 @@ BBL_MODULE(usdGeom) {
     bbl::Enum<PXR_NS::UsdGeomPointInstancer::MaskApplication>("MaskApplication");
 
     bbl::Class<PXR_NS::UsdGeomPoints>("Points")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomPoints, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomPoints>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomPoints::GetWidthsAttr)
         .m(&PXR_NS::UsdGeomPoints::CreateWidthsAttr)
         .m(&PXR_NS::UsdGeomPoints::GetIdsAttr)
@@ -474,7 +474,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomPrimvar>("Primvar")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomPrimvar, PXR_NS::UsdAttribute const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomPrimvar>::Ctor<PXR_NS::UsdAttribute const&>(), "new")
         .m(&PXR_NS::UsdGeomPrimvar::GetInterpolation)
         .m(&PXR_NS::UsdGeomPrimvar::SetInterpolation)
         .m(&PXR_NS::UsdGeomPrimvar::HasAuthoredInterpolation)
@@ -518,7 +518,7 @@ BBL_MODULE(usdGeom) {
     
 
     bbl::Class<PXR_NS::UsdGeomPrimvarsAPI>("PrimvarsAPI")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomPrimvarsAPI, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomPrimvarsAPI>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomPrimvarsAPI::CreatePrimvar)
         .m(&PXR_NS::UsdGeomPrimvarsAPI::RemovePrimvar)
         .m(&PXR_NS::UsdGeomPrimvarsAPI::BlockPrimvar)
@@ -547,20 +547,20 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomScope>("Scope")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomScope, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomScope>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomScope::Get)
         .m(&PXR_NS::UsdGeomScope::GetSchemaAttributeNames)
         .m(&PXR_NS::UsdGeomScope::Define)
         ;
 
     bbl::Class<PXR_NS::UsdGeomSphere>("Sphere")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomSphere, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomSphere>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomSphere::GetRadiusAttr)
         .m(&PXR_NS::UsdGeomSphere::CreateRadiusAttr)
         ;
 
     bbl::Class<PXR_NS::UsdGeomSubset>("Subset")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomSubset, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomSubset>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomSubset::GetElementTypeAttr)
         .m(&PXR_NS::UsdGeomSubset::CreateElementTypeAttr)
         .m(&PXR_NS::UsdGeomSubset::GetIndicesAttr)
@@ -591,7 +591,7 @@ BBL_MODULE(usdGeom) {
 
 
     bbl::Class<PXR_NS::UsdGeomVisibilityAPI>("VisibilityAPI")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomVisibilityAPI, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomVisibilityAPI>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomVisibilityAPI::GetGuideVisibilityAttr)
         .m(&PXR_NS::UsdGeomVisibilityAPI::CreateGuideVisibilityAttr)
         .m(&PXR_NS::UsdGeomVisibilityAPI::GetProxyVisibilityAttr)
@@ -609,14 +609,14 @@ BBL_MODULE(usdGeom) {
 
 
     bbl::Class<PXR_NS::UsdGeomXform>("Xform")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomXform>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomXform>::Ctor<>(), "new")
         .m(&PXR_NS::UsdGeomXform::GetSchemaAttributeNames)
         .m(&PXR_NS::UsdGeomXform::Get)
         .m(&PXR_NS::UsdGeomXform::Define)
         ;
 
     bbl::Class<PXR_NS::UsdGeomXformCache>("XformCache")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomXformCache, PXR_NS::UsdTimeCode>("time"), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomXformCache>::Ctor<PXR_NS::UsdTimeCode>("time"), "new")
         .m(&PXR_NS::UsdGeomXformCache::GetLocalToWorldTransform)
         .m(&PXR_NS::UsdGeomXformCache::GetParentToWorldTransform)
         .m(&PXR_NS::UsdGeomXformCache::GetLocalTransformation)
@@ -631,7 +631,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomXformCommonAPI>("XformCommonAPI")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomXformCommonAPI, PXR_NS::UsdPrim const&>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomXformCommonAPI>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomXformCommonAPI::SetXformVectors)
         // .m(&PXR_NS::UsdGeomXformCommonAPI::GetXformVectors)
         // .m(&PXR_NS::UsdGeomXformCommonAPI::GetXformVectorsByAccumulation)
@@ -661,7 +661,7 @@ BBL_MODULE(usdGeom) {
 
 
     bbl::Class<PXR_NS::UsdGeomXformable>("Xformable")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomXformable>(), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomXformable>::Ctor<>(),"new")
         .m(&PXR_NS::UsdGeomXformable::GetXformOpOrderAttr) 
         .m(&PXR_NS::UsdGeomXformable::AddXformOp) 
         .m(&PXR_NS::UsdGeomXformable::AddTranslateOp) 
@@ -697,7 +697,7 @@ BBL_MODULE(usdGeom) {
         ;
 
     bbl::Class<PXR_NS::UsdGeomXformOp>("XformOp")
-        .ctor(bbl::Ctor<PXR_NS::UsdGeomXformOp, PXR_NS::UsdAttribute const&, bool>("attr", "isInverseOp"), "new")
+        .ctor(bbl::Class<PXR_NS::UsdGeomXformOp>::Ctor<PXR_NS::UsdAttribute const&, bool>("attr", "isInverseOp"), "new")
 
         .m(&PXR_NS::UsdGeomXformOp::GetOpType)
         .m(&PXR_NS::UsdGeomXformOp::GetPrecision)

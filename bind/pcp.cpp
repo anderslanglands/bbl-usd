@@ -60,7 +60,7 @@ BBL_MODULE(pcp) {
     ;
 
     bbl::Class<PXR_NS::PcpMapFunction>("MapFunction")
-        .ctor(bbl::Ctor<PXR_NS::PcpMapFunction>(), "default")
+        .ctor(bbl::Class<PXR_NS::PcpMapFunction>::Ctor<>(), "default")
         .m(&PXR_NS::PcpMapFunction::IsNull)
         .m(&PXR_NS::PcpMapFunction::IsIdentity)
         .m(&PXR_NS::PcpMapFunction::IsIdentityPathMapping)

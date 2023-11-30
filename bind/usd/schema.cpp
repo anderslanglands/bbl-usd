@@ -23,8 +23,8 @@ BBL_MODULE(usd) {
         .m(&CLS::GetSchemaClassPrimDefinition)
 
     bbl::Class<PXR_NS::UsdClipsAPI>("ClipsAPI")
-        .ctor(bbl::Ctor<PXR_NS::UsdClipsAPI, PXR_NS::UsdPrim const&>(), "on_prim")
-        .ctor(bbl::Ctor<PXR_NS::UsdClipsAPI, PXR_NS::UsdSchemaBase const&>(), "on_schema_obj")
+        .ctor(bbl::Class<PXR_NS::UsdClipsAPI>::Ctor<PXR_NS::UsdPrim const&>(), "on_prim")
+        .ctor(bbl::Class<PXR_NS::UsdClipsAPI>::Ctor<PXR_NS::UsdSchemaBase const&>(), "on_schema_obj")
         APISCHEMABASE_METHODS(PXR_NS::UsdClipsAPI)
 
         .m(&PXR_NS::UsdClipsAPI::Get)
@@ -69,8 +69,8 @@ BBL_MODULE(usd) {
     ;
 
     bbl::Class<PXR_NS::UsdCollectionAPI>("CollectionAPI")
-        .ctor(bbl::Ctor<PXR_NS::UsdCollectionAPI, PXR_NS::UsdPrim const&, PXR_NS::TfToken const&>(), "on_prim")
-        .ctor(bbl::Ctor<PXR_NS::UsdCollectionAPI, PXR_NS::UsdSchemaBase const&, PXR_NS::TfToken const&>(), "on_schema_obj")
+        .ctor(bbl::Class<PXR_NS::UsdCollectionAPI>::Ctor<PXR_NS::UsdPrim const&, PXR_NS::TfToken const&>(), "on_prim")
+        .ctor(bbl::Class<PXR_NS::UsdCollectionAPI>::Ctor<PXR_NS::UsdSchemaBase const&, PXR_NS::TfToken const&>(), "on_schema_obj")
         .m(&PXR_NS::UsdCollectionAPI::GetName)
         .m(&PXR_NS::UsdCollectionAPI::GetExpansionRuleAttr)
         .m(&PXR_NS::UsdCollectionAPI::CreateExpansionRuleAttr)
@@ -136,8 +136,8 @@ BBL_MODULE(usd) {
         ;
 
     bbl::Class<PXR_NS::UsdCollectionMembershipQuery>("CollectionMembershipQuery")
-        .ctor(bbl::Ctor<PXR_NS::UsdCollectionMembershipQuery>(), "default")
-        .ctor(bbl::Ctor<PXR_NS::UsdCollectionMembershipQuery, PXR_NS::UsdCollectionMembershipQuery::PathExpansionRuleMap, PXR_NS::SdfPathSet const&>(), "default")
+        .ctor(bbl::Class<PXR_NS::UsdCollectionMembershipQuery>::Ctor<>(), "default")
+        .ctor(bbl::Class<PXR_NS::UsdCollectionMembershipQuery>::Ctor<PXR_NS::UsdCollectionMembershipQuery::PathExpansionRuleMap, PXR_NS::SdfPathSet const&>(), "default")
         .m((bool (PXR_NS::UsdCollectionMembershipQuery::*)(PXR_NS::SdfPath const&, PXR_NS::TfToken*) const)
             &PXR_NS::UsdCollectionMembershipQuery::IsPathIncluded
         )
@@ -153,7 +153,7 @@ BBL_MODULE(usd) {
     using Perm = PXR_NS::UsdCollectionMembershipQuery::PathExpansionRuleMap;
     using PermIter = PXR_NS::UsdCollectionMembershipQuery::PathExpansionRuleMap::iterator;
     bbl::Class<PXR_NS::UsdCollectionMembershipQuery::PathExpansionRuleMap>("CollectionMembershipQueryPathExpansionRuleMap")
-        .ctor(bbl::Ctor<Perm>(), "default")
+        .ctor(bbl::Class<Perm>::Ctor<>(), "default")
         // .m((PermIter (Perm::*)())
         //     &Perm::begin
         // )
@@ -175,8 +175,8 @@ BBL_MODULE(usd) {
     // ;
 
     bbl::Class<PXR_NS::UsdModelAPI>("ModelAPI")
-        .ctor(bbl::Ctor<PXR_NS::UsdModelAPI, PXR_NS::UsdPrim const&>(), "on_prim")
-        .ctor(bbl::Ctor<PXR_NS::UsdModelAPI, PXR_NS::UsdSchemaBase const&>(), "on_schema_obj")
+        .ctor(bbl::Class<PXR_NS::UsdModelAPI>::Ctor<PXR_NS::UsdPrim const&>(), "on_prim")
+        .ctor(bbl::Class<PXR_NS::UsdModelAPI>::Ctor<PXR_NS::UsdSchemaBase const&>(), "on_schema_obj")
         APISCHEMABASE_METHODS(PXR_NS::UsdModelAPI)
         .m(&PXR_NS::UsdModelAPI::GetAssetIdentifier)
         .m(&PXR_NS::UsdModelAPI::SetAssetIdentifier)

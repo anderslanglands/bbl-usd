@@ -47,15 +47,15 @@ BBL_MODULE(vt) {
     using Value = PXR_NS::VtValue;
 
     bbl::Class<PXR_NS::VtValue>("Value")
-        .ctor(bbl::Ctor<Value>(), "new")
-        .ctor(bbl::Ctor<Value, float>("obj"))
+        .ctor(bbl::Class<Value>::Ctor<>(), "new")
+        .ctor(bbl::Class<Value>::Ctor<float>("obj"))
         .m(&Value::IsArrayValued)
         .m(&Value::IsEmpty)
         .m(&Value::GetArraySize)
         .m(&Value::GetType)
         .m(&Value::GetTypeName)
 
-        .ctor(bbl::Ctor<Value, bool>("value"), "from_bool")
+        .ctor(bbl::Class<Value>::Ctor<bool>("value"), "from_bool")
         .m((bool (Value::*)() const)
             &Value::IsHolding<bool>, "IsHolding_bool"
         )
@@ -63,7 +63,7 @@ BBL_MODULE(vt) {
             &Value::Get<bool>, "Get_bool"
         ) 
 
-        .ctor(bbl::Ctor<Value, int>("value"), "from_int")
+        .ctor(bbl::Class<Value>::Ctor<int>("value"), "from_int")
         .m((bool (Value::*)() const)
             &Value::IsHolding<int>, "IsHolding_int"
         )
@@ -71,7 +71,7 @@ BBL_MODULE(vt) {
             &Value::Get<int>, "Get_int"
         ) 
 
-        .ctor(bbl::Ctor<Value, float>("value"), "from_float")
+        .ctor(bbl::Class<Value>::Ctor<float>("value"), "from_float")
         .m((bool (Value::*)() const)
             &Value::IsHolding<float>, "IsHolding_float"
         )
@@ -79,7 +79,7 @@ BBL_MODULE(vt) {
             &Value::Get<float>, "Get_float"
         ) 
 
-        .ctor(bbl::Ctor<Value, double>("value"), "from_double")
+        .ctor(bbl::Class<Value>::Ctor<double>("value"), "from_double")
         .m((bool (Value::*)() const)
             &Value::IsHolding<double>, "IsHolding_double"
         )
@@ -87,7 +87,7 @@ BBL_MODULE(vt) {
             &Value::Get<double>, "Get_double"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::TfToken>("value"), "from_TfToken")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::TfToken>("value"), "from_TfToken")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::TfToken>, "IsHolding_TfToken"
         )
@@ -95,7 +95,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::TfToken>, "Get_TfToken"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::SdfAssetPath>("value"), "from_SdfAssetPath")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::SdfAssetPath>("value"), "from_SdfAssetPath")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::SdfAssetPath>, "IsHolding_SdfAssetPath"
         )
@@ -103,7 +103,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::SdfAssetPath>, "Get_SdfAssetPath"
         ) 
 
-        .ctor(bbl::Ctor<Value, std::string>("value"), "from_string")
+        .ctor(bbl::Class<Value>::Ctor<std::string>("value"), "from_string")
         .m((bool (Value::*)() const)
             &Value::IsHolding<std::string>, "IsHolding_string"
         )
@@ -111,7 +111,7 @@ BBL_MODULE(vt) {
             &Value::Get<std::string>, "Get_string"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfVec2d>("value"), "from_GfVec2d")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec2d>("value"), "from_GfVec2d")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfVec2d>, "IsHolding_GfVec2d"
         )
@@ -119,7 +119,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfVec2d>, "Get_GfVec2d"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfVec2h>("value"), "from_GfVec2h")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec2h>("value"), "from_GfVec2h")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfVec2h>, "IsHolding_GfVec2h"
         )
@@ -127,7 +127,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfVec2h>, "Get_GfVec2h"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfVec2f>("value"), "from_GfVec2f")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec2f>("value"), "from_GfVec2f")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfVec2f>, "IsHolding_GfVec2f"
         )
@@ -135,7 +135,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfVec2f>, "Get_GfVec2f"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfVec2i>("value"), "from_GfVec2i")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec2i>("value"), "from_GfVec2i")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfVec2i>, "IsHolding_GfVec2i"
         )
@@ -143,7 +143,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfVec2i>, "Get_GfVec2i"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfVec3d>("value"), "from_GfVec3d")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec3d>("value"), "from_GfVec3d")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfVec3d>, "IsHolding_GfVec3d"
         )
@@ -151,7 +151,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfVec3d>, "Get_GfVec3d"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfVec3h>("value"), "from_GfVec3h")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec3h>("value"), "from_GfVec3h")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfVec3h>, "IsHolding_GfVec3h"
         )
@@ -159,7 +159,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfVec3h>, "Get_GfVec3h"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfVec3f>("value"), "from_GfVec3f")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec3f>("value"), "from_GfVec3f")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfVec3f>, "IsHolding_GfVec3f"
         )
@@ -167,7 +167,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfVec3f>, "Get_GfVec3f"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfVec3i>("value"), "from_GfVec3i")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec3i>("value"), "from_GfVec3i")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfVec3i>, "IsHolding_GfVec3i"
         )
@@ -175,7 +175,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfVec3i>, "Get_GfVec3i"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfVec4d>("value"), "from_GfVec4d")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec4d>("value"), "from_GfVec4d")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfVec4d>, "IsHolding_GfVec4d"
         )
@@ -183,7 +183,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfVec4d>, "Get_GfVec4d"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfVec4h>("value"), "from_GfVec4h")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec4h>("value"), "from_GfVec4h")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfVec4h>, "IsHolding_GfVec4h"
         )
@@ -191,7 +191,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfVec4h>, "Get_GfVec4h"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfVec4f>("value"), "from_GfVec4f")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec4f>("value"), "from_GfVec4f")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfVec4f>, "IsHolding_GfVec4f"
         )
@@ -199,7 +199,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfVec4f>, "Get_GfVec4f"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfVec4i>("value"), "from_GfVec4i")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec4i>("value"), "from_GfVec4i")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfVec4i>, "IsHolding_GfVec4i"
         )
@@ -207,7 +207,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfVec4i>, "Get_GfVec4i"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfQuatd>("value"), "from_GfQuatd")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfQuatd>("value"), "from_GfQuatd")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfQuatd>, "IsHolding_GfQuatd"
         )
@@ -215,7 +215,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfQuatd>, "Get_GfQuatd"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfQuatf>("value"), "from_GfQuatf")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfQuatf>("value"), "from_GfQuatf")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfQuatf>, "IsHolding_GfQuatf"
         )
@@ -223,7 +223,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfQuatf>, "Get_GfQuatf"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfQuath>("value"), "from_GfQuath")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfQuath>("value"), "from_GfQuath")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfQuath>, "IsHolding_GfQuath"
         )
@@ -231,7 +231,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfQuath>, "Get_GfQuath"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfMatrix2d>("value"), "from_GfMatrix2d")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfMatrix2d>("value"), "from_GfMatrix2d")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfMatrix2d>, "IsHolding_GfMatrix2d"
         )
@@ -239,7 +239,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfMatrix2d>, "Get_GfMatrix2d"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfMatrix2f>("value"), "from_GfMatrix2f")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfMatrix2f>("value"), "from_GfMatrix2f")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfMatrix2f>, "IsHolding_GfMatrix2f"
         )
@@ -247,7 +247,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfMatrix2f>, "Get_GfMatrix2f"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfMatrix3d>("value"), "from_GfMatrix3d")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfMatrix3d>("value"), "from_GfMatrix3d")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfMatrix3d>, "IsHolding_GfMatrix3d"
         )
@@ -255,7 +255,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfMatrix3d>, "Get_GfMatrix3d"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfMatrix3f>("value"), "from_GfMatrix3f")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfMatrix3f>("value"), "from_GfMatrix3f")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfMatrix3f>, "IsHolding_GfMatrix3f"
         )
@@ -263,7 +263,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfMatrix3f>, "Get_GfMatrix3f"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfMatrix4d>("value"), "from_GfMatrix4d")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfMatrix4d>("value"), "from_GfMatrix4d")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfMatrix4d>, "IsHolding_GfMatrix4d"
         )
@@ -271,7 +271,7 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::GfMatrix4d>, "Get_GfMatrix4d"
         ) 
 
-        .ctor(bbl::Ctor<Value, PXR_NS::GfMatrix4f>("value"), "from_GfMatrix4f")
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfMatrix4f>("value"), "from_GfMatrix4f")
         .m((bool (Value::*)() const)
             &Value::IsHolding<PXR_NS::GfMatrix4f>, "IsHolding_GfMatrix4f"
         )

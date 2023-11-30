@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(bbl-usd VERSION 0.1 LANGUAGES C CXX)
 
-find_package(babble CONFIG REQUIRED)
+find_package(babble 0.5 CONFIG REQUIRED)
 find_package(pxr REQUIRED)
 
 # The bindfile contains all our binding definitions
@@ -49,3 +49,5 @@ set_property(TARGET usd-c-test01 PROPERTY C_STANDARD 99)
 add_library(bind-dummy ${bindfiles})
 target_link_libraries(bind-dummy babble::bind)
 target_include_directories(bind-dummy PRIVATE $<TARGET_PROPERTY:openusd-c,INCLUDE_DIRECTORIES>)
+target_compile_options(bind-dummy PRIVATE $<TARGET_PROPERTY:openusd-c,COMPILE_OPTIONS>)
+target_compile_definitions(bind-dummy PRIVATE $<TARGET_PROPERTY:openusd-c,COMPILE_DEFINITIONS>)

@@ -38,7 +38,7 @@ BBL_MODULE(usd) {
 
     // Binding a class looks like this
     bbl::Class<PXR_NS::UsdPrim>("Prim")
-        .ctor(bbl::Ctor<Prim>(), "new")
+        .ctor(bbl::Class<Prim>::Ctor<>(), "new")
         .opaque_ptr()
         // Binding a (default) constructor looks like this
         // Method bindings just take the member function pointer and all
@@ -284,7 +284,7 @@ BBL_MODULE(usd) {
     bbl::fn(&bblext::UsdPrim_GetProperties, "Prim_GetProperties");
 
     bbl::Class<PXR_NS::UsdPrimCompositionQuery>("PrimCompositionQuery")
-        .ctor(bbl::Ctor<PXR_NS::UsdPrimCompositionQuery, PXR_NS::UsdPrim const&,
+        .ctor(bbl::Class<PXR_NS::UsdPrimCompositionQuery>::Ctor<PXR_NS::UsdPrim const&,
                         PXR_NS::UsdPrimCompositionQuery::Filter const&>(
             "prim", "filter"))
         .m(&PXR_NS::UsdPrimCompositionQuery::SetFilter)
@@ -389,22 +389,22 @@ BBL_MODULE(usd) {
 
     bbl::Class<PXR_NS::UsdPrimRange>("PrimRange")
         .opaque_ptr()
-        .ctor(bbl::Ctor<PrimRange, Prim>("start"), "from_prim")
+        .ctor(bbl::Class<PrimRange>::Ctor<Prim>("start"), "from_prim")
         .m(&PrimRange::begin)
         .m(&PrimRange::end);
 
     bbl::Class<PXR_NS::UsdPrimRange::iterator>("PrimRangeIterator")
         .opaque_ptr()
-        .ctor(bbl::Ctor<PrimRangeIterator>(), "new")
-        .m(&PrimRangeIterator::operator++, "op_inc")
-        .m((PrimRangeIterator &
-            (PrimRangeIterator::*)(PrimRangeIterator const&)) &
-               PrimRangeIterator::operator=,
+        .ctor(bbl::Class<PXR_NS::UsdPrimRange::iterator>::Ctor<>(), "new")
+        .m(&PXR_NS::UsdPrimRange::iterator::operator++, "op_inc")
+        .m((PXR_NS::UsdPrimRange::iterator &
+            (PXR_NS::UsdPrimRange::iterator::*)(PXR_NS::UsdPrimRange::iterator const&)) &
+               PXR_NS::UsdPrimRange::iterator::operator=,
            "op_assign")
-        .m((bool(PrimRangeIterator::*)(PrimRangeIterator const&) const) &
-               PrimRangeIterator::operator==,
+        .m((bool(PXR_NS::UsdPrimRange::iterator::*)(PXR_NS::UsdPrimRange::iterator const&) const) &
+               PXR_NS::UsdPrimRange::iterator::operator==,
            "op_eq")
-        .m(&PrimRangeIterator::operator*, "deref");
+        .m(&PXR_NS::UsdPrimRange::iterator::operator*, "deref");
 
     bbl::Class<PXR_NS::UsdPrimSiblingRange>("PrimSiblingRange")
         .m(&PXR_NS::UsdPrimSiblingRange::begin)

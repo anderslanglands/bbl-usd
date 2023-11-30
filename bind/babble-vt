@@ -4,7 +4,7 @@
 
 // Bind std::vector<TY>
 #define VTARRAY_METHODS(TY)                                                                                             \
-    .ctor(bbl::Ctor<PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>>(), "new")                              \
+    .ctor(bbl::Class<PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>>::Ctor<>(), "new")                              \
     .m((bbl::detail::argument_type<void(TY)>::type* (PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::*)()) \
         &PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::data)                                             \
     .m((bbl::detail::argument_type<void(TY)>::type const* (PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::*)() const) \

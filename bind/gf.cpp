@@ -381,16 +381,16 @@ BBL_MODULE(gf) {
     ;
 
     bbl::Class<PXR_NS::GfInterval>("Interval")
-        .ctor(bbl::Ctor<PXR_NS::GfInterval>(), "default")
+        .ctor(bbl::Class<PXR_NS::GfInterval>::Ctor<>(), "default")
         .m(&PXR_NS::GfInterval::GetMin)
         .m(&PXR_NS::GfInterval::GetMax)
         .m(&PXR_NS::GfInterval::GetSize)
         ;
 
     bbl::Class<PXR_NS::GfBBox3d>("BBox3d")
-        .ctor(bbl::Ctor<PXR_NS::GfBBox3d>(), "new")
-        .ctor(bbl::Ctor<PXR_NS::GfBBox3d, PXR_NS::GfRange3d const&>("box"), "from_range")
-        .ctor(bbl::Ctor<PXR_NS::GfBBox3d, PXR_NS::GfRange3d const&, PXR_NS::GfMatrix4d&>("box", "matrix"), "from_range_and_transform")
+        .ctor(bbl::Class<PXR_NS::GfBBox3d>::Ctor<>(), "new")
+        .ctor(bbl::Class<PXR_NS::GfBBox3d>::Ctor<PXR_NS::GfRange3d const&>("box"), "from_range")
+        .ctor(bbl::Class<PXR_NS::GfBBox3d>::Ctor<PXR_NS::GfRange3d const&, PXR_NS::GfMatrix4d&>("box", "matrix"), "from_range_and_transform")
         .m(&PXR_NS::GfBBox3d::Set)
         .m(&PXR_NS::GfBBox3d::SetMatrix)
         .m(&PXR_NS::GfBBox3d::SetRange)
@@ -421,19 +421,7 @@ BBL_MODULE(gf) {
         ;
 
     bbl::Class<PXR_NS::GfCamera>("Camera")
-        .ctor(bbl::Ctor<PXR_NS::GfCamera,
-            PXR_NS::GfMatrix4d const&,
-            PXR_NS::GfCamera::Projection,
-            float,
-            float,
-            float,
-            float,
-            float,
-            PXR_NS::GfRange1f,
-            std::vector<PXR_NS::GfVec4f> const&,
-            float,
-            float
-        >(
+        .ctor(bbl::Class<PXR_NS::GfCamera>::Ctor<PXR_NS::GfMatrix4d const&, PXR_NS::GfCamera::Projection, float, float, float, float, float, PXR_NS::GfRange1f, std::vector<PXR_NS::GfVec4f> const&, float, float >(
             "transform",
             "projection",
             "horizontalAperture",
@@ -479,9 +467,9 @@ BBL_MODULE(gf) {
     bbl::Enum<PXR_NS::GfCamera::FOVDirection>("CameraFOVDirection");
 
     bbl::Class<PXR_NS::GfFrustum>("Frustum")
-        .ctor(bbl::Ctor<PXR_NS::GfFrustum>(), "new")
-        .ctor(bbl::Ctor<PXR_NS::GfFrustum, PXR_NS::GfVec3f const&, PXR_NS::GfRotation const&, PXR_NS::GfRange2d const&, PXR_NS::GfRange1d const&, PXR_NS::GfFrustum::ProjectionType, double>("position", "rotation", "window", "nearFar", "projectionType", "viewDistance"), "from_position_and_rotation")
-        .ctor(bbl::Ctor<PXR_NS::GfFrustum, PXR_NS::GfMatrix4d const&, PXR_NS::GfRange2d const&, PXR_NS::GfRange1d const&, PXR_NS::GfFrustum::ProjectionType, double>("camToWorldXF", "window", "nearFar", "projectionType", "viewDistance"), "from_transform")
+        .ctor(bbl::Class<PXR_NS::GfFrustum>::Ctor<>(), "new")
+        .ctor(bbl::Class<PXR_NS::GfFrustum>::Ctor<PXR_NS::GfVec3f const&, PXR_NS::GfRotation const&, PXR_NS::GfRange2d const&, PXR_NS::GfRange1d const&, PXR_NS::GfFrustum::ProjectionType, double>("position", "rotation", "window", "nearFar", "projectionType", "viewDistance"), "from_position_and_rotation")
+        .ctor(bbl::Class<PXR_NS::GfFrustum>::Ctor<PXR_NS::GfMatrix4d const&, PXR_NS::GfRange2d const&, PXR_NS::GfRange1d const&, PXR_NS::GfFrustum::ProjectionType, double>("camToWorldXF", "window", "nearFar", "projectionType", "viewDistance"), "from_transform")
 
         .m((void (PXR_NS::GfFrustum::*)(double, bool, double, double, double))
             &PXR_NS::GfFrustum::SetPerspective)

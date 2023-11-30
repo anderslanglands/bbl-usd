@@ -28,7 +28,7 @@ And you should see output like:
 # ...
 ```
 
-The test program itself using the generated wraper API looks like:
+The test program itself in `usd-c-test01.c` using the generated wraper API looks like:
 ```c
     // Open the given stage and check that it opened successfully
     usd_StageRefPtr_t* stage_ref = NULL;
@@ -39,4 +39,6 @@ The test program itself using the generated wraper API looks like:
     if (is_invalid) {
         printf("failed to open stage \"%s\"\n", argv[1]);
     }
+    
+    // ...
 ```

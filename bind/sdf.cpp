@@ -153,15 +153,15 @@ BBL_MODULE(sdf) {
     // Probably don't want to bind SdfAbstractData*?
 
     bbl::Class<PXR_NS::SdfAllowed>("Allowed")
-        .ctor(bbl::Ctor<PXR_NS::SdfAllowed>(), "new")
-        .ctor(bbl::Ctor<PXR_NS::SdfAllowed, bool>(), "from_bool")
-        .ctor(bbl::Ctor<PXR_NS::SdfAllowed, char const*>(), "from_string")
-        .ctor(bbl::Ctor<PXR_NS::SdfAllowed, bool, char const*>(),
+        .ctor(bbl::Class<PXR_NS::SdfAllowed>::Ctor<>(), "new")
+        .ctor(bbl::Class<PXR_NS::SdfAllowed>::Ctor<bool>(), "from_bool")
+        .ctor(bbl::Class<PXR_NS::SdfAllowed>::Ctor<char const*>(), "from_string")
+        .ctor(bbl::Class<PXR_NS::SdfAllowed>::Ctor<bool, char const*>(),
               "from_bool_and_string")
         .m(&PXR_NS::SdfAllowed::IsAllowed);
 
     bbl::Class<PXR_NS::SdfAssetPath>("AssetPath")
-        .ctor(bbl::Ctor<PXR_NS::SdfAssetPath>(), "new");
+        .ctor(bbl::Class<PXR_NS::SdfAssetPath>::Ctor<>(), "new");
 
     // we bind specific wrapper functions for these as there's no point
     // generating an intermediary string&
@@ -278,7 +278,7 @@ BBL_MODULE(sdf) {
     bbl::Class<PXR_NS::SdfAttributeSpecView>("AttributeSpecView");
 
     bbl::Class<PXR_NS::SdfBatchNamespaceEdit>("BatchNamespaceEdit")
-        .ctor(bbl::Ctor<PXR_NS::SdfBatchNamespaceEdit>(), "new")
+        .ctor(bbl::Class<PXR_NS::SdfBatchNamespaceEdit>::Ctor<>(), "new")
         .m((void (PXR_NS::SdfBatchNamespaceEdit::*)(PXR_NS::SdfNamespaceEdit const&))
             &PXR_NS::SdfBatchNamespaceEdit::Add)
         .m((void (PXR_NS::SdfBatchNamespaceEdit::*)(PXR_NS::SdfNamespaceEdit::Path const&, PXR_NS::SdfNamespaceEdit::Path const&, PXR_NS::SdfNamespaceEdit::Index))
@@ -287,11 +287,11 @@ BBL_MODULE(sdf) {
         ;
 
     bbl::Class<PXR_NS::SdfChangeBlock>("ChangeBlock")
-        .ctor(bbl::Ctor<PXR_NS::SdfChangeBlock>(), "new")
+        .ctor(bbl::Class<PXR_NS::SdfChangeBlock>::Ctor<>(), "new")
         ;
 
     bbl::Class<PXR_NS::SdfChangeList>("ChangeList")
-        .ctor(bbl::Ctor<PXR_NS::SdfChangeList>(), "new")
+        .ctor(bbl::Class<PXR_NS::SdfChangeList>::Ctor<>(), "new")
         // XXX: Getting link errors with these
         // .m(&PXR_NS::SdfChangeList::DidReplaceLayerContent)
         // .m(&PXR_NS::SdfChangeList::DidReloadLayerContent)
@@ -323,7 +323,7 @@ BBL_MODULE(sdf) {
         ;
 
     bbl::Class<PXR_NS::SdfChangeList::Entry>("ChangeListEntry")
-        .ctor(bbl::Ctor<PXR_NS::SdfChangeList::Entry>(), "new")
+        .ctor(bbl::Class<PXR_NS::SdfChangeList::Entry>::Ctor<>(), "new")
         ;
 
     bbl::Class<std::pair<PXR_NS::SdfPath, PXR_NS::SdfChangeList::Entry>>("PathChangeListEntryPair")
@@ -515,7 +515,7 @@ BBL_MODULE(sdf) {
     ;
 
     bbl::Class<PXR_NS::SdfLayerOffset>("LayerOffset")
-        .ctor(bbl::Ctor<PXR_NS::SdfLayerOffset, double, double>("offset", "scale"), "new")
+        .ctor(bbl::Class<PXR_NS::SdfLayerOffset>::Ctor<double, double>("offset", "scale"), "new")
         .m(&PXR_NS::SdfLayerOffset::GetOffset)
         .m(&PXR_NS::SdfLayerOffset::GetScale)
         .m(&PXR_NS::SdfLayerOffset::SetOffset)
@@ -555,7 +555,7 @@ BBL_MODULE(sdf) {
 
     using StringListOp = PXR_NS::SdfListOp<std::string>;
     bbl::Class<PXR_NS::SdfListOp<std::string>>("StringListOp")
-        .ctor(bbl::Ctor<StringListOp>(), "new")
+        .ctor(bbl::Class<StringListOp>::Ctor<>(), "new")
         .m(&StringListOp::HasKeys)
         .m(&StringListOp::IsExplicit)
         .m(&StringListOp::GetExplicitItems)
@@ -572,8 +572,8 @@ BBL_MODULE(sdf) {
     bbl::Class<PXR_NS::SdfNameEditorProxy>("NameEditorProxy");
 
     bbl::Class<PXR_NS::SdfNamespaceEdit>("NamespaceEdit")
-        .ctor(bbl::Ctor<PXR_NS::SdfNamespaceEdit>(), "new")
-        .ctor(bbl::Ctor<PXR_NS::SdfNamespaceEdit, PXR_NS::SdfNamespaceEdit::Path const&, PXR_NS::SdfNamespaceEdit::Path const&, PXR_NS::SdfNamespaceEdit::Index>(), "from_paths")
+        .ctor(bbl::Class<PXR_NS::SdfNamespaceEdit>::Ctor<>(), "new")
+        .ctor(bbl::Class<PXR_NS::SdfNamespaceEdit>::Ctor<PXR_NS::SdfNamespaceEdit::Path const&, PXR_NS::SdfNamespaceEdit::Path const&, PXR_NS::SdfNamespaceEdit::Index>(), "from_paths")
         .m(&PXR_NS::SdfNamespaceEdit::Remove)
         .m(&PXR_NS::SdfNamespaceEdit::Rename)
         .m(&PXR_NS::SdfNamespaceEdit::Reorder)
@@ -616,7 +616,7 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfPath>("Path")
         .opaque_ptr()
-        .ctor(bbl::Ctor<PXR_NS::SdfPath>(), "new")
+        .ctor(bbl::Class<PXR_NS::SdfPath>::Ctor<>(), "new")
         .m(&PXR_NS::SdfPath::GetPathElementCount)
         .m(&PXR_NS::SdfPath::IsAbsolutePath)
         .m(&PXR_NS::SdfPath::IsAbsoluteRootPath)
@@ -699,7 +699,7 @@ BBL_MODULE(sdf) {
     // bbl::Class<PXR_NS::SdfPathEditorProxy>("PathEditorProxy");
 
     bbl::Class<PXR_NS::SdfPathExpression>("PathExpression")
-        .ctor(bbl::Ctor<PXR_NS::SdfPathExpression>(), "new")
+        .ctor(bbl::Class<PXR_NS::SdfPathExpression>::Ctor<>(), "new")
         .m((PXR_NS::SdfPathExpression (PXR_NS::SdfPathExpression::*)(PXR_NS::SdfPath const&, PXR_NS::SdfPath const&) const&)
             &PXR_NS::SdfPathExpression::ReplacePrefix)
         .m(&PXR_NS::SdfPathExpression::IsAbsolute)
@@ -726,7 +726,7 @@ BBL_MODULE(sdf) {
         BBL_STD_VECTOR_METHODS(PXR_NS::SdfPath);
 
     bbl::Class<PXR_NS::SdfPayload>("Payload")
-        .ctor(bbl::Ctor<PXR_NS::SdfPayload>(), "new")
+        .ctor(bbl::Class<PXR_NS::SdfPayload>::Ctor<>(), "new")
         .m(&PXR_NS::SdfPayload::GetAssetPath)
         .m(&PXR_NS::SdfPayload::SetAssetPath)
         .m(&PXR_NS::SdfPayload::GetPrimPath)
@@ -1076,7 +1076,7 @@ BBL_MODULE(sdf) {
         ;
 
     bbl::Class<PXR_NS::SdfTimeCode>("TimeCode")
-        .ctor(bbl::Ctor<PXR_NS::SdfTimeCode, double>(), "from_time")
+        .ctor(bbl::Class<PXR_NS::SdfTimeCode>::Ctor<double>(), "from_time")
         .m(&PXR_NS::SdfTimeCode::GetValue);
 
     bbl::Class<PXR_NS::SdfTimeSampleMap>("TimeSampleMap");
@@ -1088,11 +1088,11 @@ BBL_MODULE(sdf) {
         ;
 
     bbl::Class<PXR_NS::SdfValueBlock>("ValueBlock")
-        .ctor(bbl::Ctor<PXR_NS::SdfValueBlock>(), "new")
+        .ctor(bbl::Class<PXR_NS::SdfValueBlock>::Ctor<>(), "new")
     ;
 
     bbl::Class<PXR_NS::SdfValueTypeName>("ValueTypeName")
-        .ctor(bbl::Ctor<PXR_NS::SdfValueTypeName>(), "new")
+        .ctor(bbl::Class<PXR_NS::SdfValueTypeName>::Ctor<>(), "new")
         .m(&PXR_NS::SdfValueTypeName::GetAsToken)
         .m(&PXR_NS::SdfValueTypeName::GetType)
         .m(&PXR_NS::SdfValueTypeName::GetRole)
@@ -1115,7 +1115,7 @@ BBL_MODULE(sdf) {
     bbl::Enum<PXR_NS::SdfVariability>("Variability");
 
     bbl::Class<PXR_NS::SdfVariableExpression>("VariableExpression")
-        .ctor(bbl::Ctor<PXR_NS::SdfVariableExpression>(), "new")
+        .ctor(bbl::Class<PXR_NS::SdfVariableExpression>::Ctor<>(), "new")
         .m(&PXR_NS::SdfVariableExpression::GetErrors)
         .m(&PXR_NS::SdfVariableExpression::Evaluate)
         ;
