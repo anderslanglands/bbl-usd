@@ -51,3 +51,16 @@ target_link_libraries(bind-dummy babble::bind)
 target_include_directories(bind-dummy PRIVATE $<TARGET_PROPERTY:openusd-c,INCLUDE_DIRECTORIES>)
 target_compile_options(bind-dummy PRIVATE $<TARGET_PROPERTY:openusd-c,COMPILE_OPTIONS>)
 target_compile_definitions(bind-dummy PRIVATE $<TARGET_PROPERTY:openusd-c,COMPILE_DEFINITIONS>)
+
+install(
+  TARGETS 
+    openusd-c
+  LIBRARY 
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE 
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME 
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+  INCLUDES 
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
