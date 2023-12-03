@@ -4,6 +4,8 @@ project(bbl-usd VERSION 0.1 LANGUAGES C CXX)
 find_package(babble 0.5 CONFIG REQUIRED)
 find_package(pxr REQUIRED)
 
+option(BUILD_EXAMPLE "Build the example program" OFF)
+
 # The bindfile contains all our binding definitions
 set(bindfiles 
     bind/ar.cpp 
@@ -40,10 +42,12 @@ if (MSVC)
 endif()
 
 # Compile a simple test program to exercise the generated library
+if (${BUILD_EXAMPLE})
 add_executable(usd-c-test01 usd-c-test01.c)
 target_link_libraries(usd-c-test01 PUBLIC openusd-c)
 target_include_directories(usd-c-test01 PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 set_property(TARGET usd-c-test01 PROPERTY C_STANDARD 99)
+endif()
 
 # This is just here to trigger generation of compile commands for the bind file so we get LSP functionality in the bind file
 add_library(bind-dummy ${bindfiles})

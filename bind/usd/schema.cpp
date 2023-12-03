@@ -137,7 +137,7 @@ BBL_MODULE(usd) {
 
     bbl::Class<PXR_NS::UsdCollectionMembershipQuery>("CollectionMembershipQuery")
         .ctor(bbl::Class<PXR_NS::UsdCollectionMembershipQuery>::Ctor<>(), "default")
-        .ctor(bbl::Class<PXR_NS::UsdCollectionMembershipQuery>::Ctor<PXR_NS::UsdCollectionMembershipQuery::PathExpansionRuleMap, PXR_NS::SdfPathSet const&>(), "default")
+        // .ctor(bbl::Class<PXR_NS::UsdCollectionMembershipQuery>::Ctor<PXR_NS::UsdCollectionMembershipQuery::PathExpansionRuleMap, PXR_NS::SdfPathSet const&>(), "with_rules")
         .m((bool (PXR_NS::UsdCollectionMembershipQuery::*)(PXR_NS::SdfPath const&, PXR_NS::TfToken*) const)
             &PXR_NS::UsdCollectionMembershipQuery::IsPathIncluded
         )
