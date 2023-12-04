@@ -21,6 +21,10 @@ auto UsdPrim_GetProperties(PXR_NS::UsdPrim prim) -> std::vector<PXR_NS::UsdPrope
     return prim.GetProperties();
 }
 
+auto PrimSiblingIterator_op_eq(PXR_NS::UsdPrimSiblingIterator const& lhs, PXR_NS::UsdPrimSiblingIterator const& rhs) -> bool {
+    return lhs == rhs;
+}
+
 }
 
 BBL_MODULE(usd) {
@@ -412,7 +416,11 @@ BBL_MODULE(usd) {
 
     bbl::Class<PXR_NS::UsdPrimSiblingIterator>("PrimSiblingIterator")
         .m(&PXR_NS::UsdPrimSiblingIterator::operator*, "deref")
-        .m(&PXR_NS::UsdPrimSiblingIterator::operator++, "op_inc");
+        .m(&PXR_NS::UsdPrimSiblingIterator::operator++, "op_inc")
+    ;
+
+    bbl::fn(&bblext::PrimSiblingIterator_op_eq)
+    ;
 
     bbl::Class<PXR_NS::UsdPrimSubtreeRange>("PrimSubtreeRange")
     ;

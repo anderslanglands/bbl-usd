@@ -61,7 +61,6 @@ PXR_NS::UsdStageRefPtr Stage_Open(char const* filename, PXR_NS::UsdStage::Initia
 // together. These would then likely be turned into real modules in languages
 // that support them like Rust or Python
 BBL_MODULE(usd) {
-
     // clang-format off
 
     using Token = PXR_NS::TfToken;

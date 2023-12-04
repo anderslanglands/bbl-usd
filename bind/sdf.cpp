@@ -617,6 +617,7 @@ BBL_MODULE(sdf) {
     bbl::Class<PXR_NS::SdfPath>("Path")
         .opaque_ptr()
         .ctor(bbl::Class<PXR_NS::SdfPath>::Ctor<>(), "new")
+        .ctor(bbl::Class<PXR_NS::SdfPath>::Ctor<char const*>("path"), "from_string")
         .m(&PXR_NS::SdfPath::GetPathElementCount)
         .m(&PXR_NS::SdfPath::IsAbsolutePath)
         .m(&PXR_NS::SdfPath::IsAbsoluteRootPath)

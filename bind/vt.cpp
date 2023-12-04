@@ -42,6 +42,7 @@
 #include <pxr/usd/sdf/assetPath.h>
 
 BBL_MODULE(vt) {
+
     // clang-format off
 
     using Value = PXR_NS::VtValue;
@@ -102,6 +103,7 @@ BBL_MODULE(vt) {
         .m((PXR_NS::SdfAssetPath const& (Value::*)() const&)
             &Value::Get<PXR_NS::SdfAssetPath>, "Get_SdfAssetPath"
         ) 
+
 
         .ctor(bbl::Class<Value>::Ctor<std::string>("value"), "from_string")
         .m((bool (Value::*)() const)
@@ -277,6 +279,62 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfMatrix4f const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfMatrix4f>, "Get_GfMatrix4f"
+        ) 
+
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtTokenArray>("value"), "from_VtTokenArray")
+        .m((bool (Value::*)() const)
+            &Value::IsHolding<PXR_NS::VtTokenArray>, "IsHolding_VtTokenArray"
+        )
+        .m((PXR_NS::VtTokenArray const& (Value::*)() const&)
+            &Value::Get<PXR_NS::VtTokenArray>, "Get_VtTokenArray"
+        ) 
+
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtIntArray>("value"), "from_VtIntArray")
+        .m((bool (Value::*)() const)
+            &Value::IsHolding<PXR_NS::VtIntArray>, "IsHolding_VtIntArray"
+        )
+        .m((PXR_NS::VtIntArray const& (Value::*)() const&)
+            &Value::Get<PXR_NS::VtIntArray>, "Get_VtIntArray"
+        ) 
+
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtFloatArray>("value"), "from_VtFloatArray")
+        .m((bool (Value::*)() const)
+            &Value::IsHolding<PXR_NS::VtFloatArray>, "IsHolding_VtFloatArray"
+        )
+        .m((PXR_NS::VtFloatArray const& (Value::*)() const&)
+            &Value::Get<PXR_NS::VtFloatArray>, "Get_VtFloatArray"
+        ) 
+
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtDoubleArray>("value"), "from_VtDoubleArray")
+        .m((bool (Value::*)() const)
+            &Value::IsHolding<PXR_NS::VtDoubleArray>, "IsHolding_VtDoubleArray"
+        )
+        .m((PXR_NS::VtDoubleArray const& (Value::*)() const&)
+            &Value::Get<PXR_NS::VtDoubleArray>, "Get_VtDoubleArray"
+        ) 
+
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtVec2fArray>("value"), "from_VtVec2fArray")
+        .m((bool (Value::*)() const)
+            &Value::IsHolding<PXR_NS::VtVec2fArray>, "IsHolding_VtVec2fArray"
+        )
+        .m((PXR_NS::VtVec2fArray const& (Value::*)() const&)
+            &Value::Get<PXR_NS::VtVec2fArray>, "Get_VtVec2fArray"
+        ) 
+
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtVec3fArray>("value"), "from_VtVec3fArray")
+        .m((bool (Value::*)() const)
+            &Value::IsHolding<PXR_NS::VtVec3fArray>, "IsHolding_VtVec3fArray"
+        )
+        .m((PXR_NS::VtVec3fArray const& (Value::*)() const&)
+            &Value::Get<PXR_NS::VtVec3fArray>, "Get_VtVec3fArray"
+        ) 
+
+        .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtVec4fArray>("value"), "from_VtVec4fArray")
+        .m((bool (Value::*)() const)
+            &Value::IsHolding<PXR_NS::VtVec4fArray>, "IsHolding_VtVec4fArray"
+        )
+        .m((PXR_NS::VtVec4fArray const& (Value::*)() const&)
+            &Value::Get<PXR_NS::VtVec4fArray>, "Get_VtVec4fArray"
         ) 
 
         ;
