@@ -14,7 +14,8 @@ int main(int argc, char** argv) {
 
     // Open the given stage and check that it opened successfully
     usd_StageRefPtr_t* stage_ref = NULL;
-    usd_Stage_Open(argv[1], usd_StageInitialLoadSet_LoadAll, &stage_ref);
+    char const* filename = argv[1];
+    usd_Stage_Open(filename, usd_StageInitialLoadSet_LoadAll, &stage_ref);
 
     bool is_invalid = false;
     usd_StageRefPtr_is_invalid(stage_ref, &is_invalid);
@@ -147,15 +148,23 @@ void print_attribute(usd_Attribute_t* attr, usd_TimeCode_t tc) {
     vt_Value_t* val;
     vt_Value_new(&val);
 
+    // Get the attribute's name as a TfToken
+    tf_Token_t const* tok_attr_name;
+    usd_Attribute_GetName(attr, &tok_attr_name);
+
+    // Get the name as a string
+    char const* attr_name_str = NULL;
+    tf_Token_GetText(tok_attr_name, &attr_name_str);
+
     bool result = false;
     usd_Attribute_Get(attr, val, tc, &result);
 
     vt_Value_IsHolding_bool(val, &result);
     if (result) {
-        bool v;
+        bool const* v;
         vt_Value_Get_bool(val, &v);
 
-        printf(" bool %d\n", v);
+        printf("%s bool %d\n", attr_name_str, *v);
 
         vt_Value_dtor(val);
         return;
@@ -163,28 +172,28 @@ void print_attribute(usd_Attribute_t* attr, usd_TimeCode_t tc) {
 
     vt_Value_IsHolding_int(val, &result);
     if (result) {
-        int v;
+        int const* v;
         vt_Value_Get_int(val, &v);
 
-        printf(" int %d\n", v);
+        printf(" int %d\n", *v);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_float(val, &result);
     if (result) {
-        float v;
+        float const* v;
         vt_Value_Get_float(val, &v);
-        printf(" float %f\n", v);
+        printf(" float %f\n", *v);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_double(val, &result);
     if (result) {
-        double v;
+        double const* v;
         vt_Value_Get_double(val, &v);
-        printf(" double %f\n", v);
+        printf(" double %f\n", *v);
         vt_Value_dtor(val);
         return;
     }
@@ -228,25 +237,25 @@ void print_attribute(usd_Attribute_t* attr, usd_TimeCode_t tc) {
 
     vt_Value_IsHolding_GfVec2d(val, &result);
     if (result) {
-        gf_Vec2d_t v;
+        gf_Vec2d_t const* v;
         vt_Value_Get_GfVec2d(val, &v);
-        printf(" GfVec2d (%f, %f)\n", v.x, v.y);
+        printf(" GfVec2d (%f, %f)\n", v->x, v->y);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_GfVec2f(val, &result);
     if (result) {
-        gf_Vec2f_t v;
+        gf_Vec2f_t const* v;
         vt_Value_Get_GfVec2f(val, &v);
-        printf(" GfVec2f (%f, %f)\n", v.x, v.y);
+        printf(" GfVec2f (%f, %f)\n", v->x, v->y);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_GfVec2h(val, &result);
     if (result) {
-        gf_Vec2h_t v;
+        gf_Vec2h_t const* v;
         vt_Value_Get_GfVec2h(val, &v);
         printf(" GfVec2h\n");
         vt_Value_dtor(val);
@@ -255,27 +264,27 @@ void print_attribute(usd_Attribute_t* attr, usd_TimeCode_t tc) {
 
     vt_Value_IsHolding_GfVec2i(val, &result);
     if (result) {
-        gf_Vec2i_t v;
+        gf_Vec2i_t const* v;
         vt_Value_Get_GfVec2i(val, &v);
-        printf(" GfVec2i (%d, %d)\n", v.x, v.y);
+        printf(" GfVec2i (%d, %d)\n", v->x, v->y);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_GfVec3d(val, &result);
     if (result) {
-        gf_Vec3d_t v;
+        gf_Vec3d_t const* v;
         vt_Value_Get_GfVec3d(val, &v);
-        printf(" GfVec3d (%f, %f, %f)\n", v.x, v.y, v.z);
+        printf(" GfVec3d (%f, %f, %f)\n", v->x, v->y, v->z);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_GfVec3f(val, &result);
     if (result) {
-        gf_Vec3f_t v;
+        gf_Vec3f_t const* v;
         vt_Value_Get_GfVec3f(val, &v);
-        printf(" GfVec3f (%f, %f, %f)\n", v.x, v.y, v.z);
+        printf(" GfVec3f (%f, %f, %f)\n", v->x, v->y, v->z);
         vt_Value_dtor(val);
         return;
     }
@@ -289,27 +298,27 @@ void print_attribute(usd_Attribute_t* attr, usd_TimeCode_t tc) {
 
     vt_Value_IsHolding_GfVec3i(val, &result);
     if (result) {
-        gf_Vec3i_t v;
+        gf_Vec3i_t const* v;
         vt_Value_Get_GfVec3i(val, &v);
-        printf(" GfVec3i (%d, %d, %d)\n", v.x, v.y, v.z);
+        printf(" GfVec3i (%d, %d, %d)\n", v->x, v->y, v->z);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_GfVec4d(val, &result);
     if (result) {
-        gf_Vec4d_t v;
+        gf_Vec4d_t const* v;
         vt_Value_Get_GfVec4d(val, &v);
-        printf(" GfVec4d (%f, %f, %f, %f)\n", v.x, v.y, v.z, v.w);
+        printf(" GfVec4d (%f, %f, %f, %f)\n", v->x, v->y, v->z, v->w);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_GfVec4f(val, &result);
     if (result) {
-        gf_Vec4f_t v;
+        gf_Vec4f_t const* v;
         vt_Value_Get_GfVec4f(val, &v);
-        printf(" GfVec4f (%f, %f, %f, %f)\n", v.x, v.y, v.z, v.w);
+        printf(" GfVec4f (%f, %f, %f, %f)\n", v->x, v->y, v->z, v->w);
         vt_Value_dtor(val);
         return;
     }
@@ -323,18 +332,18 @@ void print_attribute(usd_Attribute_t* attr, usd_TimeCode_t tc) {
 
     vt_Value_IsHolding_GfVec4i(val, &result);
     if (result) {
-        gf_Vec4i_t v;
+        gf_Vec4i_t const* v;
         vt_Value_Get_GfVec4i(val, &v);
-        printf(" GfVec4i (%d, %d, %d, %d)\n", v.x, v.y, v.z, v.w);
+        printf(" GfVec4i (%d, %d, %d, %d)\n", v->x, v->y, v->z, v->w);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_GfQuatd(val, &result);
     if (result) {
-        gf_Quatd_t v;
+        gf_Quatd_t const* v;
         vt_Value_Get_GfQuatd(val, &v);
-        printf(" GfQuatd (%f, %f, %f, %f)\n", v.x, v.y, v.z, v.w);
+        printf(" GfQuatd (%f, %f, %f, %f)\n", v->x, v->y, v->z, v->w);
         vt_Value_dtor(val);
         return;
     }
@@ -348,125 +357,125 @@ void print_attribute(usd_Attribute_t* attr, usd_TimeCode_t tc) {
 
     vt_Value_IsHolding_GfQuatf(val, &result);
     if (result) {
-        gf_Quatf_t v;
+        gf_Quatf_t const* v;
         vt_Value_Get_GfQuatf(val, &v);
-        printf(" GfQuatf (%f, %f, %f, %f)\n", v.x, v.y, v.z, v.w);
+        printf(" GfQuatf (%f, %f, %f, %f)\n", v->x, v->y, v->z, v->w);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_GfMatrix2d(val, &result);
     if (result) {
-        gf_Matrix2d_t v;
+        gf_Matrix2d_t const* v;
         vt_Value_Get_GfMatrix2d(val, &v);
         printf(" GfMatrix2d [[%f, %f], [%f, %f]]\n",
-               v.m[0],
-               v.m[1],
-               v.m[2],
-               v.m[3]);
+               v->m[0],
+               v->m[1],
+               v->m[2],
+               v->m[3]);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_GfMatrix2f(val, &result);
     if (result) {
-        gf_Matrix2f_t v;
+        gf_Matrix2f_t const* v;
         vt_Value_Get_GfMatrix2f(val, &v);
         printf(" GfMatrix2f [[%f, %f], [%f, %f]]\n",
-               v.m[0],
-               v.m[1],
-               v.m[2],
-               v.m[3]);
+               v->m[0],
+               v->m[1],
+               v->m[2],
+               v->m[3]);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_GfMatrix3d(val, &result);
     if (result) {
-        gf_Matrix3d_t v;
+        gf_Matrix3d_t const* v;
         vt_Value_Get_GfMatrix3d(val, &v);
         printf(" GfMatrix3d [[%f, %f, %f], [%f, %f, %f], [%f, %f, %f]]\n",
-               v.m[0],
-               v.m[1],
-               v.m[2],
-               v.m[3],
-               v.m[4],
-               v.m[5],
-               v.m[6],
-               v.m[7],
-               v.m[8]);
+               v->m[0],
+               v->m[1],
+               v->m[2],
+               v->m[3],
+               v->m[4],
+               v->m[5],
+               v->m[6],
+               v->m[7],
+               v->m[8]);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_GfMatrix3f(val, &result);
     if (result) {
-        gf_Matrix3f_t v;
+        gf_Matrix3f_t const* v;
         vt_Value_Get_GfMatrix3f(val, &v);
         printf(" GfMatrix3f [[%f, %f, %f], [%f, %f, %f], [%f, %f, %f]]\n",
-               v.m[0],
-               v.m[1],
-               v.m[2],
-               v.m[3],
-               v.m[4],
-               v.m[5],
-               v.m[6],
-               v.m[7],
-               v.m[8]);
+               v->m[0],
+               v->m[1],
+               v->m[2],
+               v->m[3],
+               v->m[4],
+               v->m[5],
+               v->m[6],
+               v->m[7],
+               v->m[8]);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_GfMatrix4d(val, &result);
     if (result) {
-        gf_Matrix4d_t v;
+        gf_Matrix4d_t const* v;
         vt_Value_Get_GfMatrix4d(val, &v);
         printf(" GfMatrix4d [[%f, %f, %f, %f], [%f, %f, %f, %f], [%f, %f, %f, "
                "%f], "
                "[%f, %f, %f, %f]]\n",
-               v.m[0],
-               v.m[1],
-               v.m[2],
-               v.m[3],
-               v.m[4],
-               v.m[5],
-               v.m[6],
-               v.m[7],
-               v.m[8],
-               v.m[9],
-               v.m[10],
-               v.m[11],
-               v.m[12],
-               v.m[13],
-               v.m[14],
-               v.m[15]);
+               v->m[0],
+               v->m[1],
+               v->m[2],
+               v->m[3],
+               v->m[4],
+               v->m[5],
+               v->m[6],
+               v->m[7],
+               v->m[8],
+               v->m[9],
+               v->m[10],
+               v->m[11],
+               v->m[12],
+               v->m[13],
+               v->m[14],
+               v->m[15]);
         vt_Value_dtor(val);
         return;
     }
 
     vt_Value_IsHolding_GfMatrix4f(val, &result);
     if (result) {
-        gf_Matrix4f_t v;
+        gf_Matrix4f_t const* v;
         vt_Value_Get_GfMatrix4f(val, &v);
         printf(" GfMatrix4f [[%f, %f, %f, %f], [%f, %f, %f, %f], [%f, %f, %f, "
                "%f], "
                "[%f, %f, %f, %f]]\n",
-               v.m[0],
-               v.m[1],
-               v.m[2],
-               v.m[3],
-               v.m[4],
-               v.m[5],
-               v.m[6],
-               v.m[7],
-               v.m[8],
-               v.m[9],
-               v.m[10],
-               v.m[11],
-               v.m[12],
-               v.m[13],
-               v.m[14],
-               v.m[15]);
+               v->m[0],
+               v->m[1],
+               v->m[2],
+               v->m[3],
+               v->m[4],
+               v->m[5],
+               v->m[6],
+               v->m[7],
+               v->m[8],
+               v->m[9],
+               v->m[10],
+               v->m[11],
+               v->m[12],
+               v->m[13],
+               v->m[14],
+               v->m[15]);
         vt_Value_dtor(val);
         return;
     }

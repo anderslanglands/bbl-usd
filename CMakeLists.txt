@@ -22,6 +22,8 @@ set(bindfiles
     bind/vt.cpp 
 )
 
+# Configures bbl-translate to generate the shim library source and build it as
+# libopenusd-c
 bbl_translate_binding(
     openusd
     BINDFILES 
@@ -34,7 +36,9 @@ bbl_translate_binding(
         -D__TBB_show_deprecation_message_task_H 
 )
 
-target_link_libraries(openusd-c PUBLIC usd sdf js usdGeom)
+target_link_libraries(openusd-c PUBLIC usd usdGeom)
+
+
 target_compile_definitions(openusd-c PRIVATE NOMINMAX BOOST_ALL_NO_LIB __TBB_show_deprecation_message_task_H)
 
 if (MSVC)

@@ -21,6 +21,10 @@ auto UsdPrim_GetProperties(PXR_NS::UsdPrim prim) -> std::vector<PXR_NS::UsdPrope
     return prim.GetProperties();
 }
 
+auto UsdPrim_GetAuthoredProperties(PXR_NS::UsdPrim prim) -> std::vector<PXR_NS::UsdProperty> {
+    return prim.GetAuthoredProperties();
+}
+
 auto PrimSiblingIterator_op_eq(PXR_NS::UsdPrimSiblingIterator const& lhs, PXR_NS::UsdPrimSiblingIterator const& rhs) -> bool {
     return lhs == rhs;
 }
@@ -28,6 +32,7 @@ auto PrimSiblingIterator_op_eq(PXR_NS::UsdPrimSiblingIterator const& lhs, PXR_NS
 }
 
 BBL_MODULE(usd) {
+    // clang-format off
     using Prim = PXR_NS::UsdPrim;
     using PrimRange = PXR_NS::UsdPrimRange;
     using PrimRangeIterator = PXR_NS::UsdPrimRange::iterator;
@@ -42,11 +47,8 @@ BBL_MODULE(usd) {
 
     // Binding a class looks like this
     bbl::Class<PXR_NS::UsdPrim>("Prim")
-        .ctor(bbl::Class<Prim>::Ctor<>(), "new")
         .opaque_ptr()
-        // Binding a (default) constructor looks like this
-        // Method bindings just take the member function pointer and all
-        // parameters with known types are extracted automatically
+        .ctor(bbl::Class<Prim>::Ctor<>(), "default")
         .m(&Prim::GetPrimTypeInfo)
         .m(&Prim::GetPrimDefinition)
         .m(&Prim::GetSpecifier)
@@ -68,18 +70,16 @@ BBL_MODULE(usd) {
         .m(&Prim::IsDefined)
         .m(&Prim::HasDefiningSpecifier)
         .m(&Prim::GetAppliedSchemas)
-        // Can't handle std::function properly yet...
-        // probably need to create wrapper objects (yuck)
-        //   .m(&Prim::GetPropertyNames)
-        //   .m(&Prim::GetAuthoredPropertyNames)
-        // .m(&Prim::GetProperties)
-        // .m(&Prim::GetAuthoredProperties)
-        // Overloads require casting the member function pointer to select a
-        // particular one
-        .m((std::vector<Property>(Prim::*)(std::string const&) const) &
-           Prim::GetPropertiesInNamespace)
-        .m((std::vector<Property>(Prim::*)(std::string const&) const) &
-           Prim::GetAuthoredPropertiesInNamespace)
+        .m(&Prim::GetPropertyNames)
+        .m(&Prim::GetAuthoredPropertyNames)
+        .m(&Prim::GetProperties, "GetProperties_matching_predicate")
+        .m(&Prim::GetAuthoredProperties, "GetAuthoredProperties_matching_predicate")
+        .m((std::vector<Property>(Prim::*)(std::string const&) const) 
+            &Prim::GetPropertiesInNamespace
+        )
+        .m((std::vector<Property>(Prim::*)(std::string const&) const) 
+            &Prim::GetAuthoredPropertiesInNamespace
+        )
         .m(&Prim::GetPropertyOrder)
         .m(&Prim::SetPropertyOrder)
         .m(&Prim::ClearPropertyOrder)
@@ -90,48 +90,57 @@ BBL_MODULE(usd) {
         .m(&Prim::RemoveAppliedSchema)
 
         // IsA
-        .m((bool(Prim::*)(Token const&) const) & Prim::IsA)
+        .m((bool(Prim::*)(Token const&) const) 
+            &Prim::IsA
+        )
+
         // methods can be renamed to give useful names to overloads
-        .m((bool(Prim::*)(Token const&, SchemaVersion) const) & Prim::IsA,
-           "IsA_with_version")
+        .m((bool(Prim::*)(Token const&, SchemaVersion) const) 
+            &Prim::IsA, "IsA_with_version"
+        )
 
         // IsInFamily
-        .m((bool(Prim::*)(Token const&) const) & Prim::IsInFamily)
-        .m((bool(Prim::*)(Token const&, SchemaRegistry::VersionPolicy) const) &
-               Prim::IsInFamily,
-           "IsInFamily_with_policy")
-        .m((bool(Prim::*)(Token const&, SchemaVersion,
-                          SchemaRegistry::VersionPolicy) const) &
-               Prim::IsInFamily,
-           "IsInFamily_with_policy_and_version")
-        .m((bool(Prim::*)(Type const&, SchemaRegistry::VersionPolicy) const) &
-               Prim::IsInFamily,
-           "IsInFamily_with_type")
+        .m((bool(Prim::*)(Token const&) const) 
+            &Prim::IsInFamily
+        )
+        .m((bool(Prim::*)(Token const&, SchemaRegistry::VersionPolicy) const) 
+            &Prim::IsInFamily, "IsInFamily_with_policy"
+        )
+        .m((bool(Prim::*)(Token const&, SchemaVersion, SchemaRegistry::VersionPolicy) const) 
+            &Prim::IsInFamily, "IsInFamily_with_policy_and_version"
+        )
+        .m((bool(Prim::*)(Type const&, SchemaRegistry::VersionPolicy) const) 
+            &Prim::IsInFamily, "IsInFamily_with_type"
+        )
         .m(&Prim::GetVersionIfIsInFamily)
 
         // HasAPI
-        .m((bool(Prim::*)(Type const&) const) & Prim::HasAPI)
-        .m((bool(Prim::*)(Type const&, Token const&) const) & Prim::HasAPI,
-           "HasAPI_with_instance_name")
-        .m((bool(Prim::*)(Token const&) const) & Prim::HasAPI,
-           "HasAPI_with_schema_identifier")
-        .m((bool(Prim::*)(Token const&, Token const&) const) & Prim::HasAPI,
-           "HasAPI_with_instance_name_and_schema_identifier")
+        .m((bool(Prim::*)(Type const&) const) 
+            &Prim::HasAPI
+        )
+        .m((bool(Prim::*)(Type const&, Token const&) const) 
+            &Prim::HasAPI, "HasAPI_with_instance_name"
+        )
+        .m((bool(Prim::*)(Token const&) const) 
+            &Prim::HasAPI, "HasAPI_with_schema_identifier"
+        )
+        .m((bool(Prim::*)(Token const&, Token const&) const) 
+            &Prim::HasAPI, "HasAPI_with_instance_name_and_schema_identifier"
+        )
 
         // HasAPIInFamily
-        .m((bool(Prim::*)(Token const&) const) & Prim::HasAPIInFamily)
-        // .m((bool(Prim::*)(Token const&,
-        //                              Token const&) const) &
-        //    Prim::HasAPIInFamily)
-        // .m((bool(Prim::*)(
-        //        Token const&, SchemaVersion,
-        //        SchemaRegistry::VersionPolicy) const) &
-        //    Prim::HasAPIInFamily)
-        // .m((bool(Prim::*)(Token const&,
-        //                              SchemaVersion,
-        //                              SchemaRegistry::VersionPolicy,
-        //                              Token const&) const) &
-        //    Prim::HasAPIInFamily)
+        .m((bool(Prim::*)(Token const&) const) 
+            &Prim::HasAPIInFamily
+        )
+        .m((bool(Prim::*)(Token const&, Token const&) const) 
+            &Prim::HasAPIInFamily, "HasAPIInFamily_with_instance"
+        )
+        .m((bool(Prim::*)( Token const&, SchemaVersion, SchemaRegistry::VersionPolicy) const) 
+            &Prim::HasAPIInFamily, "HasAPIInFamily_with_version"
+        )
+        .m((bool(Prim::*)(Token const&, SchemaVersion, SchemaRegistry::VersionPolicy, Token const&) const) 
+            &Prim::HasAPIInFamily, "HasAPIInFamily_with_version_and_instance"
+        )
         // .m((bool(Prim::*)(Type const&,
         //                              SchemaRegistry::VersionPolicy)
         //         const) &
@@ -151,11 +160,14 @@ BBL_MODULE(usd) {
         // .m((bool(Prim::*)(Token const&,
         //                              SchemaVersion*) const) &
         //    Prim::GetVersionIfHasAPIInFamily)
-        .m((bool(Prim::*)(Token const&, Token const&, SchemaVersion*) const) &
-           Prim::GetVersionIfHasAPIInFamily)
+        .m((bool(Prim::*)(Token const&, Token const&, SchemaVersion*) const) 
+            &Prim::GetVersionIfHasAPIInFamily
+        )
 
         // CanApplyAPI
-        .m((bool(Prim::*)(Type const&, std::string*) const) & Prim::CanApplyAPI)
+        .m((bool(Prim::*)(Type const&, std::string*) const) 
+            &Prim::CanApplyAPI
+        ) 
         // .m((bool(Prim::*)(Type const&,
         //                              Token const&, std::string*)
         //         const) &
@@ -173,7 +185,9 @@ BBL_MODULE(usd) {
         //    Prim::CanApplyAPI)
 
         // ApplyAPI
-        .m((bool(Prim::*)(Type const&) const) & Prim::ApplyAPI)
+        .m((bool(Prim::*)(Type const&) const) 
+            &Prim::ApplyAPI
+        )
         // .m((bool(Prim::*)(Type const&,
         //                              Token const&) const) &
         //    Prim::ApplyAPI)
@@ -191,7 +205,9 @@ BBL_MODULE(usd) {
         //    Prim::ApplyAPI)
 
         // RemoveAPI
-        .m((bool(Prim::*)(Type const&) const) & Prim::RemoveAPI)
+        .m((bool(Prim::*)(Type const&) const) 
+            &Prim::RemoveAPI
+        )
         // .m((bool(Prim::*)(Type const&,
         //                              Token const&) const) &
         //    Prim::RemoveAPI)
@@ -219,6 +235,8 @@ BBL_MODULE(usd) {
         .m(&Prim::GetAllDescendants)
         .m(&Prim::GetFilteredDescendants)
         .m(&Prim::GetChildrenReorder)
+        .m(&Prim::SetChildrenReorder)
+        .m(&Prim::ClearChildrenReorder)
 
         // Parent & Stage
         .m(&Prim::GetParent)
@@ -239,23 +257,24 @@ BBL_MODULE(usd) {
         // Attributes
         // We'll only do one of these create methods as the rest are for
         // convenience, and we should do convenience on the FFI side
-        .m((Attribute(Prim::*)(Token const&, PXR_NS::SdfValueTypeName const&,
-                               bool, PXR_NS::SdfVariability) const) &
-           Prim::CreateAttribute)
+        .m((Attribute(Prim::*)(Token const&, PXR_NS::SdfValueTypeName const&, bool, PXR_NS::SdfVariability) const) 
+            &Prim::CreateAttribute
+        )
         .m(&Prim::GetAttributes)
         .m(&Prim::GetAuthoredAttributes)
         .m(&Prim::GetAttribute)
         .m(&Prim::HasAttribute)
-        // .m(&Prim::FindAllAttributeConnectionPaths)
+        .m(&Prim::FindAllAttributeConnectionPaths)
 
         // Relationships
-        .m((Relationship(Prim::*)(Token const&, bool) const) &
-           Prim::CreateRelationship)
+        .m((Relationship(Prim::*)(Token const&, bool) const) 
+            &Prim::CreateRelationship
+        )
         .m(&Prim::GetRelationships)
         .m(&Prim::GetAuthoredRelationships)
         .m(&Prim::GetRelationship)
         .m(&Prim::HasRelationship)
-        // .m(&Prim::FindAllRelationshipTargetPaths)
+        .m(&Prim::FindAllRelationshipTargetPaths)
 
         // Payloads, load and unload
         .m(&Prim::GetPayloads)
@@ -275,6 +294,21 @@ BBL_MODULE(usd) {
         .m(&Prim::GetSpecializes)
         .m(&Prim::HasAuthoredSpecializes)
 
+        // Instances
+        .m(&Prim::IsInstanceable)
+        .m(&Prim::SetInstanceable)
+        .m(&Prim::ClearInstanceable)
+        .m(&Prim::HasAuthoredInstanceable)
+        .m(&Prim::IsInstance)
+        .m(&Prim::IsInstanceProxy)
+        .m(&Prim::IsPrototypePath)
+        .m(&Prim::IsPathInPrototype)
+        .m(&Prim::IsPrototype)
+        .m(&Prim::IsInPrototype)
+        .m(&Prim::GetPrototype)
+        .m(&Prim::GetPrimInPrototype)
+        .m(&Prim::GetInstances)
+
         // Composition
         .m(&Prim::GetPrimIndex)
         .m(&Prim::ComputeExpandedPrimIndex)
@@ -284,13 +318,12 @@ BBL_MODULE(usd) {
 
     // end Prim
 
-    // we'll inject a function to get around the lack of std::function support
+    // Manually generate overrides that don't take a stdfunction for convenience
     bbl::fn(&bblext::UsdPrim_GetProperties, "Prim_GetProperties");
+    bbl::fn(&bblext::UsdPrim_GetAuthoredProperties, "Prim_GetAuthoredProperties");
 
     bbl::Class<PXR_NS::UsdPrimCompositionQuery>("PrimCompositionQuery")
-        .ctor(bbl::Class<PXR_NS::UsdPrimCompositionQuery>::Ctor<PXR_NS::UsdPrim const&,
-                        PXR_NS::UsdPrimCompositionQuery::Filter const&>(
-            "prim", "filter"))
+        .ctor(bbl::Class<PXR_NS::UsdPrimCompositionQuery>::Ctor<PXR_NS::UsdPrim const&, PXR_NS::UsdPrimCompositionQuery::Filter const&>("prim", "filter"))
         .m(&PXR_NS::UsdPrimCompositionQuery::SetFilter)
         .m(&PXR_NS::UsdPrimCompositionQuery::GetFilter)
         .m(&PXR_NS::UsdPrimCompositionQuery::GetCompositionArcs)
@@ -311,22 +344,18 @@ BBL_MODULE(usd) {
         // Arc editing
         .m(&PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingLayer)
         .m(&PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingPrimPath)
-        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)(
-               PXR_NS::SdfReferenceEditorProxy*, PXR_NS::SdfReference*) const) &
-               PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingListEditor,
-           "GetIntroducingListEditor_reference")
-        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)(
-               PXR_NS::SdfPayloadEditorProxy*, PXR_NS::SdfPayload*) const) &
-               PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingListEditor,
-           "GetIntroducingListEditor_payload")
-        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)(
-               PXR_NS::SdfPathEditorProxy*, PXR_NS::SdfPath*) const) &
-               PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingListEditor,
-           "GetIntroducingListEditor_path")
-        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)(
-               PXR_NS::SdfNameEditorProxy*, std::string*) const) &
-               PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingListEditor,
-           "GetIntroducingListEditor_name")
+        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)(PXR_NS::SdfReferenceEditorProxy*, PXR_NS::SdfReference*) const) 
+            &PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingListEditor, "GetIntroducingListEditor_reference"
+        )
+        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)(PXR_NS::SdfPayloadEditorProxy*, PXR_NS::SdfPayload*) const) 
+            &PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingListEditor, "GetIntroducingListEditor_payload"
+        )
+        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)( PXR_NS::SdfPathEditorProxy*, PXR_NS::SdfPath*) const) 
+            &PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingListEditor, "GetIntroducingListEditor_path"
+        )
+        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)(PXR_NS::SdfNameEditorProxy*, std::string*) const) 
+            &PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingListEditor, "GetIntroducingListEditor_name"
+        )
 
         // Arc classification
         .m(&PXR_NS::UsdPrimCompositionQueryArc::GetArcType)
@@ -337,9 +366,9 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdPrimCompositionQueryArc::
                IsIntroducedInRootLayerPrimSpec);
 
-    bbl::Class<std::vector<PXR_NS::UsdPrimCompositionQueryArc>>(
-        "PrimCompositionQueryArcVector");
-        // BBL_STD_VECTOR_METHODS(PXR_NS::UsdPrimCompositionQueryArc);
+    bbl::Class<std::vector<PXR_NS::UsdPrimCompositionQueryArc>>("PrimCompositionQueryArcVector")
+        BBL_STD_VECTOR_METHODS(PXR_NS::UsdPrimCompositionQueryArc)
+    ;
 
     bbl::Class<PXR_NS::UsdPrimCompositionQuery::Filter>(
         "PrimCompositionQueryFilter")
@@ -362,6 +391,9 @@ BBL_MODULE(usd) {
     bbl::Class<PXR_NS::UsdPrimDefinition>("PrimDefinition")
         .m(&PXR_NS::UsdPrimDefinition::GetPropertyNames)
         .m(&PXR_NS::UsdPrimDefinition::GetAppliedAPISchemas)
+        .m(&PXR_NS::UsdPrimDefinition::GetPropertyDefinition)
+        .m(&PXR_NS::UsdPrimDefinition::GetAttributeDefinition)
+        .m(&PXR_NS::UsdPrimDefinition::GetRelationshipDefinition)
         .m(&PXR_NS::UsdPrimDefinition::GetSpecType)
         .m(&PXR_NS::UsdPrimDefinition::GetSchemaPropertySpec)
         .m(&PXR_NS::UsdPrimDefinition::GetSchemaAttributeSpec)

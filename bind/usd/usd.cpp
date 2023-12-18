@@ -423,7 +423,7 @@ BBL_MODULE(usd) {
         .m(&Stage::SetLoadRules)
         .m(&Stage::GetPopulationMask)
         .m(&Stage::SetPopulationMask)
-        // .m(&Stage::ExpandPopulationMask) //< need std::function
+        .m(&Stage::ExpandPopulationMask) 
 
         // Layers and Edit Targets
         .m(&Stage::GetSessionLayer)
