@@ -154,6 +154,10 @@ BBL_MODULE(ndr) {
 
     bbl::Class<PXR_NS::NdrTokenMap>("TokenMap");
 
+    bbl::Class<PXR_NS::NdrOptionVec>("OptionVec")
+        BBL_STD_VECTOR_METHODS((std::pair<PXR_NS::TfToken, PXR_NS::TfToken>))
+    ;
+
 }
 
 

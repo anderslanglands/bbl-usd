@@ -151,6 +151,9 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpCache::PrintStatistics)
     ;
 
+    bbl::Class<std::map<PXR_NS::SdfPath, std::vector<std::string>, PXR_NS::SdfPath::FastLessThan>>("InvalidAssetPathMap")
+    ;
+
     bbl::Class<PXR_NS::PcpCache::PayloadSet>("CachePayloadSet")
     ;
 
@@ -180,6 +183,9 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpChanges::operator=, "op_assign")
     ;
 
+    bbl::Class<PXR_NS::PcpChanges::CacheChanges>("PcpChangesCacheChanges")
+    ;
+
     bbl::Enum<PXR_NS::PcpCacheChanges::TargetType>();
 
 
@@ -191,6 +197,10 @@ BBL_MODULE(pcp) {
     ;
 
     bbl::Class<PXR_NS::PcpDependency>("Dependency")
+    ;
+
+    bbl::Class<PXR_NS::PcpDependencyVector>("DependencyVector")
+        BBL_STD_VECTOR_METHODS(PXR_NS::PcpDependency)
     ;
 
     bbl::Class<PXR_NS::PcpCulledDependency>("CulledDependency")
@@ -209,8 +219,8 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpDynamicFileFormatDependencyData::Swap)
         .m(&PXR_NS::PcpDynamicFileFormatDependencyData::swap)
         .m(&PXR_NS::PcpDynamicFileFormatDependencyData::IsEmpty)
-        .m(&PXR_NS::PcpDynamicFileFormatDependencyData::AddDependencyContext)
         /// XXX: rvalue ref
+        // .m(&PXR_NS::PcpDynamicFileFormatDependencyData::AddDependencyContext)
         // .m(&PXR_NS::PcpDynamicFileFormatDependencyData::AppendDependencyData)
         .m(&PXR_NS::PcpDynamicFileFormatDependencyData::GetRelevantFieldNames)
         .m(&PXR_NS::PcpDynamicFileFormatDependencyData::GetRelevantAttributeNames)
@@ -226,6 +236,14 @@ BBL_MODULE(pcp) {
 
     bbl::Class<PXR_NS::PcpErrorBase>("ErrorBase")
         .m(&PXR_NS::PcpErrorBase::ToString)
+    ;
+
+    bbl::Class<std::shared_ptr<PXR_NS::PcpErrorBase>>("ErrorBaseSharedPtr")
+        .smartptr_to<PXR_NS::PcpErrorBase>()
+    ;
+
+    bbl::Class<std::vector<std::shared_ptr<PXR_NS::PcpErrorBase>>>("ErrorBaseSharedPtrVector")
+        BBL_STD_VECTOR_METHODS((std::shared_ptr<PXR_NS::PcpErrorBase>))
     ;
 
     bbl::Class<PXR_NS::PcpErrorArcCycle>("ErrorArcCycle")
@@ -353,10 +371,7 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpExpressionVariablesDependencyData::IsEmpty)
         /// XXX: rvalue ref
         // .m(&PXR_NS::PcpExpressionVariablesDependencyData::AppendDependencyData)
-        .m(&PXR_NS::PcpExpressionVariablesDependencyData::AddDependencies)
-        /** TODO: instantiate this template
-        .m(&PXR_NS::PcpExpressionVariablesDependencyData::ForEachDependency)
-        */
+        // .m(&PXR_NS::PcpExpressionVariablesDependencyData::AddDependencies)
         .m(&PXR_NS::PcpExpressionVariablesDependencyData::GetDependenciesForLayerStack)
     ;
 
@@ -448,6 +463,10 @@ BBL_MODULE(pcp) {
         .smartptr_to<PXR_NS::PcpLayerStack>()
     ;
 
+    bbl::Class<PXR_NS::PcpLayerStackPtrVector>("LayerStackPtrVector")
+        BBL_STD_VECTOR_METHODS(PXR_NS::PcpLayerStackPtr)
+    ;
+
     bbl::Class<PXR_NS::PcpLayerStackRefPtr>("LayerStackRefPtr")
         .smartptr_to<PXR_NS::PcpLayerStack>()
     ;
@@ -464,6 +483,10 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpLayerStackIdentifier::operator>=, "op_gte")
         .m(&PXR_NS::PcpLayerStackIdentifier::GetHash)
     ;
+
+    // Can't link destructor
+    // bbl::Class<PXR_NS::PcpLifeboat>("Lifeboat")
+    // ;
 
     bbl::Class<PXR_NS::PcpMapExpression>("MapExpression")
         .ctor(bbl::Class<PXR_NS::PcpMapExpression>::Ctor<>(), "default")
@@ -607,7 +630,8 @@ BBL_MODULE(pcp) {
     ;
 
     bbl::Class<PXR_NS::PcpPrimIndexOutputs>("PrimIndexOutputs")
-        .m(&PXR_NS::PcpPrimIndexOutputs::Append)
+        /// XXX: rvalue ref
+        // .m(&PXR_NS::PcpPrimIndexOutputs::Append)
     ;
 
     bbl::Class<PXR_NS::PcpPrimIndexInputs>("PrimIndexInputs")

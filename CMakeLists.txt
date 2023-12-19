@@ -13,73 +13,12 @@ set(bindfiles
     bind/js.cpp 
     bind/ndr.cpp 
     bind/pcp.cpp 
+    bind/sdf.cpp
     bind/sdr.cpp
     bind/std.cpp
     bind/tf.cpp 
-
-    bind/sdf/abstractData.cpp
-    bind/sdf/allowed.cpp
-    bind/sdf/assetPath.cpp
-    bind/sdf/attributeSpec.cpp
-    bind/sdf/changeBlock.cpp
-    bind/sdf/changeList.cpp
-    bind/sdf/copyUtils.cpp
-    bind/sdf/data.cpp
-    bind/sdf/fileFormat.cpp
-    bind/sdf/layer.cpp
-    bind/sdf/layerOffset.cpp
-    bind/sdf/layerStateDelegate.cpp
-    bind/sdf/layerTree.cpp
-    bind/sdf/listOp.cpp
-    bind/sdf/namespaceEdit.cpp
-    bind/sdf/notice.cpp
-    bind/sdf/path.cpp
-    bind/sdf/pathExpression.cpp
-    bind/sdf/payload.cpp
-    bind/sdf/predicateExpression.cpp
-    bind/sdf/primSpec.cpp
-    bind/sdf/propertySpec.cpp
-    bind/sdf/proxyTypes.cpp
-    bind/sdf/reference.cpp
-    bind/sdf/relationshipSpec.cpp
-    bind/sdf/schema.cpp
-    bind/sdf/spec.cpp
-    bind/sdf/timeCode.cpp
-    bind/sdf/types.cpp
-    bind/sdf/valueTypeName.cpp
-    bind/sdf/variableExpression.cpp
-    bind/sdf/variantSetSpec.cpp
-    bind/sdf/variantSpec.cpp
-
-    bind/usd/attributeQuery.cpp 
-    bind/usd/clipsAPI.cpp 
-    bind/usd/collectionAPI.cpp 
-    bind/usd/collectionMembershipQuery.cpp 
-    bind/usd/common.cpp 
-    bind/usd/crateInfo.cpp 
-    bind/usd/editTarget.cpp 
-    bind/usd/inherits.cpp 
-    bind/usd/modelAPI.cpp 
-    bind/usd/notice.cpp 
-    bind/usd/object.cpp 
-    bind/usd/payloads.cpp 
-    bind/usd/primCompositionQuery.cpp 
-    bind/usd/primDefinition.cpp 
-    bind/usd/primRange.cpp 
-    bind/usd/references.cpp 
-    bind/usd/resolveInfo.cpp 
-    bind/usd/resolveTarget.cpp 
-    bind/usd/schemaBase.cpp 
-    bind/usd/schemaRegistry.cpp 
-    bind/usd/specializes.cpp 
-    bind/usd/stage.cpp 
-    bind/usd/stageCache.cpp 
-    bind/usd/stageLoadRules.cpp 
-    bind/usd/stagePopulationMask.cpp 
-    bind/usd/timeCode.cpp 
-    bind/usd/variantSets.cpp 
-
-    bind/usd/geom.cpp 
+    bind/usd.cpp
+    bind/usdGeom.cpp 
     bind/vt.cpp 
 )
 

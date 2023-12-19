@@ -41,6 +41,8 @@
 #include <pxr/base/tf/token.h>
 #include <pxr/usd/sdf/assetPath.h>
 
+
+
 BBL_MODULE(vt) {
 
     // clang-format off
@@ -337,30 +339,31 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::VtVec4fArray>, "Get_VtVec4fArray"
         ) 
 
-        ;
+    ;
 
     bbl::Class<PXR_NS::VtTokenArray>("TokenArray")
         VTARRAY_METHODS(PXR_NS::TfToken)
-        ;
+    ;
 
     bbl::Class<PXR_NS::VtBoolArray>("BoolArray")
         VTARRAY_METHODS(bool)
-        ;
+    ;
 
     bbl::Class<PXR_NS::VtIntArray>("IntArray")
         VTARRAY_METHODS(int)
-        ;
+    ;
 
     bbl::Class<PXR_NS::VtFloatArray>("FloatArray")
         VTARRAY_METHODS(float)
-        ;
+    ;
 
     bbl::Class<PXR_NS::VtDoubleArray>("DoubleArray")
         VTARRAY_METHODS(double)
-        ;
+    ;
 
     bbl::Class<PXR_NS::VtDictionary>("Dictionary")
-        ;
+        .m(&PXR_NS::VtDictionary::operator[], "op_index")
+    ;
 }
 
 
