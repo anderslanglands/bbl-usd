@@ -23,7 +23,6 @@ BBL_MODULE(tf) {
     bbl::Class<PXR_NS::TfToken>("Token")
         .opaque_ptr()
         .ctor(bbl::Class<Token>::Ctor<>(), "new")
-        .m((Token& (Token::*)(Token const&))&Token::operator=, "op_assign")
         .m(&Token::GetText)
         ;
 
@@ -33,6 +32,9 @@ BBL_MODULE(tf) {
     bbl::Class<PXR_NS::TfTokenVector>("TokenVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::TfToken)
         ;
+
+    bbl::Class<std::pair<PXR_NS::TfToken, PXR_NS::TfToken>>("TokenTokenPair")
+    ;
 }
 
 

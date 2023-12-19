@@ -5,6 +5,7 @@
 
 #include <pxr/base/js/value.h>
 #include <pxr/base/js/types.h>
+#include <pxr/base/tf/token.h>
 
 BBL_MODULE(js) {
     // clang-format off
@@ -39,6 +40,9 @@ BBL_MODULE(js) {
         .m(&PXR_NS::JsValue::IsUInt64)
         .m(&PXR_NS::JsValue::IsReal)
         ;
+
+    bbl::Class<std::pair<PXR_NS::TfToken, PXR_NS::JsValue>>("TokenValuePair")
+    ;
 
 }
 

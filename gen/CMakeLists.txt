@@ -16,7 +16,8 @@ bbl_generate_binding(
         -DBOOST_ALL_NO_LIB 
         -D__TBB_show_deprecation_message_task_H
         -D_MT
+        -Wno-deprecated-builtins
 )
 
 target_link_libraries(openusd-gen PUBLIC usd sdf js usdGeom)
-# target_compile_definitions(openusd-gen PRIVATE -DNOMINMAX -DBOOST_ALL_NO_LIB -D__TBB_show_deprecation_message_task_H)
+target_compile_definitions(openusd-gen PRIVATE -DNOMINMAX -DBOOST_ALL_NO_LIB -D__TBB_show_deprecation_message_task_H)

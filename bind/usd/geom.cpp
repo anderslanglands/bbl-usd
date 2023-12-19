@@ -1,7 +1,5 @@
 #if defined(__clang__)
 
-#define NOMINMAX
-
 #include "babble"
 #include "babble-std"
 
@@ -52,21 +50,6 @@
 
 BBL_MODULE(usdGeom) {
     // clang-format off
-
-    bbl::Class<PXR_NS::UsdSchemaBase>("SchemaBase")
-        .m(&PXR_NS::UsdSchemaBase::IsConcrete) 
-        .m(&PXR_NS::UsdSchemaBase::IsTyped) 
-        .m(&PXR_NS::UsdSchemaBase::IsAPISchema) 
-        .m(&PXR_NS::UsdSchemaBase::IsAppliedAPISchema) 
-        .m(&PXR_NS::UsdSchemaBase::IsMultipleApplyAPISchema) 
-        .m(&PXR_NS::UsdSchemaBase::GetSchemaKind) 
-        .m(&PXR_NS::UsdSchemaBase::GetPrim) 
-        .m(&PXR_NS::UsdSchemaBase::GetPath) 
-        .m(&PXR_NS::UsdSchemaBase::GetSchemaClassPrimDefinition)
-        ;
-
-    bbl::Class<PXR_NS::UsdAPISchemaBase>("APISchemaBase")
-        ;
 
     bbl::Class<PXR_NS::UsdGeomBasisCurves>("BasisCurves")
         .ctor(bbl::Class<PXR_NS::UsdGeomBasisCurves>::Ctor<PXR_NS::UsdPrim const&>(), "new")
