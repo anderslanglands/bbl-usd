@@ -10,6 +10,109 @@
 #include <pxr/usd/ar/resolverContext.h>
 #include <pxr/usd/ar/timestamp.h>
 #include <pxr/usd/ar/writableAsset.h>
+#include <pxr/usd/ar/defineResolver.h>
+
+namespace bblext {
+    void set_ar_resolver_factory(
+        const PXR_NS::TfType& type,
+        void* create_id,
+        void* create_identifier,
+        void* open_asset,
+        void* resolve,
+        void* resolve_for_new_asset,
+        void *open_asset_for_write
+    ) {
+        typedef std::string (*CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR)(const std::string&, const PXR_NS::ArResolvedPath&);
+        typedef std::string (*CREATE_IDENTIFIER_FN_PTR)(const std::string &assetPath, const PXR_NS::ArResolvedPath &anchorAssetPath);
+        typedef std::shared_ptr<PXR_NS::ArAsset> (*OPEN_ASSET_FN_PTR)(const PXR_NS::ArResolvedPath &resolvedPath);
+        typedef PXR_NS::ArResolvedPath (*RESOLVE_FN_PTR)(const std::string &assetPath);
+        typedef PXR_NS::ArResolvedPath (*RESOLVE_FOR_NEW_ASSET_FN_PTR)(const std::string &assetPath);
+        typedef std::shared_ptr<PXR_NS::ArWritableAsset> (*OPEN_ASSET_FOR_WRITE_FN_PTR)(const PXR_NS::ArResolvedPath &, PXR_NS::ArResolver::WriteMode);
+
+        class CustomFunctionArResolver : public PXR_NS::ArResolver {
+            CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR create_identifier_for_new_asset;
+            CREATE_IDENTIFIER_FN_PTR create_identifier;
+            OPEN_ASSET_FN_PTR open_asset;
+            RESOLVE_FN_PTR resolve;
+            RESOLVE_FOR_NEW_ASSET_FN_PTR resolve_for_new_asset;
+            OPEN_ASSET_FOR_WRITE_FN_PTR open_asset_for_write;
+            
+        public:
+            CustomFunctionArResolver(
+                CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR create_identifier_for_new_asset_,
+                CREATE_IDENTIFIER_FN_PTR create_identifier_,
+                OPEN_ASSET_FN_PTR open_asset_,
+                RESOLVE_FN_PTR resolve_,
+                RESOLVE_FOR_NEW_ASSET_FN_PTR resolve_for_new_asset_,
+                OPEN_ASSET_FOR_WRITE_FN_PTR open_asset_for_write_
+            ): open_asset_for_write(open_asset_for_write_), resolve_for_new_asset(resolve_for_new_asset_), resolve(resolve_), open_asset(open_asset_), create_identifier_for_new_asset(create_identifier_for_new_asset_), create_identifier(create_identifier_) {
+            }
+            
+            std::string _CreateIdentifierForNewAsset(const std::string &assetPath, const PXR_NS::ArResolvedPath &anchorAssetPath) const {
+                return create_identifier_for_new_asset(assetPath, anchorAssetPath);
+            }
+            
+            std::string _CreateIdentifier(const std::string &assetPath, const PXR_NS::ArResolvedPath &anchorAssetPath) const {
+                return create_identifier(assetPath, anchorAssetPath);
+            }
+            
+            PXR_NS::ArResolvedPath _Resolve(const std::string &assetPath) const {
+                return resolve(assetPath);
+            }
+            
+            PXR_NS::ArResolvedPath _ResolveForNewAsset(const std::string &assetPath) const {
+                return resolve_for_new_asset(assetPath);
+            }
+            
+            std::shared_ptr<PXR_NS::ArAsset> _OpenAsset(const PXR_NS::ArResolvedPath &resolvedPath) const {
+                return open_asset(resolvedPath);
+            }
+            
+            std::shared_ptr<PXR_NS::ArWritableAsset> _OpenAssetForWrite(
+                const PXR_NS::ArResolvedPath &resolvedPath,
+                PXR_NS::ArResolver::WriteMode writeMode 
+            ) const {
+                return open_asset_for_write(resolvedPath, writeMode);
+            }
+        };
+
+        class CustomFunctionArResolverFactory: public PXR_NS::Ar_ResolverFactoryBase {
+            CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR create_identifier_for_new_asset;
+            CREATE_IDENTIFIER_FN_PTR create_identifier;
+            OPEN_ASSET_FN_PTR open_asset;
+            RESOLVE_FN_PTR resolve;
+            RESOLVE_FOR_NEW_ASSET_FN_PTR resolve_for_new_asset;
+            OPEN_ASSET_FOR_WRITE_FN_PTR open_asset_for_write;
+            
+        public:    
+            CustomFunctionArResolverFactory(
+                CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR create_identifier_for_new_asset_,
+                CREATE_IDENTIFIER_FN_PTR create_identifier_,
+                OPEN_ASSET_FN_PTR open_asset_,
+                RESOLVE_FN_PTR resolve_,
+                RESOLVE_FOR_NEW_ASSET_FN_PTR resolve_for_new_asset_,
+                OPEN_ASSET_FOR_WRITE_FN_PTR open_asset_for_write_
+            ): open_asset_for_write(open_asset_for_write_), resolve_for_new_asset(resolve_for_new_asset_), resolve(resolve_), open_asset(open_asset_), create_identifier(create_identifier_), create_identifier_for_new_asset(create_identifier_for_new_asset_) {}
+
+            virtual PXR_NS::ArResolver* New() const {
+                return new CustomFunctionArResolver(create_identifier_for_new_asset, create_identifier, open_asset, resolve, resolve_for_new_asset, open_asset_for_write);
+            }
+        };
+        
+        type.SetFactory(
+            std::unique_ptr<PXR_NS::TfType::FactoryBase>(
+                new CustomFunctionArResolverFactory(
+                    (CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR) create_id,
+                    (CREATE_IDENTIFIER_FN_PTR) create_identifier,
+                    (OPEN_ASSET_FN_PTR) open_asset,
+                    (RESOLVE_FN_PTR) resolve,
+                    (RESOLVE_FOR_NEW_ASSET_FN_PTR) resolve_for_new_asset,
+                    (OPEN_ASSET_FOR_WRITE_FN_PTR) open_asset_for_write
+                )
+            )
+        );
+    }
+}
 
 BBL_MODULE(ar) {
     bbl::Class<PXR_NS::ArAsset>()
@@ -112,7 +215,7 @@ BBL_MODULE(ar) {
         .smartptr_to<PXR_NS::ArWritableAsset>()
     ;
 
-
+    bbl::fn(&bblext::set_ar_resolver_factory);
 }
 
 
