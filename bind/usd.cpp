@@ -1091,7 +1091,9 @@ BBL_MODULE(usd) {
     bbl::Class<PXR_NS::UsdPrimRange::iterator>("PrimRangeIterator")
         .opaque_ptr()
         .ctor(bbl::Class<PXR_NS::UsdPrimRange::iterator>::Ctor<>(), "new")
-        .m(&PXR_NS::UsdPrimRange::iterator::operator++, "op_inc")
+        .m((PXR_NS::UsdPrimRange::iterator & (PXR_NS::UsdPrimRange::iterator::*)())
+            &PXR_NS::UsdPrimRange::iterator::operator++, "op_inc"
+        )
         .m((PXR_NS::UsdPrimRange::iterator & (PXR_NS::UsdPrimRange::iterator::*)(PXR_NS::UsdPrimRange::iterator const&)) 
             &PXR_NS::UsdPrimRange::iterator::operator=, "op_assign"
         )
@@ -1107,7 +1109,9 @@ BBL_MODULE(usd) {
 
     bbl::Class<PXR_NS::UsdPrimSiblingIterator>("PrimSiblingIterator")
         .m(&PXR_NS::UsdPrimSiblingIterator::operator*, "deref")
-        .m(&PXR_NS::UsdPrimSiblingIterator::operator++, "op_inc")
+        .m((PXR_NS::UsdPrimSiblingIterator & (PXR_NS::UsdPrimSiblingIterator::*)())
+            &PXR_NS::UsdPrimSiblingIterator::operator++, "op_inc"
+        )
     ;
 
     bbl::fn(&bblext::PrimSiblingIterator_op_eq);

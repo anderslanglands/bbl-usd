@@ -37,8 +37,7 @@ bbl_translate_binding(
         -D__TBB_show_deprecation_message_task_H 
 )
 
-target_link_libraries(openusd-c PUBLIC usd usdGeom sdf sdr ndr pcp)
-
+target_link_libraries(openusd-c PUBLIC ${PXR_LIBRARIES})
 
 target_compile_definitions(openusd-c PRIVATE NOMINMAX BOOST_ALL_NO_LIB __TBB_show_deprecation_message_task_H)
 
