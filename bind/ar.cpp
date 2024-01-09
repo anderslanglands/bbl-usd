@@ -105,6 +105,11 @@ namespace bblext {
                 return output;
             }
             
+            std::string _GetExtension(const std::string& assetPath) const {
+                std::cout << "_GetExtension" << std::endl;
+                return PXR_NS::ArResolver::_GetExtension(assetPath);
+            }
+
             std::shared_ptr<PXR_NS::ArWritableAsset> _OpenAssetForWrite(
                 const PXR_NS::ArResolvedPath &resolvedPath,
                 PXR_NS::ArResolver::WriteMode writeMode 
