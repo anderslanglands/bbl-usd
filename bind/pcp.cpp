@@ -145,7 +145,8 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpCache::GetDynamicFileFormatArgumentDependencyData)
         .m(&PXR_NS::PcpCache::GetPrimsUsingExpressionVariablesFromLayerStack)
         .m(&PXR_NS::PcpCache::GetExpressionVariablesFromLayerStackUsedByPrim)
-        .m(&PXR_NS::PcpCache::Apply)
+        /// XXX: PcpLifeboat doesn't link
+        // .m(&PXR_NS::PcpCache::Apply)
         .m(&PXR_NS::PcpCache::Reload)
         .m(&PXR_NS::PcpCache::ReloadReferences)
         .m(&PXR_NS::PcpCache::PrintStatistics)
@@ -178,16 +179,24 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpChanges::IsEmpty)
         .m(&PXR_NS::PcpChanges::GetLayerStackChanges)
         .m(&PXR_NS::PcpChanges::GetCacheChanges)
-        .m(&PXR_NS::PcpChanges::GetLifeboat)
+        /// XXX: lifeboat doesnt link
+        // .m(&PXR_NS::PcpChanges::GetLifeboat)
         .m(&PXR_NS::PcpChanges::Apply)
-        .m(&PXR_NS::PcpChanges::operator=, "op_assign")
     ;
 
     bbl::Class<PXR_NS::PcpChanges::CacheChanges>("PcpChangesCacheChanges")
     ;
 
-    bbl::Enum<PXR_NS::PcpCacheChanges::TargetType>();
+    bbl::Class<PXR_NS::PcpChanges::LayerStackChanges>("PcpLayerStackChanges")
+    ;
 
+    bbl::Class<PXR_NS::PcpCacheChanges>("CacheChanges")
+    ;
+
+    bbl::Enum<PXR_NS::PcpCacheChanges::TargetType>("CacheChangesTargetType");
+
+    bbl::Class<PXR_NS::Pcp_CompressedSdSite>("CompressedSdSite")
+    ;
 
     bbl::Class<PXR_NS::PcpSourceArcInfo>("SourceArcInfo")
     ;
@@ -247,104 +256,93 @@ BBL_MODULE(pcp) {
     ;
 
     bbl::Class<PXR_NS::PcpErrorArcCycle>("ErrorArcCycle")
-        .m(&PXR_NS::PcpErrorArcCycle::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorArcPermissionDenied>("ErrorArcPermissionDenied")
-        .m(&PXR_NS::PcpErrorArcPermissionDenied::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorCapacityExceeded>("ErrorCapacityExceeded")
-        .m(&PXR_NS::PcpErrorCapacityExceeded::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorInconsistentPropertyBase>("ErrorInconsistentPropertyBase")
     ;
 
+    bbl::Class<std::shared_ptr<PXR_NS::PcpErrorInconsistentPropertyBase>>("ErrorInconsistentPropertyBaseSharedPtr")
+        .smartptr_to<PXR_NS::PcpErrorInconsistentPropertyBase>()
+    ;
+
     bbl::Class<PXR_NS::PcpErrorInconsistentPropertyType>("ErrorInconsistentPropertyType")
-        .m(&PXR_NS::PcpErrorInconsistentPropertyType::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorInconsistentAttributeType>("ErrorInconsistentAttributeType")
-        .m(&PXR_NS::PcpErrorInconsistentAttributeType::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorInconsistentAttributeVariability>("ErrorInconsistentAttributeVariability")
-        .m(&PXR_NS::PcpErrorInconsistentAttributeVariability::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorInvalidPrimPath>("ErrorInvalidPrimPath")
-        .m(&PXR_NS::PcpErrorInvalidPrimPath::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorInvalidAssetPathBase>("ErrorInvalidAssetPathBase")
     ;
 
+    bbl::Class<std::shared_ptr<PXR_NS::PcpErrorInvalidAssetPathBase>>("ErrorInvalidAssetPathBaseSharedPtr")
+        .smartptr_to<PXR_NS::PcpErrorInvalidAssetPathBase>()
+    ;
+
     bbl::Class<PXR_NS::PcpErrorInvalidAssetPath>("ErrorInvalidAssetPath")
-        .m(&PXR_NS::PcpErrorInvalidAssetPath::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorMutedAssetPath>("ErrorMutedAssetPath")
-        .m(&PXR_NS::PcpErrorMutedAssetPath::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorTargetPathBase>("ErrorTargetPathBase")
     ;
 
+    bbl::Class<std::shared_ptr<PXR_NS::PcpErrorTargetPathBase>>("ErrorTargetPathBaseSharedPtr")
+        .smartptr_to<PXR_NS::PcpErrorTargetPathBase>()
+    ;
+
     bbl::Class<PXR_NS::PcpErrorInvalidInstanceTargetPath>("ErrorInvalidInstaceTargetPath")
-        .m(&PXR_NS::PcpErrorInvalidInstanceTargetPath::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorInvalidExternalTargetPath>("ErrorInvalidExternalTargetPath")
-        .m(&PXR_NS::PcpErrorInvalidExternalTargetPath::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorInvalidTargetPath>("ErrorInvalidTargetPath")
-        .m(&PXR_NS::PcpErrorInvalidTargetPath::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorInvalidSublayerOffset>("ErrorInvalidSublayerOffset")
-        .m(&PXR_NS::PcpErrorInvalidSublayerOffset::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorInvalidReferenceOffset>("ErrorInvalidReferenceOffset")
-        .m(&PXR_NS::PcpErrorInvalidReferenceOffset::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorInvalidSublayerOwnership>("ErrorInvalidSublayerOwnership")
-        .m(&PXR_NS::PcpErrorInvalidSublayerOwnership::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorInvalidSublayerPath>("ErrorInvalidSublayerPath")
-        .m(&PXR_NS::PcpErrorInvalidSublayerPath::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorOpinionAtRelocationSource>("ErrorOpinionAtRelocationSource")
-        .m(&PXR_NS::PcpErrorOpinionAtRelocationSource::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorPrimPermissionDenied>("ErrorPrimPermissionDenied")
-        .m(&PXR_NS::PcpErrorPrimPermissionDenied::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorPropertyPermissionDenied>("ErrorPropertyPermissionDenied")
-        .m(&PXR_NS::PcpErrorPropertyPermissionDenied::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorSublayerCycle>("ErrorSublayerCycle")
-        .m(&PXR_NS::PcpErrorSublayerCycle::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorTargetPermissionDenied>("ErrorTargetPermissionDenied")
-        .m(&PXR_NS::PcpErrorTargetPermissionDenied::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorUnresolvedPrimPath>("ErrorUnresolvedPrimPath")
-        .m(&PXR_NS::PcpErrorUnresolvedPrimPath::New)
     ;
 
     bbl::Class<PXR_NS::PcpErrorVariableExpressionError>("ErrorVariableExpressionError")
-        .m(&PXR_NS::PcpErrorVariableExpressionError::New)
     ;
 
     bbl::Enum<PXR_NS::PcpErrorType>("ErrorType");
@@ -396,6 +394,9 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpInstanceKey::operator==, "op_eq")
         .m(&PXR_NS::PcpInstanceKey::operator!=, "op_neq")
         .m(&PXR_NS::PcpInstanceKey::GetString)
+    ;
+
+    bbl::Class<PXR_NS::PcpLayerStackSite>("LayerStackSite")
     ;
 
     bbl::Class<PXR_NS::PcpNodeIterator>("NodeIterator")
@@ -455,8 +456,12 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpLayerStack::GetIncrementalRelocatesSourceToTarget)
         .m(&PXR_NS::PcpLayerStack::GetIncrementalRelocatesTargetToSource)
         .m(&PXR_NS::PcpLayerStack::GetPathsToPrimsWithRelocates)
-        .m(&PXR_NS::PcpLayerStack::Apply)
+        /// XXX: lifeboat doesn't link
+        // .m(&PXR_NS::PcpLayerStack::Apply)
         .m(&PXR_NS::PcpLayerStack::GetExpressionForRelocatesAtPath)
+    ;
+
+    bbl::Class<PXR_NS::PcpLayerStackChanges>("LayerStackChanges")
     ;
 
     bbl::Class<PXR_NS::PcpLayerStackPtr>("LayerStackPtr")
@@ -495,7 +500,8 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpMapExpression::IsNull)
         .m(&PXR_NS::PcpMapExpression::Identity)
         .m(&PXR_NS::PcpMapExpression::Constant)
-        .m(&PXR_NS::PcpMapExpression::NewVariable)
+        /// XXX: rvalue ref
+        // .m(&PXR_NS::PcpMapExpression::NewVariable)
         .m(&PXR_NS::PcpMapExpression::Compose)
         .m(&PXR_NS::PcpMapExpression::Inverse)
         .m(&PXR_NS::PcpMapExpression::AddRootIdentity)
@@ -512,6 +518,10 @@ BBL_MODULE(pcp) {
         /// XXX: rvalue ref
         // .m(&PXR_NS::PcpMapExpression::Variable::SetValue)
         .m(&PXR_NS::PcpMapExpression::Variable::GetExpression)
+    ;
+
+    bbl::Class<PXR_NS::PcpMapExpression::VariableUniquePtr>("MapExpressionVariableUniquePtr")
+        .smartptr_to<PXR_NS::PcpMapExpression::Variable>()
     ;
 
     bbl::Class<PXR_NS::PcpMapFunction>("MapFunction")
@@ -598,6 +608,18 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpNodeRef::GetCompressedSdSite)
     ;
 
+    bbl::Class<PXR_NS::PcpNodeRange>("NodeRange")
+    ;
+
+    bbl::Class<PXR_NS::PcpNodeRef::child_const_iterator>("NodeRef_child_const_iterator")
+    ;
+
+    bbl::Class<PXR_NS::PcpNodeRef::child_const_reverse_iterator>("NodeRef_child_const_reverse_iterator")
+    ;
+
+    bbl::Class<PXR_NS::PcpNodeRef::child_const_range>("NodeRef_child_const_range")
+    ;
+
     bbl::Class<PXR_NS::PcpPrimIndex>("PrimIndex")
         .ctor(bbl::Class<PXR_NS::PcpPrimIndex>::Ctor<>(), "default")
         .m(&PXR_NS::PcpPrimIndex::Swap)
@@ -641,13 +663,23 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpPrimIndexInputs::Cache)
         .m(&PXR_NS::PcpPrimIndexInputs::VariantFallbacks)
         .m(&PXR_NS::PcpPrimIndexInputs::IncludedPayloads)
-        .m(&PXR_NS::PcpPrimIndexInputs::IncludedPayloadsMutex)
+        /// XXX: tbb mutex
+        // .m(&PXR_NS::PcpPrimIndexInputs::IncludedPayloadsMutex)
         .m(&PXR_NS::PcpPrimIndexInputs::IncludePayloadPredicate)
         .m(&PXR_NS::PcpPrimIndexInputs::Cull)
         .m(&PXR_NS::PcpPrimIndexInputs::USD)
         .m(&PXR_NS::PcpPrimIndexInputs::FileFormatTarget)
     ;
 
+    bbl::ClassIncomplete<PXR_NS::PcpPrimIndex_Graph>("PrimIndex_Graph")
+    ;
+
+    bbl::Class<PXR_NS::PcpPrimIndex_GraphRefPtr>("PrimIndex_GraphRefPtr")
+        .smartptr_to<PXR_NS::PcpPrimIndex_Graph>()
+    ;
+
+    bbl::Class<PXR_NS::PcpPrimRange>("PrimRange")
+    ;
 
     bbl::Class<PXR_NS::PcpPropertyIndex>("PropertyIndex")
         .ctor(bbl::Class<PXR_NS::PcpPropertyIndex>::Ctor<>(), "default")
@@ -656,6 +688,12 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpPropertyIndex::GetPropertyRange)
         .m(&PXR_NS::PcpPropertyIndex::GetLocalErrors)
         .m(&PXR_NS::PcpPropertyIndex::GetNumLocalSpecs)
+    ;
+
+    bbl::Class<PXR_NS::PcpPropertyRange>("PropertyRange")
+    ;
+
+    bbl::Class<PXR_NS::Pcp_SdSiteRef>("SdSiteRef")
     ;
 
     bbl::Class<PXR_NS::PcpSite>("Site")
@@ -677,6 +715,9 @@ BBL_MODULE(pcp) {
     ;
 
     bbl::Class<PXR_NS::PcpTargetIndex>("TargetIndex")
+    ;
+
+    bbl::Class<PXR_NS::PcpTokenSet>("TokenSet")
     ;
 
     bbl::Class<PXR_NS::PcpVariantFallbackMap>("VariantFallbackMap")

@@ -89,9 +89,10 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomBBoxCache::GetBaseTime)
         .m(&PXR_NS::UsdGeomBBoxCache::ClearBaseTime)
         .m(&PXR_NS::UsdGeomBBoxCache::HasBaseTime)
-        ;
+    ;
 
-    bbl::Class<PXR_NS::TfHashMap<PXR_NS::SdfPath, PXR_NS::GfMatrix4d>>("PathMatrixHashMap");
+    bbl::Class<PXR_NS::TfHashMap<PXR_NS::SdfPath, PXR_NS::GfMatrix4d, PXR_NS::SdfPath::Hash>>("PathMatrixHashMap")
+    ;
 
 
     bbl::Class<PXR_NS::UsdGeomBoundable>("Boundable")

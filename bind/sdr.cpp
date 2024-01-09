@@ -47,6 +47,10 @@ BBL_MODULE(sdr) {
         BBL_STD_VECTOR_METHODS(PXR_NS::SdrShaderNode)
     ;
 
+    bbl::Class<PXR_NS::SdrShaderNodePtrVec>("ShaderNodePtrVector")
+        BBL_STD_VECTOR_METHODS(PXR_NS::SdrShaderNode const*)
+    ;
+
     bbl::Class<PXR_NS::SdrShaderProperty>("ShaderProperty")
         .ctor(bbl::Class<PXR_NS::SdrShaderProperty>::Ctor<const PXR_NS::TfToken &, const PXR_NS::TfToken &, const PXR_NS::VtValue &, bool, size_t, const PXR_NS::NdrTokenMap &, const PXR_NS::NdrTokenMap &, const PXR_NS::NdrOptionVec &>("name", "type", "defaultValue", "isOutput", "arraySize", "metadata", "hints", "options"), "ctor_00")
         .m(&PXR_NS::SdrShaderProperty::GetLabel)
