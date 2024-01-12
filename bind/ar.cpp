@@ -27,13 +27,14 @@ namespace bblext {
 
     void set_ar_resolver_factory(
         const PXR_NS::TfType& type,
-        void* create_id,
+        void* create_identifier_for_new_asset,
         void* create_identifier,
         void* open_asset,
         void* resolve,
         void* resolve_for_new_asset,
         void* open_asset_for_write,
-        void* get_extension
+        void* get_extension,
+        void* get_modification_timestamp
     ) {
         typedef void (*CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR)(const std::string*, const PXR_NS::ArResolvedPath*, std::string** output);
         typedef void (*CREATE_IDENTIFIER_FN_PTR)(const std::string *assetPath, const PXR_NS::ArResolvedPath *anchorAssetPath, std::string** output);
@@ -42,8 +43,9 @@ namespace bblext {
         typedef void (*RESOLVE_FOR_NEW_ASSET_FN_PTR)(const std::string *assetPath, PXR_NS::ArResolvedPath** output);
         typedef void (*OPEN_ASSET_FOR_WRITE_FN_PTR)(const PXR_NS::ArResolvedPath *, PXR_NS::ArResolver::WriteMode, std::shared_ptr<PXR_NS::ArWritableAsset>** output);
         typedef void (*GET_EXTENSION_FN_PTR)(const std::string* assetPath, std::string** output);
+        typedef void (*GET_MODIFICATION_TIMESTAMP_FN_PTR)(const std::string *assetPath, const PXR_NS::ArResolvedPath *resolvedPath, PXR_NS::ArTimestamp** output);
 
-        class CustomFunctionArResolver : public PXR_NS::ArResolver {
+        struct Functions {
             CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR create_identifier_for_new_asset;
             CREATE_IDENTIFIER_FN_PTR create_identifier;
             OPEN_ASSET_FN_PTR open_asset;
@@ -51,24 +53,33 @@ namespace bblext {
             RESOLVE_FOR_NEW_ASSET_FN_PTR resolve_for_new_asset;
             OPEN_ASSET_FOR_WRITE_FN_PTR open_asset_for_write;
             GET_EXTENSION_FN_PTR get_extension;
+            GET_MODIFICATION_TIMESTAMP_FN_PTR get_modification_timestamp;
+        };
+
+        Functions functions = {
+            (CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR) create_identifier_for_new_asset,
+            (CREATE_IDENTIFIER_FN_PTR) create_identifier,
+            (OPEN_ASSET_FN_PTR) open_asset,
+            (RESOLVE_FN_PTR) resolve,
+            (RESOLVE_FOR_NEW_ASSET_FN_PTR) resolve_for_new_asset,
+            (OPEN_ASSET_FOR_WRITE_FN_PTR) open_asset_for_write,
+            (GET_EXTENSION_FN_PTR) get_extension,
+            (GET_MODIFICATION_TIMESTAMP_FN_PTR) get_modification_timestamp
+        };
+
+        class CustomFunctionArResolver : public PXR_NS::ArResolver {
+            Functions functions;
 
         public:
             CustomFunctionArResolver(
-                CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR create_identifier_for_new_asset_,
-                CREATE_IDENTIFIER_FN_PTR create_identifier_,
-                OPEN_ASSET_FN_PTR open_asset_,
-                RESOLVE_FN_PTR resolve_,
-                RESOLVE_FOR_NEW_ASSET_FN_PTR resolve_for_new_asset_,
-                OPEN_ASSET_FOR_WRITE_FN_PTR open_asset_for_write_,
-                GET_EXTENSION_FN_PTR get_extension_
-            ): get_extension(get_extension_), open_asset_for_write(open_asset_for_write_), resolve_for_new_asset(resolve_for_new_asset_), resolve(resolve_), open_asset(open_asset_), create_identifier_for_new_asset(create_identifier_for_new_asset_), create_identifier(create_identifier_) {
-            }
+                Functions functions_
+            ): functions(functions_) {}
             
             std::string _CreateIdentifierForNewAsset(const std::string &assetPath, const PXR_NS::ArResolvedPath &anchorAssetPath) const override {
                 std::cout << "_CreateIdentifierForNewAsset" << std::endl;
                 std::string output;
                 std::string* output_ptr = &output;
-                create_identifier_for_new_asset(&assetPath, &anchorAssetPath, &output_ptr);
+                functions.create_identifier_for_new_asset(&assetPath, &anchorAssetPath, &output_ptr);
                 output = *output_ptr;
                 return output;
             }
@@ -77,7 +88,7 @@ namespace bblext {
                 std::cout << "_CreateIdentifier" << std::endl;
                 std::string output;
                 std::string* output_ptr = &output;
-                create_identifier(&assetPath, &anchorAssetPath, &output_ptr);
+                functions.create_identifier(&assetPath, &anchorAssetPath, &output_ptr);
                 output = *output_ptr;
                 return output;
             }
@@ -86,17 +97,17 @@ namespace bblext {
                 std::cout << "_Resolve" << std::endl;
                 PXR_NS::ArResolvedPath output;
                 PXR_NS::ArResolvedPath* output_ptr = &output;
-                resolve(&assetPath, &output_ptr);
+                functions.resolve(&assetPath, &output_ptr);
                 output = *output_ptr;
                 return output;
             }
             
             PXR_NS::ArResolvedPath _ResolveForNewAsset(const std::string &assetPath) const override {
                 std::cout << "_ResolveForNewAsset" << std::endl;
-                if (resolve_for_new_asset) {
+                if (functions.resolve_for_new_asset) {
                     PXR_NS::ArResolvedPath output;
                     PXR_NS::ArResolvedPath* output_ptr = &output;
-                    resolve_for_new_asset(&assetPath, &output_ptr);
+                    functions.resolve_for_new_asset(&assetPath, &output_ptr);
                     output = *output_ptr;
                     return output;
                 } else {
@@ -108,23 +119,32 @@ namespace bblext {
                 std::cout << "_OpenAsset" << std::endl;
                 std::shared_ptr<PXR_NS::ArAsset> output;
                 std::shared_ptr<PXR_NS::ArAsset>* output_ptr = &output;
-                open_asset(&resolvedPath, &output_ptr);
+                functions.open_asset(&resolvedPath, &output_ptr);
                 output = *output_ptr;
                 return output;
             }
             
             PXR_NS::ArTimestamp _GetModificationTimestamp(const std::string &assetPath, const PXR_NS::ArResolvedPath &resolvedPath) const override {
                 std::cout << "_GetModificationTimestamp" << std::endl;
-                return PXR_NS::ArResolver::_GetModificationTimestamp(assetPath, resolvedPath);
+
+                if (functions.get_modification_timestamp) {
+                    PXR_NS::ArTimestamp output;
+                    PXR_NS::ArTimestamp* output_ptr = &output;
+                    functions.get_modification_timestamp(&assetPath, &resolvedPath, &output_ptr);
+                    output = *output_ptr;
+                    return output;
+                } else {
+                    return PXR_NS::ArResolver::_GetModificationTimestamp(assetPath, resolvedPath);
+                }
             }
 
             std::string _GetExtension(const std::string& assetPath) const override {
                 std::cout << "_GetExtension" << std::endl;
 
-                if (get_extension) {
+                if (functions.get_extension) {
                     std::string output;
                     std::string* output_ptr = &output;
-                    get_extension(&assetPath, &output_ptr);
+                    functions.get_extension(&assetPath, &output_ptr);
                     output = *output_ptr;
                     return output;
                 } else {
@@ -139,48 +159,28 @@ namespace bblext {
                 std::cout << "_OpenAssetForWrite" << std::endl;
                 std::shared_ptr<PXR_NS::ArWritableAsset> output;
                 std::shared_ptr<PXR_NS::ArWritableAsset>* output_ptr = &output;
-                open_asset_for_write(&resolvedPath, writeMode, &output_ptr);
+                functions.open_asset_for_write(&resolvedPath, writeMode, &output_ptr);
                 output = *output_ptr;
                 return output;
             }
         };
 
         class CustomFunctionArResolverFactory: public PXR_NS::Ar_ResolverFactoryBase {
-            CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR create_identifier_for_new_asset;
-            CREATE_IDENTIFIER_FN_PTR create_identifier;
-            OPEN_ASSET_FN_PTR open_asset;
-            RESOLVE_FN_PTR resolve;
-            RESOLVE_FOR_NEW_ASSET_FN_PTR resolve_for_new_asset;
-            OPEN_ASSET_FOR_WRITE_FN_PTR open_asset_for_write;
-            GET_EXTENSION_FN_PTR get_extension;
+            Functions functions;
 
-        public:    
+        public:
             CustomFunctionArResolverFactory(
-                CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR create_identifier_for_new_asset_,
-                CREATE_IDENTIFIER_FN_PTR create_identifier_,
-                OPEN_ASSET_FN_PTR open_asset_,
-                RESOLVE_FN_PTR resolve_,
-                RESOLVE_FOR_NEW_ASSET_FN_PTR resolve_for_new_asset_,
-                OPEN_ASSET_FOR_WRITE_FN_PTR open_asset_for_write_,
-                GET_EXTENSION_FN_PTR get_extension_
-            ): get_extension(get_extension_), open_asset_for_write(open_asset_for_write_), resolve_for_new_asset(resolve_for_new_asset_), resolve(resolve_), open_asset(open_asset_), create_identifier(create_identifier_), create_identifier_for_new_asset(create_identifier_for_new_asset_) {}
+                Functions functions_
+            ): functions(functions_) {}
 
             virtual PXR_NS::ArResolver* New() const {
-                return new CustomFunctionArResolver(create_identifier_for_new_asset, create_identifier, open_asset, resolve, resolve_for_new_asset, open_asset_for_write, get_extension);
+                return new CustomFunctionArResolver(functions);
             }
         };
         
         type.SetFactory(
             std::unique_ptr<PXR_NS::TfType::FactoryBase>(
-                new CustomFunctionArResolverFactory(
-                    (CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR) create_id,
-                    (CREATE_IDENTIFIER_FN_PTR) create_identifier,
-                    (OPEN_ASSET_FN_PTR) open_asset,
-                    (RESOLVE_FN_PTR) resolve,
-                    (RESOLVE_FOR_NEW_ASSET_FN_PTR) resolve_for_new_asset,
-                    (OPEN_ASSET_FOR_WRITE_FN_PTR) open_asset_for_write,
-                    (GET_EXTENSION_FN_PTR) get_extension
-                )
+                new CustomFunctionArResolverFactory(functions)
             )
         );
     }
