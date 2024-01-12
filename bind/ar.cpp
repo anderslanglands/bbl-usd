@@ -289,9 +289,8 @@ BBL_MODULE(ar) {
     ;
 
     bbl::fn(&bblext::set_ar_resolver_factory);
-    bbl::fn(&bblext::asset_from_string);
+    bbl::fn(&bblext::asset_from_bytes);
 }
 
 
 #endif
-
