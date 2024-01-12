@@ -43,7 +43,7 @@ bbl_translate_binding(
 target_link_libraries(
   openusd-c 
     PUBLIC 
-     ${PXR_LIBRARIES}
+      ${PXR_LIBRARIES}
 )
 
 
