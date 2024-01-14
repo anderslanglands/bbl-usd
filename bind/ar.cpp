@@ -34,37 +34,72 @@ namespace bblext {
         void* resolve_for_new_asset,
         void* open_asset_for_write,
         void* get_extension,
-        void* get_modification_timestamp
+        void* get_modification_timestamp,
+        void* close_writeable_asset,
+        void* open_writable_asset,
+        void* write_writable_asset
     ) {
-        typedef void (*CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR)(const std::string*, const PXR_NS::ArResolvedPath*, std::string** output);
         typedef void (*CREATE_IDENTIFIER_FN_PTR)(const std::string *assetPath, const PXR_NS::ArResolvedPath *anchorAssetPath, std::string** output);
         typedef void (*OPEN_ASSET_FN_PTR)(const PXR_NS::ArResolvedPath *resolvedPath, std::shared_ptr<PXR_NS::ArAsset>** output);
         typedef void (*RESOLVE_FN_PTR)(const std::string *assetPath, PXR_NS::ArResolvedPath** output);
-        typedef void (*RESOLVE_FOR_NEW_ASSET_FN_PTR)(const std::string *assetPath, PXR_NS::ArResolvedPath** output);
         typedef void (*OPEN_ASSET_FOR_WRITE_FN_PTR)(const PXR_NS::ArResolvedPath *, PXR_NS::ArResolver::WriteMode, std::shared_ptr<PXR_NS::ArWritableAsset>** output);
         typedef void (*GET_EXTENSION_FN_PTR)(const std::string* assetPath, std::string** output);
         typedef void (*GET_MODIFICATION_TIMESTAMP_FN_PTR)(const std::string *assetPath, const PXR_NS::ArResolvedPath *resolvedPath, PXR_NS::ArTimestamp** output);
+        typedef bool (*CLOSE_WRITABLE_ASSET_FN_PTR)(void*);
+        typedef void* (*OPEN_WRITABLE_ASSET_FN_PTR)(const PXR_NS::ArResolvedPath *resolvedPath, PXR_NS::ArResolver::WriteMode);
+        typedef size_t (*WRITE_WRITABLE_ASSET_FN_PTR)(void*, const void*, size_t, size_t);
+
+        class CustomFunctionWriteableAsset: public PXR_NS::ArWritableAsset {
+            public:
+                void* custom_data;
+                CLOSE_WRITABLE_ASSET_FN_PTR close_writeable_asset;
+                WRITE_WRITABLE_ASSET_FN_PTR write_writable_asset;
+
+                CustomFunctionWriteableAsset(
+                    const PXR_NS::ArResolvedPath &resolved_path,
+                    PXR_NS::ArResolver::WriteMode writeMode,
+                    CLOSE_WRITABLE_ASSET_FN_PTR close_writeable_asset_,
+                    OPEN_WRITABLE_ASSET_FN_PTR open_writable_asset,
+                    WRITE_WRITABLE_ASSET_FN_PTR write_writable_asset_
+                ): write_writable_asset(write_writable_asset_), custom_data(open_writable_asset(&resolved_path, writeMode)), close_writeable_asset(close_writeable_asset_) {
+
+                }
+
+                bool Close() {
+                    return close_writeable_asset(custom_data);
+                }
+
+                size_t Write(const void* src, size_t count, size_t offset) {
+                    return write_writable_asset(custom_data, src, count, offset);
+                }
+        };
 
         struct Functions {
-            CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR create_identifier_for_new_asset;
+            CREATE_IDENTIFIER_FN_PTR create_identifier_for_new_asset;
             CREATE_IDENTIFIER_FN_PTR create_identifier;
             OPEN_ASSET_FN_PTR open_asset;
             RESOLVE_FN_PTR resolve;
-            RESOLVE_FOR_NEW_ASSET_FN_PTR resolve_for_new_asset;
+            RESOLVE_FN_PTR resolve_for_new_asset;
             OPEN_ASSET_FOR_WRITE_FN_PTR open_asset_for_write;
             GET_EXTENSION_FN_PTR get_extension;
             GET_MODIFICATION_TIMESTAMP_FN_PTR get_modification_timestamp;
+            CLOSE_WRITABLE_ASSET_FN_PTR close_writeable_asset;
+            OPEN_WRITABLE_ASSET_FN_PTR open_writable_asset;
+            WRITE_WRITABLE_ASSET_FN_PTR write_writable_asset;
         };
 
         Functions functions = {
-            (CREATE_IDENTIFIER_FOR_NEW_ASSET_FN_PTR) create_identifier_for_new_asset,
+            (CREATE_IDENTIFIER_FN_PTR) create_identifier_for_new_asset,
             (CREATE_IDENTIFIER_FN_PTR) create_identifier,
             (OPEN_ASSET_FN_PTR) open_asset,
             (RESOLVE_FN_PTR) resolve,
-            (RESOLVE_FOR_NEW_ASSET_FN_PTR) resolve_for_new_asset,
+            (RESOLVE_FN_PTR) resolve_for_new_asset,
             (OPEN_ASSET_FOR_WRITE_FN_PTR) open_asset_for_write,
             (GET_EXTENSION_FN_PTR) get_extension,
-            (GET_MODIFICATION_TIMESTAMP_FN_PTR) get_modification_timestamp
+            (GET_MODIFICATION_TIMESTAMP_FN_PTR) get_modification_timestamp,
+            (CLOSE_WRITABLE_ASSET_FN_PTR) close_writeable_asset,
+            (OPEN_WRITABLE_ASSET_FN_PTR) open_writable_asset,
+            (WRITE_WRITABLE_ASSET_FN_PTR) write_writable_asset
         };
 
         class CustomFunctionArResolver : public PXR_NS::ArResolver {
@@ -74,7 +109,7 @@ namespace bblext {
             CustomFunctionArResolver(
                 Functions functions_
             ): functions(functions_) {}
-            
+
             std::string _CreateIdentifierForNewAsset(const std::string &assetPath, const PXR_NS::ArResolvedPath &anchorAssetPath) const override {
                 std::cout << "_CreateIdentifierForNewAsset" << std::endl;
                 std::string output;
@@ -83,7 +118,7 @@ namespace bblext {
                 output = *output_ptr;
                 return output;
             }
-            
+
             std::string _CreateIdentifier(const std::string &assetPath, const PXR_NS::ArResolvedPath &anchorAssetPath) const override {
                 std::cout << "_CreateIdentifier" << std::endl;
                 std::string output;
@@ -92,7 +127,7 @@ namespace bblext {
                 output = *output_ptr;
                 return output;
             }
-            
+
             PXR_NS::ArResolvedPath _Resolve(const std::string &assetPath) const override {
                 std::cout << "_Resolve" << std::endl;
                 PXR_NS::ArResolvedPath output;
@@ -101,7 +136,7 @@ namespace bblext {
                 output = *output_ptr;
                 return output;
             }
-            
+
             PXR_NS::ArResolvedPath _ResolveForNewAsset(const std::string &assetPath) const override {
                 std::cout << "_ResolveForNewAsset" << std::endl;
                 if (functions.resolve_for_new_asset) {
@@ -114,7 +149,7 @@ namespace bblext {
                     return PXR_NS::ArResolvedPath();
                 }
             }
-            
+
             std::shared_ptr<PXR_NS::ArAsset> _OpenAsset(const PXR_NS::ArResolvedPath &resolvedPath) const override {
                 std::cout << "_OpenAsset" << std::endl;
                 std::shared_ptr<PXR_NS::ArAsset> output;
@@ -123,7 +158,7 @@ namespace bblext {
                 output = *output_ptr;
                 return output;
             }
-            
+
             PXR_NS::ArTimestamp _GetModificationTimestamp(const std::string &assetPath, const PXR_NS::ArResolvedPath &resolvedPath) const override {
                 std::cout << "_GetModificationTimestamp" << std::endl;
 
@@ -154,14 +189,10 @@ namespace bblext {
 
             std::shared_ptr<PXR_NS::ArWritableAsset> _OpenAssetForWrite(
                 const PXR_NS::ArResolvedPath &resolvedPath,
-                PXR_NS::ArResolver::WriteMode writeMode 
+                PXR_NS::ArResolver::WriteMode writeMode
             ) const override {
                 std::cout << "_OpenAssetForWrite" << std::endl;
-                std::shared_ptr<PXR_NS::ArWritableAsset> output;
-                std::shared_ptr<PXR_NS::ArWritableAsset>* output_ptr = &output;
-                functions.open_asset_for_write(&resolvedPath, writeMode, &output_ptr);
-                output = *output_ptr;
-                return output;
+                return std::make_shared<CustomFunctionWriteableAsset>(resolvedPath, writeMode, functions.close_writeable_asset, functions.open_writable_asset, functions.write_writable_asset);
             }
         };
 
@@ -177,7 +208,7 @@ namespace bblext {
                 return new CustomFunctionArResolver(functions);
             }
         };
-        
+
         type.SetFactory(
             std::unique_ptr<PXR_NS::TfType::FactoryBase>(
                 new CustomFunctionArResolverFactory(functions)
