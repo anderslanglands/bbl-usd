@@ -165,6 +165,11 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpChanges::DidMaybeFixAsset)
         .m(&PXR_NS::PcpChanges::DidMuteLayer)
         .m(&PXR_NS::PcpChanges::DidUnmuteLayer)
+#if PXR_VERSION <= 2308
+        .m(&PXR_NS::PcpChanges::DidChangeLayers)
+        .m(&PXR_NS::PcpChanges::DidChangeLayerOffsets)
+        .m(&PXR_NS::PcpChanges::DidChangeRelocates)
+#endif
         .m(&PXR_NS::PcpChanges::DidChangeSignificantly)
         .m(&PXR_NS::PcpChanges::DidChangeSpecs)
         .m(&PXR_NS::PcpChanges::DidChangeSpecStack)
@@ -527,6 +532,10 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpMapFunction::IsIdentity)
         .m(&PXR_NS::PcpMapFunction::IsIdentityPathMapping)
         .m(&PXR_NS::PcpMapFunction::HasRootIdentity)
+#if PXR_VERSION <= 2308
+        .m(&PXR_NS::PcpMapFunction::MapSourceToTarget)
+        .m(&PXR_NS::PcpMapFunction::MapTargetToSource)
+#endif
         .m(&PXR_NS::PcpMapFunction::Compose)
         .m(&PXR_NS::PcpMapFunction::ComposeOffset)
         .m(&PXR_NS::PcpMapFunction::GetInverse)
