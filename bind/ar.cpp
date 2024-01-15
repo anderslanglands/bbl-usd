@@ -243,7 +243,6 @@ BBL_MODULE(ar) {
     ;
 
     bbl::Class<PXR_NS::ArResolvedPath>("ResolvedPath")
-        .ctor(bbl::Class<PXR_NS::ArResolvedPath>::Ctor<>(), "default")
         .ctor(bbl::Class<PXR_NS::ArResolvedPath>::Ctor<std::string const&>("resolvedPath"), "ctor")
         .m(&PXR_NS::ArResolvedPath::GetPathString)
         .m(&PXR_NS::ArResolvedPath::GetHash)
