@@ -156,6 +156,82 @@ PXR_NS::VtValue const& VariableExpressionResult_value(
     return ver.value;
 }
 
+class FileFormatBase : public PXR_NS::SdfFileFormat {
+public:
+    // expose protected members
+    FileFormatBase(PXR_NS::TfToken const& formatId, PXR_NS::TfToken const& versionString, PXR_NS::TfToken const& target, char const* extension)
+    : PXR_NS::SdfFileFormat(formatId, versionString, target, extension)
+    {}
+
+    virtual ~FileFormatBase() {}
+
+    virtual auto CanRead(std::string const& file) const -> bool override {
+        return false;
+    }
+
+    virtual auto Read(PXR_NS::SdfLayer* layer, std::string const& resolvedPath, bool metadaOnly) const -> bool override {
+        return false;
+    }
+
+    // Helper function for _ReadDetached
+    auto _ReadAndCopyLayerDataToMemory(PXR_NS::SdfLayer* layer, char const* resolvedPath, bool metadataOnly, bool* didCopyData) const -> bool {
+        return PXR_NS::SdfFileFormat::_ReadAndCopyLayerDataToMemory(layer, resolvedPath, metadataOnly, didCopyData);
+    }
+
+    virtual auto _InstantiateNewLayer(PXR_NS::SdfFileFormatConstPtr const& fileFormat, const std::string &identifier, const std::string &realPath, const PXR_NS::ArAssetInfo &assetInfo, const PXR_NS::SdfFileFormat::FileFormatArguments &args) const -> PXR_NS::SdfLayer* override {
+        return PXR_NS::SdfFileFormat::_InstantiateNewLayer(fileFormat, identifier, realPath, assetInfo, args);
+    }
+
+    auto _InstantiateNewLayer_base(PXR_NS::SdfFileFormatConstPtr const& fileFormat, char const* identifier, char const* realPath, const PXR_NS::ArAssetInfo &assetInfo, const PXR_NS::SdfFileFormat::FileFormatArguments &args) const -> PXR_NS::SdfLayer* {
+        return PXR_NS::SdfFileFormat::_InstantiateNewLayer(fileFormat, identifier, realPath, assetInfo, args);
+    }
+
+    virtual auto _ShouldSkipAnonymousReload() const -> bool override {
+        return PXR_NS::SdfFileFormat::ShouldSkipAnonymousReload();
+    }
+
+    auto _ShouldSkipAnonymousReload_base() const -> bool {
+        return PXR_NS::SdfFileFormat::ShouldSkipAnonymousReload();
+    }
+
+    virtual auto _ShouldReadAnonymousLayers() const -> bool override {
+        return PXR_NS::SdfFileFormat::ShouldReadAnonymousLayers();
+    }
+
+    auto _ShouldReadAnonymousLayers_base() const -> bool {
+        return PXR_NS::SdfFileFormat::ShouldReadAnonymousLayers();
+    }
+
+    virtual auto _InitDetachedData(PXR_NS::SdfFileFormat::FileFormatArguments const& args) const -> PXR_NS::SdfAbstractDataRefPtr  override {
+        return PXR_NS::SdfFileFormat::InitDetachedData(args);
+    }
+
+    auto _InitDetachedData_base(PXR_NS::SdfFileFormat::FileFormatArguments const& args) const -> PXR_NS::SdfAbstractDataRefPtr {
+        return PXR_NS::SdfFileFormat::_InitDetachedData(args);
+    }
+
+    virtual bool _ReadDetached(PXR_NS::SdfLayer *layer, const std::string &resolvedPath, bool metadataOnly) const override {
+        return PXR_NS::SdfFileFormat::_ReadDetached(layer, resolvedPath, metadataOnly);
+    }
+
+    bool _ReadDetached_base(PXR_NS::SdfLayer *layer, const std::string &resolvedPath, bool metadataOnly) const {
+        return PXR_NS::SdfFileFormat::_ReadDetached(layer, resolvedPath, metadataOnly);
+    }
+
+    // static protected member functions
+    static void _SetLayerData(PXR_NS::SdfLayer* layer, PXR_NS::SdfAbstractDataRefPtr& data) {
+        PXR_NS::SdfFileFormat::_SetLayerData(layer, data);
+    }
+
+    static void _SetLayerData_with_hints(PXR_NS::SdfLayer* layer, PXR_NS::SdfAbstractDataRefPtr& data, PXR_NS::SdfLayerHints hints) {
+        PXR_NS::SdfFileFormat::_SetLayerData(layer, data, hints);
+    }
+
+    static auto _GetLayerData(PXR_NS::SdfLayer const& layer) -> PXR_NS::SdfAbstractDataConstPtr {
+        return PXR_NS::SdfFileFormat::_GetLayerData(layer);
+    }
+};
+
 }
 
 BBL_MODULE(sdf) {
@@ -468,6 +544,24 @@ BBL_MODULE(sdf) {
             &PXR_NS::SdfFileFormat::FindByExtension, "FindByExtension_01")
     ;
 
+    bbl::Superclass<bblext::FileFormatBase>()
+        .ctor(bbl::Superclass<bblext::FileFormatBase>::Ctor<PXR_NS::TfToken const&, PXR_NS::TfToken const&, PXR_NS::TfToken const&, char const*>("formatId", "versionString", "target", "extension"), "ctor")
+        .m(&bblext::FileFormatBase::_ReadAndCopyLayerDataToMemory)
+        .m(&bblext::FileFormatBase::_InstantiateNewLayer)
+        .m(&bblext::FileFormatBase::_InstantiateNewLayer_base)
+        .m(&bblext::FileFormatBase::_ShouldSkipAnonymousReload)
+        .m(&bblext::FileFormatBase::_ShouldSkipAnonymousReload_base)
+        .m(&bblext::FileFormatBase::_ShouldReadAnonymousLayers)
+        .m(&bblext::FileFormatBase::_ShouldReadAnonymousLayers_base)
+        .m(&bblext::FileFormatBase::_InitDetachedData)
+        .m(&bblext::FileFormatBase::_InitDetachedData_base)
+        .m(&bblext::FileFormatBase::_ReadDetached)
+        .m(&bblext::FileFormatBase::_ReadDetached_base)
+        .m(&bblext::FileFormatBase::_SetLayerData)
+        .m(&bblext::FileFormatBase::_SetLayerData_with_hints)
+        .m(&bblext::FileFormatBase::_GetLayerData)
+    ;
+
     bbl::Class<PXR_NS::SdfFileFormatConstPtr>("FileFormatConstPtr")
         .smartptr_to<PXR_NS::SdfFileFormat const>()
     ;
@@ -612,6 +706,10 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfLayerHandleVector>("LayerHandleVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::SdfLayerHandle)
+    ;
+
+    bbl::Class<PXR_NS::SdfLayerRefPtrVector>("LayerRefPtrVector")
+        BBL_STD_VECTOR_METHODS(PXR_NS::SdfLayerRefPtr)
     ;
 
     bbl::Class<PXR_NS::SdfLayerHandleSet>("LayerHandleSet")

@@ -34,6 +34,9 @@ BBL_MODULE(std) {
         BBL_STD_VECTOR_METHODS(double);
 
     bbl::Class<std::set<double>>("DoubleSet");
+
+    bbl::Class<std::pair<double, double>>("DoublePair");
+    bbl::Class<std::pair<float, float>>("FloatPair");
     
 }
 
