@@ -10,8 +10,9 @@
 
 BBL_MODULE(std) {
 
-    bbl::Class<std::string>("String").ctor(
-        bbl::Class<std::string>::Ctor<char const*>(), "from_char_ptr")
+    bbl::Class<std::string>("String")
+        .ctor(bbl::Class<std::string>::Ctor<>(), "default")
+        .ctor(bbl::Class<std::string>::Ctor<char const*>(), "from_char_ptr")
         .m(&std::string::c_str)
     ;
 
