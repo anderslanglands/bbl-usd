@@ -722,6 +722,7 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfLayerOffset>("LayerOffset")
         .ctor(bbl::Class<PXR_NS::SdfLayerOffset>::Ctor<double, double>("offset", "scale"), "ctor")
+        .ctor(bbl::Class<PXR_NS::SdfLayerOffset>::Ctor(), "default")
         .m(&PXR_NS::SdfLayerOffset::GetOffset)
         .m(&PXR_NS::SdfLayerOffset::GetScale)
         .m(&PXR_NS::SdfLayerOffset::SetOffset)

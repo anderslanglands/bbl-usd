@@ -22,7 +22,7 @@ BBL_MODULE(tf) {
 
     bbl::Class<PXR_NS::TfToken>("Token")
         .opaque_ptr()
-        .ctor(bbl::Class<Token>::Ctor<>(), "new")
+        .ctor(bbl::Class<Token>::Ctor<const char*>(), "new")
         .m(&Token::GetText)
         ;
 

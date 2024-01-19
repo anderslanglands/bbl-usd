@@ -88,6 +88,14 @@ PXR_NS::UsdStageRefPtr Stage_Open(char const* filename, PXR_NS::UsdStage::Initia
     return PXR_NS::UsdStage::Open(filename, loadSet);
 }
 
+bool StageRefPtr_ExportToString(
+    const PXR_NS::UsdStageRefPtr& stage,
+    std::string** output,
+    bool addSourceFileComment = true
+) {
+    return stage->ExportToString(*output, addSourceFileComment);
+}
+
 }
 
 
@@ -1349,7 +1357,6 @@ BBL_MODULE(usd) {
 
         // Flatten & Export Utilities
         .m(&PXR_NS::UsdStage::Export)
-        .m(&PXR_NS::UsdStage::ExportToString)
         .m(&PXR_NS::UsdStage::Flatten)
 
         // PXR_NS::UsdStage Metadata
@@ -1491,6 +1498,7 @@ BBL_MODULE(usd) {
         ;
 
     bbl::fn(&bblext::Stage_Open);
+    bbl::fn(&bblext::StageRefPtr_ExportToString);
 
     bbl::Enum<PXR_NS::UsdStage::InitialLoadSet>("StageInitialLoadSet");
 
