@@ -18,11 +18,12 @@ set(bindfiles
     bind/std.cpp
     bind/tf.cpp 
     bind/usd.cpp
-    bind/usdGeom.cpp 
-    bind/usdLux.cpp 
-    bind/usdRender.cpp 
-    bind/usdShade.cpp 
-    bind/vt.cpp 
+    bind/usdGeom.cpp
+    bind/usdLux.cpp
+    bind/usdRender.cpp
+    bind/usdShade.cpp
+    bind/usdImaging.cpp
+    bind/vt.cpp
 )
 
 # Configures bbl-translate to generate the shim library source and build it as
