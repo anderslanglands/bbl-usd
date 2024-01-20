@@ -1099,8 +1099,14 @@ BBL_MODULE(usd) {
     bbl::Class<PXR_NS::UsdPrimRange::iterator>("PrimRangeIterator")
         .opaque_ptr()
         .ctor(bbl::Class<PXR_NS::UsdPrimRange::iterator>::Ctor<>(), "new")
+#if PXR_VERSION <= 2308
         .m(&PXR_NS::UsdPrimRange::iterator::operator++, "op_inc")
-        .m((PXR_NS::UsdPrimRange::iterator & (PXR_NS::UsdPrimRange::iterator::*)(PXR_NS::UsdPrimRange::iterator const&)) 
+#else
+        .m((PXR_NS::UsdPrimRange::iterator & (PXR_NS::UsdPrimRange::iterator::*)())
+            &PXR_NS::UsdPrimRange::iterator::operator++, "op_inc"
+        )
+#endif
+        .m((PXR_NS::UsdPrimRange::iterator & (PXR_NS::UsdPrimRange::iterator::*)(PXR_NS::UsdPrimRange::iterator const&))
             &PXR_NS::UsdPrimRange::iterator::operator=, "op_assign"
         )
         .m((bool(PXR_NS::UsdPrimRange::iterator::*)(PXR_NS::UsdPrimRange::iterator const&) const) 
@@ -1115,7 +1121,13 @@ BBL_MODULE(usd) {
 
     bbl::Class<PXR_NS::UsdPrimSiblingIterator>("PrimSiblingIterator")
         .m(&PXR_NS::UsdPrimSiblingIterator::operator*, "deref")
+    #if PXR_VERSION <= 2308
         .m(&PXR_NS::UsdPrimSiblingIterator::operator++, "op_inc")
+#else
+        .m((PXR_NS::UsdPrimSiblingIterator & (PXR_NS::UsdPrimSiblingIterator::*)())
+            &PXR_NS::UsdPrimSiblingIterator::operator++, "op_inc"
+        )
+#endif
     ;
 
     bbl::fn(&bblext::PrimSiblingIterator_op_eq);
