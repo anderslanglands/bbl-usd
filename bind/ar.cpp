@@ -121,20 +121,28 @@ namespace bblext {
 
             std::string _CreateIdentifier(const std::string &assetPath, const PXR_NS::ArResolvedPath &anchorAssetPath) const override {
                 std::cout << "_CreateIdentifier" << std::endl;
-                std::string output;
-                std::string* output_ptr = &output;
-                functions.create_identifier(&assetPath, &anchorAssetPath, &output_ptr);
-                output = *output_ptr;
-                return output;
+                if (functions.create_identifier) {
+                    std::string output;
+                    std::string* output_ptr = &output;
+                    functions.create_identifier(&assetPath, &anchorAssetPath, &output_ptr);
+                    output = *output_ptr;
+                    return output;
+                } else {
+                    return assetPath;
+                }
             }
 
             PXR_NS::ArResolvedPath _Resolve(const std::string &assetPath) const override {
                 std::cout << "_Resolve" << std::endl;
-                PXR_NS::ArResolvedPath output;
-                PXR_NS::ArResolvedPath* output_ptr = &output;
-                functions.resolve(&assetPath, &output_ptr);
-                output = *output_ptr;
-                return output;
+                if (functions.resolve) {
+                    PXR_NS::ArResolvedPath output;
+                    PXR_NS::ArResolvedPath* output_ptr = &output;
+                    functions.resolve(&assetPath, &output_ptr);
+                    output = *output_ptr;
+                    return output;
+                } else {
+                    return PXR_NS::ArResolvedPath(assetPath);
+                }
             }
 
             PXR_NS::ArResolvedPath _ResolveForNewAsset(const std::string &assetPath) const override {
