@@ -7,42 +7,42 @@ find_package(pxr REQUIRED)
 option(BUILD_EXAMPLE "Build the example program" OFF)
 
 # The bindfile contains all our binding definitions
-set(bindfiles 
-    bind/ar.cpp 
-    bind/gf.cpp 
-    bind/js.cpp 
-    bind/ndr.cpp 
-    bind/pcp.cpp 
+set(bindfiles
+    bind/ar.cpp
+    bind/gf.cpp
+    bind/js.cpp
+    bind/ndr.cpp
+    bind/pcp.cpp
     bind/sdf.cpp
     bind/sdr.cpp
     bind/std.cpp
-    bind/tf.cpp 
+    bind/tf.cpp
     bind/usd.cpp
-    bind/usdGeom.cpp 
-    bind/usdLux.cpp 
-    bind/usdRender.cpp 
-    bind/usdShade.cpp 
-    bind/vt.cpp 
+    bind/usdGeom.cpp
+    bind/usdLux.cpp
+    bind/usdRender.cpp
+    bind/usdShade.cpp
+    bind/vt.cpp
 )
 
 # Configures bbl-translate to generate the shim library source and build it as
 # libopenusd-c
 bbl_translate_binding(
     openusd
-    BINDFILES 
+    BINDFILES
         ${bindfiles}
-    COMPILE_ARGS 
-        -Wno-deprecated-builtins 
+    COMPILE_ARGS
+        -Wno-deprecated-builtins
         "-Wno-#pragma-messages"
-        -DNOMINMAX 
-        -D_MT 
-        -DBOOST_ALL_NO_LIB 
-        -D__TBB_show_deprecation_message_task_H 
+        -DNOMINMAX
+        -D_MT
+        -DBOOST_ALL_NO_LIB
+        -D__TBB_show_deprecation_message_task_H
 )
 
 target_link_libraries(
-  openusd-c 
-    PUBLIC 
+  openusd-c
+    PUBLIC
       ${PXR_LIBRARIES}
 )
 
@@ -69,14 +69,14 @@ target_compile_options(bind-dummy PRIVATE $<TARGET_PROPERTY:openusd-c,COMPILE_OP
 target_compile_definitions(bind-dummy PRIVATE $<TARGET_PROPERTY:openusd-c,COMPILE_DEFINITIONS>)
 
 install(
-  TARGETS 
+  TARGETS
     openusd-c
-  LIBRARY 
+  LIBRARY
     DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  ARCHIVE 
+  ARCHIVE
     DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  RUNTIME 
+  RUNTIME
     DESTINATION ${CMAKE_INSTALL_BINDIR}
-  INCLUDES 
+  INCLUDES
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )

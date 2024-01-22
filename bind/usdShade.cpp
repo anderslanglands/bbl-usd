@@ -619,5 +619,3 @@ BBL_MODULE(usdShade) {
 
 
 #endif
-
-

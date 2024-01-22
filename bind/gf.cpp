@@ -208,12 +208,12 @@ struct Rotation {
 BBL_MODULE(gf) {
     // clang-format off
 
-    // We don't bind methods for simple classes like this and will poke at the members directly or build that 
+    // We don't bind methods for simple classes like this and will poke at the members directly or build that
     // functionality in higher-level language bindings
     bbl::Class<PXR_NS::GfVec2f>("Vec2f")
         .replace_with<Vec2f>()
         ;
-    
+
     bbl::Class<PXR_NS::VtArray<PXR_NS::GfVec2f>>("Vec2fArray")
         VTARRAY_METHODS(PXR_NS::GfVec2f)
     ;
@@ -909,11 +909,11 @@ BBL_MODULE(gf) {
     bbl::Class<PXR_NS::VtArray<PXR_NS::GfMatrix4d>>("Matrix4dArray")
         VTARRAY_METHODS(PXR_NS::GfMatrix4d)
     ;
-    
+
     bbl::Class<std::vector<PXR_NS::VtMatrix4dArray>>("Matrix4dArrayVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::VtMatrix4dArray)
     ;
-    
+
     bbl::Class<PXR_NS::GfMatrix2f>("Matrix2f")
         .replace_with<Matrix2f>()
         .ctor(bbl::Class<PXR_NS::GfMatrix2f>::Ctor<>(), "default")
@@ -2007,4 +2007,3 @@ BBL_MODULE(gf) {
 
 
 #endif
-

@@ -65,7 +65,7 @@ BBL_MODULE(vt) {
         )
         .m((bool const& (Value::*)() const&)
             &Value::Get<bool>, "Get_bool"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<uint8_t>("value"), "from_uchar")
         .m((bool (Value::*)() const)
@@ -73,7 +73,7 @@ BBL_MODULE(vt) {
         )
         .m((uint8_t const& (Value::*)() const&)
             &Value::Get<uint8_t>, "Get_uchar"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<uint32_t>("value"), "from_uint")
         .m((bool (Value::*)() const)
@@ -81,7 +81,7 @@ BBL_MODULE(vt) {
         )
         .m((uint32_t const& (Value::*)() const&)
             &Value::Get<uint32_t>, "Get_uint"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<int>("value"), "from_int")
         .m((bool (Value::*)() const)
@@ -89,7 +89,7 @@ BBL_MODULE(vt) {
         )
         .m((int const& (Value::*)() const&)
             &Value::Get<int>, "Get_int"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<uint64_t>("value"), "from_uint64")
         .m((bool (Value::*)() const)
@@ -97,7 +97,7 @@ BBL_MODULE(vt) {
         )
         .m((uint64_t const& (Value::*)() const&)
             &Value::Get<uint64_t>, "Get_uint64"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<int64_t>("value"), "from_int64")
         .m((bool (Value::*)() const)
@@ -105,7 +105,7 @@ BBL_MODULE(vt) {
         )
         .m((int64_t const& (Value::*)() const&)
             &Value::Get<int64_t>, "Get_int64"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<float>("value"), "from_float")
         .m((bool (Value::*)() const)
@@ -113,7 +113,7 @@ BBL_MODULE(vt) {
         )
         .m((float const& (Value::*)() const&)
             &Value::Get<float>, "Get_float"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<double>("value"), "from_double")
         .m((bool (Value::*)() const)
@@ -121,7 +121,7 @@ BBL_MODULE(vt) {
         )
         .m((double const& (Value::*)() const&)
             &Value::Get<double>, "Get_double"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::TfToken>("value"), "from_TfToken")
         .m((bool (Value::*)() const)
@@ -129,7 +129,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::TfToken const& (Value::*)() const&)
             &Value::Get<PXR_NS::TfToken>, "Get_TfToken"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::SdfAssetPath>("value"), "from_SdfAssetPath")
         .m((bool (Value::*)() const)
@@ -137,7 +137,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::SdfAssetPath const& (Value::*)() const&)
             &Value::Get<PXR_NS::SdfAssetPath>, "Get_SdfAssetPath"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::SdfTimeCode>("value"), "from_SdfTimeCode")
         .m((bool (Value::*)() const)
@@ -145,7 +145,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::SdfTimeCode const& (Value::*)() const&)
             &Value::Get<PXR_NS::SdfTimeCode>, "Get_SdfTimeCode"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<std::string>("value"), "from_string")
         .m((bool (Value::*)() const)
@@ -153,7 +153,7 @@ BBL_MODULE(vt) {
         )
         .m((std::string const& (Value::*)() const&)
             &Value::Get<std::string>, "Get_string"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec2d>("value"), "from_GfVec2d")
         .m((bool (Value::*)() const)
@@ -161,7 +161,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfVec2d const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfVec2d>, "Get_GfVec2d"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec2h>("value"), "from_GfVec2h")
         .m((bool (Value::*)() const)
@@ -169,7 +169,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfVec2h const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfVec2h>, "Get_GfVec2h"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec2f>("value"), "from_GfVec2f")
         .m((bool (Value::*)() const)
@@ -177,7 +177,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfVec2f const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfVec2f>, "Get_GfVec2f"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec2i>("value"), "from_GfVec2i")
         .m((bool (Value::*)() const)
@@ -185,7 +185,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfVec2i const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfVec2i>, "Get_GfVec2i"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec3d>("value"), "from_GfVec3d")
         .m((bool (Value::*)() const)
@@ -193,7 +193,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfVec3d const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfVec3d>, "Get_GfVec3d"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec3h>("value"), "from_GfVec3h")
         .m((bool (Value::*)() const)
@@ -201,7 +201,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfVec3h const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfVec3h>, "Get_GfVec3h"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec3f>("value"), "from_GfVec3f")
         .m((bool (Value::*)() const)
@@ -209,7 +209,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfVec3f const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfVec3f>, "Get_GfVec3f"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec3i>("value"), "from_GfVec3i")
         .m((bool (Value::*)() const)
@@ -217,7 +217,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfVec3i const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfVec3i>, "Get_GfVec3i"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec4d>("value"), "from_GfVec4d")
         .m((bool (Value::*)() const)
@@ -225,7 +225,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfVec4d const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfVec4d>, "Get_GfVec4d"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec4h>("value"), "from_GfVec4h")
         .m((bool (Value::*)() const)
@@ -233,7 +233,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfVec4h const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfVec4h>, "Get_GfVec4h"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec4f>("value"), "from_GfVec4f")
         .m((bool (Value::*)() const)
@@ -241,7 +241,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfVec4f const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfVec4f>, "Get_GfVec4f"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfVec4i>("value"), "from_GfVec4i")
         .m((bool (Value::*)() const)
@@ -249,7 +249,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfVec4i const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfVec4i>, "Get_GfVec4i"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfQuatd>("value"), "from_GfQuatd")
         .m((bool (Value::*)() const)
@@ -257,7 +257,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfQuatd const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfQuatd>, "Get_GfQuatd"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfQuatf>("value"), "from_GfQuatf")
         .m((bool (Value::*)() const)
@@ -265,7 +265,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfQuatf const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfQuatf>, "Get_GfQuatf"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfQuath>("value"), "from_GfQuath")
         .m((bool (Value::*)() const)
@@ -273,7 +273,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfQuath const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfQuath>, "Get_GfQuath"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfMatrix2d>("value"), "from_GfMatrix2d")
         .m((bool (Value::*)() const)
@@ -281,7 +281,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfMatrix2d const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfMatrix2d>, "Get_GfMatrix2d"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfMatrix2f>("value"), "from_GfMatrix2f")
         .m((bool (Value::*)() const)
@@ -289,7 +289,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfMatrix2f const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfMatrix2f>, "Get_GfMatrix2f"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfMatrix3d>("value"), "from_GfMatrix3d")
         .m((bool (Value::*)() const)
@@ -297,7 +297,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfMatrix3d const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfMatrix3d>, "Get_GfMatrix3d"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfMatrix3f>("value"), "from_GfMatrix3f")
         .m((bool (Value::*)() const)
@@ -305,7 +305,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfMatrix3f const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfMatrix3f>, "Get_GfMatrix3f"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfMatrix4d>("value"), "from_GfMatrix4d")
         .m((bool (Value::*)() const)
@@ -313,7 +313,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfMatrix4d const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfMatrix4d>, "Get_GfMatrix4d"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::GfMatrix4f>("value"), "from_GfMatrix4f")
         .m((bool (Value::*)() const)
@@ -321,7 +321,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::GfMatrix4f const& (Value::*)() const&)
             &Value::Get<PXR_NS::GfMatrix4f>, "Get_GfMatrix4f"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtTokenArray>("value"), "from_VtTokenArray")
         .m((bool (Value::*)() const)
@@ -329,7 +329,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtTokenArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtTokenArray>, "Get_VtTokenArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtStringArray>("value"), "from_VtStringArray")
         .m((bool (Value::*)() const)
@@ -337,7 +337,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtStringArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtStringArray>, "Get_VtStringArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtBoolArray>("value"), "from_VtBoolArray")
         .m((bool (Value::*)() const)
@@ -345,7 +345,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtBoolArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtBoolArray>, "Get_VtBoolArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtUCharArray>("value"), "from_VtUCharArray")
         .m((bool (Value::*)() const)
@@ -353,7 +353,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtUCharArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtUCharArray>, "Get_VtUCharArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtUIntArray>("value"), "from_VtUIntArray")
         .m((bool (Value::*)() const)
@@ -361,7 +361,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtUIntArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtUIntArray>, "Get_VtUIntArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtIntArray>("value"), "from_VtIntArray")
         .m((bool (Value::*)() const)
@@ -369,7 +369,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtIntArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtIntArray>, "Get_VtIntArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtUInt64Array>("value"), "from_VtUInt64Array")
         .m((bool (Value::*)() const)
@@ -377,7 +377,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtUInt64Array const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtUInt64Array>, "Get_VtUInt64Array"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtInt64Array>("value"), "from_VtInt64Array")
         .m((bool (Value::*)() const)
@@ -385,7 +385,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtInt64Array const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtInt64Array>, "Get_VtInt64Array"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtFloatArray>("value"), "from_VtFloatArray")
         .m((bool (Value::*)() const)
@@ -393,7 +393,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtFloatArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtFloatArray>, "Get_VtFloatArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtDoubleArray>("value"), "from_VtDoubleArray")
         .m((bool (Value::*)() const)
@@ -401,7 +401,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtDoubleArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtDoubleArray>, "Get_VtDoubleArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtVec2fArray>("value"), "from_VtVec2fArray")
         .m((bool (Value::*)() const)
@@ -409,7 +409,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtVec2fArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtVec2fArray>, "Get_VtVec2fArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtVec3fArray>("value"), "from_VtVec3fArray")
         .m((bool (Value::*)() const)
@@ -417,7 +417,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtVec3fArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtVec3fArray>, "Get_VtVec3fArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtVec4fArray>("value"), "from_VtVec4fArray")
         .m((bool (Value::*)() const)
@@ -425,7 +425,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtVec4fArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtVec4fArray>, "Get_VtVec4fArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtVec2dArray>("value"), "from_VtVec2dArray")
         .m((bool (Value::*)() const)
@@ -433,7 +433,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtVec2dArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtVec2dArray>, "Get_VtVec2dArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtVec3dArray>("value"), "from_VtVec3dArray")
         .m((bool (Value::*)() const)
@@ -441,7 +441,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtVec3dArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtVec3dArray>, "Get_VtVec3dArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtVec4dArray>("value"), "from_VtVec4dArray")
         .m((bool (Value::*)() const)
@@ -449,7 +449,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtVec4dArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtVec4dArray>, "Get_VtVec4dArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtVec2hArray>("value"), "from_VtVec2hArray")
         .m((bool (Value::*)() const)
@@ -457,7 +457,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtVec2hArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtVec2hArray>, "Get_VtVec2hArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtVec3hArray>("value"), "from_VtVec3hArray")
         .m((bool (Value::*)() const)
@@ -465,7 +465,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtVec3hArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtVec3hArray>, "Get_VtVec3hArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtVec4hArray>("value"), "from_VtVec4hArray")
         .m((bool (Value::*)() const)
@@ -473,7 +473,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtVec4hArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtVec4hArray>, "Get_VtVec4hArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtQuatfArray>("value"), "from_VtQuatfArray")
         .m((bool (Value::*)() const)
@@ -481,7 +481,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtQuatfArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtQuatfArray>, "Get_VtQuatfArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtQuatdArray>("value"), "from_VtQuatdArray")
         .m((bool (Value::*)() const)
@@ -489,7 +489,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtQuatdArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtQuatdArray>, "Get_VtQuatdArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtQuathArray>("value"), "from_VtQuathArray")
         .m((bool (Value::*)() const)
@@ -497,7 +497,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtQuathArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtQuathArray>, "Get_VtQuathArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtMatrix2dArray>("value"), "from_VtMatrix2dArray")
         .m((bool (Value::*)() const)
@@ -505,7 +505,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtMatrix2dArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtMatrix2dArray>, "Get_VtMatrix2dArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtMatrix3dArray>("value"), "from_VtMatrix3dArray")
         .m((bool (Value::*)() const)
@@ -513,7 +513,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtMatrix3dArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtMatrix3dArray>, "Get_VtMatrix3dArray"
-        ) 
+        )
 
         .ctor(bbl::Class<Value>::Ctor<PXR_NS::VtMatrix4dArray>("value"), "from_VtMatrix4dArray")
         .m((bool (Value::*)() const)
@@ -521,7 +521,7 @@ BBL_MODULE(vt) {
         )
         .m((PXR_NS::VtMatrix4dArray const& (Value::*)() const&)
             &Value::Get<PXR_NS::VtMatrix4dArray>, "Get_VtMatrix4dArray"
-        ) 
+        )
 
     ;
 
@@ -576,4 +576,3 @@ BBL_MODULE(vt) {
 
 
 #endif
-

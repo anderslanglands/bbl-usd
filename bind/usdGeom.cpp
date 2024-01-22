@@ -187,12 +187,12 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomCurves>("Curves")
         .ctor(bbl::Class<PXR_NS::UsdGeomCurves>::Ctor<PXR_NS::UsdPrim const&>(), "new")
-        .m(&PXR_NS::UsdGeomCurves::GetCurveVertexCountsAttr) 
-        .m(&PXR_NS::UsdGeomCurves::CreateCurveVertexCountsAttr) 
-        .m(&PXR_NS::UsdGeomCurves::GetWidthsAttr) 
-        .m(&PXR_NS::UsdGeomCurves::CreateWidthsAttr) 
-        .m(&PXR_NS::UsdGeomCurves::GetWidthsInterpolation) 
-        .m(&PXR_NS::UsdGeomCurves::SetWidthsInterpolation) 
+        .m(&PXR_NS::UsdGeomCurves::GetCurveVertexCountsAttr)
+        .m(&PXR_NS::UsdGeomCurves::CreateCurveVertexCountsAttr)
+        .m(&PXR_NS::UsdGeomCurves::GetWidthsAttr)
+        .m(&PXR_NS::UsdGeomCurves::CreateWidthsAttr)
+        .m(&PXR_NS::UsdGeomCurves::GetWidthsInterpolation)
+        .m(&PXR_NS::UsdGeomCurves::SetWidthsInterpolation)
         .m(&PXR_NS::UsdGeomCurves::GetCurveCount)
         ;
 
@@ -209,15 +209,15 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomGprim>("Gprim")
         .ctor(bbl::Class<PXR_NS::UsdGeomGprim>::Ctor<PXR_NS::UsdPrim const&>(), "new")
-        .m(&PXR_NS::UsdGeomGprim::GetDisplayColorAttr) 
-        .m(&PXR_NS::UsdGeomGprim::CreateDisplayColorAttr) 
-        .m(&PXR_NS::UsdGeomGprim::GetDisplayOpacityAttr) 
-        .m(&PXR_NS::UsdGeomGprim::CreateDisplayOpacityAttr) 
-        .m(&PXR_NS::UsdGeomGprim::GetDoubleSidedAttr) 
-        .m(&PXR_NS::UsdGeomGprim::CreateDoubleSidedAttr) 
-        .m(&PXR_NS::UsdGeomGprim::GetOrientationAttr) 
-        .m(&PXR_NS::UsdGeomGprim::CreateOrientationAttr) 
-        .m(&PXR_NS::UsdGeomGprim::GetDisplayColorPrimvar) 
+        .m(&PXR_NS::UsdGeomGprim::GetDisplayColorAttr)
+        .m(&PXR_NS::UsdGeomGprim::CreateDisplayColorAttr)
+        .m(&PXR_NS::UsdGeomGprim::GetDisplayOpacityAttr)
+        .m(&PXR_NS::UsdGeomGprim::CreateDisplayOpacityAttr)
+        .m(&PXR_NS::UsdGeomGprim::GetDoubleSidedAttr)
+        .m(&PXR_NS::UsdGeomGprim::CreateDoubleSidedAttr)
+        .m(&PXR_NS::UsdGeomGprim::GetOrientationAttr)
+        .m(&PXR_NS::UsdGeomGprim::CreateOrientationAttr)
+        .m(&PXR_NS::UsdGeomGprim::GetDisplayColorPrimvar)
         .m(&PXR_NS::UsdGeomGprim::CreateDisplayColorPrimvar)
         ;
 
@@ -230,28 +230,28 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomImageable>("Imageable")
         .ctor(bbl::Class<PXR_NS::UsdGeomImageable>::Ctor<PXR_NS::UsdPrim const&>(), "new")
-        .m(&PXR_NS::UsdGeomImageable::GetVisibilityAttr) 
-        .m(&PXR_NS::UsdGeomImageable::CreateVisibilityAttr) 
-        .m(&PXR_NS::UsdGeomImageable::GetPurposeAttr) 
-        .m(&PXR_NS::UsdGeomImageable::CreatePurposeAttr) 
-        .m(&PXR_NS::UsdGeomImageable::GetProxyPrimRel) 
-        .m(&PXR_NS::UsdGeomImageable::CreateProxyPrimRel) 
-        .m(&PXR_NS::UsdGeomImageable::MakeVisible) 
-        .m(&PXR_NS::UsdGeomImageable::MakeInvisible) 
-        .m(&PXR_NS::UsdGeomImageable::ComputeVisibility) 
-        .m(&PXR_NS::UsdGeomImageable::GetPurposeVisibilityAttr) 
-        .m((PXR_NS::UsdGeomImageable::PurposeInfo (PXR_NS::UsdGeomImageable::*)() const) 
-            &PXR_NS::UsdGeomImageable::ComputePurposeInfo) 
-        .m((PXR_NS::UsdGeomImageable::PurposeInfo (PXR_NS::UsdGeomImageable::*)(PXR_NS::UsdGeomImageable::PurposeInfo const&) const) 
-            &PXR_NS::UsdGeomImageable::ComputePurposeInfo, "ComputePurposeInfo_given_parent") 
-        .m(&PXR_NS::UsdGeomImageable::ComputePurpose) 
-        .m(&PXR_NS::UsdGeomImageable::ComputeProxyPrim) 
-        .m((bool (PXR_NS::UsdGeomImageable::*)(PXR_NS::UsdPrim const&) const) 
-            &PXR_NS::UsdGeomImageable::SetProxyPrim) 
-        .m(&PXR_NS::UsdGeomImageable::ComputeWorldBound) 
-        .m(&PXR_NS::UsdGeomImageable::ComputeLocalBound) 
-        .m(&PXR_NS::UsdGeomImageable::ComputeUntransformedBound) 
-        .m(&PXR_NS::UsdGeomImageable::ComputeLocalToWorldTransform) 
+        .m(&PXR_NS::UsdGeomImageable::GetVisibilityAttr)
+        .m(&PXR_NS::UsdGeomImageable::CreateVisibilityAttr)
+        .m(&PXR_NS::UsdGeomImageable::GetPurposeAttr)
+        .m(&PXR_NS::UsdGeomImageable::CreatePurposeAttr)
+        .m(&PXR_NS::UsdGeomImageable::GetProxyPrimRel)
+        .m(&PXR_NS::UsdGeomImageable::CreateProxyPrimRel)
+        .m(&PXR_NS::UsdGeomImageable::MakeVisible)
+        .m(&PXR_NS::UsdGeomImageable::MakeInvisible)
+        .m(&PXR_NS::UsdGeomImageable::ComputeVisibility)
+        .m(&PXR_NS::UsdGeomImageable::GetPurposeVisibilityAttr)
+        .m((PXR_NS::UsdGeomImageable::PurposeInfo (PXR_NS::UsdGeomImageable::*)() const)
+            &PXR_NS::UsdGeomImageable::ComputePurposeInfo)
+        .m((PXR_NS::UsdGeomImageable::PurposeInfo (PXR_NS::UsdGeomImageable::*)(PXR_NS::UsdGeomImageable::PurposeInfo const&) const)
+            &PXR_NS::UsdGeomImageable::ComputePurposeInfo, "ComputePurposeInfo_given_parent")
+        .m(&PXR_NS::UsdGeomImageable::ComputePurpose)
+        .m(&PXR_NS::UsdGeomImageable::ComputeProxyPrim)
+        .m((bool (PXR_NS::UsdGeomImageable::*)(PXR_NS::UsdPrim const&) const)
+            &PXR_NS::UsdGeomImageable::SetProxyPrim)
+        .m(&PXR_NS::UsdGeomImageable::ComputeWorldBound)
+        .m(&PXR_NS::UsdGeomImageable::ComputeLocalBound)
+        .m(&PXR_NS::UsdGeomImageable::ComputeUntransformedBound)
+        .m(&PXR_NS::UsdGeomImageable::ComputeLocalToWorldTransform)
         .m(&PXR_NS::UsdGeomImageable::ComputeParentToWorldTransform)
         ;
 
@@ -394,17 +394,17 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<PXR_NS::UsdGeomPointBased>("PointBased")
         .ctor(bbl::Class<PXR_NS::UsdGeomPointBased>::Ctor<PXR_NS::UsdPrim const&>(), "new")
-        .m(&PXR_NS::UsdGeomPointBased::GetPointsAttr) 
-        .m(&PXR_NS::UsdGeomPointBased::CreatePointsAttr) 
-        .m(&PXR_NS::UsdGeomPointBased::GetVelocitiesAttr) 
-        .m(&PXR_NS::UsdGeomPointBased::CreateVelocitiesAttr) 
-        .m(&PXR_NS::UsdGeomPointBased::GetAccelerationsAttr) 
-        .m(&PXR_NS::UsdGeomPointBased::CreateAccelerationsAttr) 
-        .m(&PXR_NS::UsdGeomPointBased::GetNormalsAttr) 
-        .m(&PXR_NS::UsdGeomPointBased::CreateNormalsAttr) 
-        .m(&PXR_NS::UsdGeomPointBased::GetNormalsInterpolation) 
-        .m(&PXR_NS::UsdGeomPointBased::SetNormalsInterpolation) 
-        .m((bool (PXR_NS::UsdGeomPointBased::*)(PXR_NS::VtArray<PXR_NS::GfVec3f>*, PXR_NS::UsdTimeCode const, PXR_NS::UsdTimeCode const) const) 
+        .m(&PXR_NS::UsdGeomPointBased::GetPointsAttr)
+        .m(&PXR_NS::UsdGeomPointBased::CreatePointsAttr)
+        .m(&PXR_NS::UsdGeomPointBased::GetVelocitiesAttr)
+        .m(&PXR_NS::UsdGeomPointBased::CreateVelocitiesAttr)
+        .m(&PXR_NS::UsdGeomPointBased::GetAccelerationsAttr)
+        .m(&PXR_NS::UsdGeomPointBased::CreateAccelerationsAttr)
+        .m(&PXR_NS::UsdGeomPointBased::GetNormalsAttr)
+        .m(&PXR_NS::UsdGeomPointBased::CreateNormalsAttr)
+        .m(&PXR_NS::UsdGeomPointBased::GetNormalsInterpolation)
+        .m(&PXR_NS::UsdGeomPointBased::SetNormalsInterpolation)
+        .m((bool (PXR_NS::UsdGeomPointBased::*)(PXR_NS::VtArray<PXR_NS::GfVec3f>*, PXR_NS::UsdTimeCode const, PXR_NS::UsdTimeCode const) const)
             &PXR_NS::UsdGeomPointBased::ComputePointsAtTime)
 
         ;
@@ -442,7 +442,7 @@ BBL_MODULE(usdGeom) {
             &PXR_NS::UsdGeomPointInstancer::ComputeExtentAtTimes, "ComputeExtentAtTimes_with_transform")
         .m(&PXR_NS::UsdGeomPointInstancer::GetInstanceCount)
         ;
-    
+
     bbl::Enum<PXR_NS::UsdGeomPointInstancer::ProtoXformInclusion>("ProtoXformInclusion");
     bbl::Enum<PXR_NS::UsdGeomPointInstancer::MaskApplication>("MaskApplication");
 
@@ -499,7 +499,7 @@ BBL_MODULE(usdGeom) {
     bbl::Class<std::vector<PXR_NS::UsdGeomPrimvar>>("PrimvarVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::UsdGeomPrimvar)
         ;
-    
+
 
     bbl::Class<PXR_NS::UsdGeomPrimvarsAPI>("PrimvarsAPI")
         .ctor(bbl::Class<PXR_NS::UsdGeomPrimvarsAPI>::Ctor<PXR_NS::UsdPrim const&>(), "new")

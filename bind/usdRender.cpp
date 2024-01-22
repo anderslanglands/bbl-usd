@@ -125,5 +125,3 @@ BBL_MODULE(usdRender) {
 
 
 #endif
-
-
