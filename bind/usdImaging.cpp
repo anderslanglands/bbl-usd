@@ -8,22 +8,23 @@
 #include <pxr/usd/usdGeom/camera.h>
 
 namespace bblext {
-    void render(PXR_NS::UsdImagingGLEngine& engine, const PXR_NS::UsdPrim& prim) {
-        pxr::UsdImagingGLRenderParams params;
-        params.enableLighting = false;
-        engine.Render(prim, params);
+    void GLRenderParams_SetEnableLighting(PXR_NS::UsdImagingGLRenderParams& params, bool enableLighting) {
+        params.enableLighting = enableLighting;
     }
 }
 
 BBL_MODULE(usdImaging) {
-    bbl::fn(&bblext::render, "render");
-
     bbl::Class<PXR_NS::UsdImagingGLEngine>("GLEngine")
         .ctor(bbl::Class<PXR_NS::UsdImagingGLEngine>::Ctor<>(), "new")
         .m(&PXR_NS::UsdImagingGLEngine::SetRenderViewport)
         .m(&PXR_NS::UsdImagingGLEngine::SetCameraState)
-        .m(&PXR_NS::UsdImagingGLEngine::Render);
+        .m(&PXR_NS::UsdImagingGLEngine::Render)
+        .m(&PXR_NS::UsdImagingGLEngine::SetRendererSetting);
 
+    bbl::Class<PXR_NS::UsdImagingGLRenderParams>("GLRenderParams")
+        .ctor(bbl::Class<PXR_NS::UsdImagingGLRenderParams>::Ctor<>(), "new");
+
+    bbl::fn(&bblext::GLRenderParams_SetEnableLighting, "GLRenderParams_SetEnableLighting");
 }
 
 
