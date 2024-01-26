@@ -4,8 +4,6 @@
 
 #include <pxr/usdImaging/usdImagingGL/engine.h>
 #include <pxr/usdImaging/usdImagingGL/renderParams.h>
-#include <pxr/base/gf/camera.h>
-#include <pxr/usd/usdGeom/camera.h>
 
 namespace bblext {
     void GLRenderParams_SetEnableLighting(PXR_NS::UsdImagingGLRenderParams& params, bool enableLighting) {
