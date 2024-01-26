@@ -232,6 +232,13 @@ public:
     }
 };
 
+bool LayerHandle_ExportToString(
+    const PXR_NS::SdfLayerHandle& layer,
+    std::string** output
+) {
+    return layer->ExportToString(*output);
+}
+
 }
 
 BBL_MODULE(sdf) {
@@ -566,9 +573,16 @@ BBL_MODULE(sdf) {
         .smartptr_to<PXR_NS::SdfFileFormat const>()
     ;
 
-    bbl::Class<PXR_NS::SdfFileFormat::FileFormatArguments>("FileFormatFileFormatArguments");
+    bbl::Class<PXR_NS::SdfFileFormat::FileFormatArguments>("FileFormatFileFormatArguments")
+        .ctor(bbl::Class<PXR_NS::SdfFileFormat::FileFormatArguments>::Ctor(), "default");
 
     bbl::Class<PXR_NS::SdfLayer>("Layer")
+        // Constructors
+        .m((PXR_NS::SdfLayerRefPtr(*)(const std::string&, const PXR_NS::SdfLayer::FileFormatArguments&))
+            &PXR_NS::SdfLayer::CreateAnonymous)
+        .m(&PXR_NS::SdfLayer::ImportFromString)
+        .m(&PXR_NS::SdfLayer::FindOrOpen)
+
         // External References
         .m(&PXR_NS::SdfLayer::GetExternalReferences)
         .m(&PXR_NS::SdfLayer::UpdateExternalReference)
@@ -592,6 +606,7 @@ BBL_MODULE(sdf) {
             &PXR_NS::SdfLayer::SetFieldDictValueByKey)
         .m(&PXR_NS::SdfLayer::EraseField)
         .m(&PXR_NS::SdfLayer::EraseFieldDictValueByKey)
+        .m(&PXR_NS::SdfLayer::GetIdentifier)
 
         // Metadata
         .m(&PXR_NS::SdfLayer::GetColorConfiguration)
@@ -695,6 +710,8 @@ BBL_MODULE(sdf) {
         // static
         .m(&PXR_NS::SdfLayer::DumpLayerInfo)
     ;
+
+    bbl::fn(&bblext::LayerHandle_ExportToString);
 
     bbl::Class<PXR_NS::SdfLayerHandle>("LayerHandle")
         .smartptr_to<PXR_NS::SdfLayer>()
