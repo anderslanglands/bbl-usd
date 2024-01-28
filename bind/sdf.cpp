@@ -239,6 +239,13 @@ bool LayerHandle_ExportToString(
     return layer->ExportToString(*output);
 }
 
+bool LayerRefPtr_ExportToString(
+    const PXR_NS::SdfLayerRefPtr& layer,
+    std::string** output
+) {
+    return layer->ExportToString(*output);
+}
+
 }
 
 BBL_MODULE(sdf) {
@@ -712,6 +719,7 @@ BBL_MODULE(sdf) {
     ;
 
     bbl::fn(&bblext::LayerHandle_ExportToString);
+    bbl::fn(&bblext::LayerRefPtr_ExportToString);
 
     bbl::Class<PXR_NS::SdfLayerHandle>("LayerHandle")
         .smartptr_to<PXR_NS::SdfLayer>()
