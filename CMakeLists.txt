@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(bbl-usd VERSION 0.1 LANGUAGES C CXX)
 
-find_package(babble 0.6 CONFIG REQUIRED)
+find_package(babble 0.7 CONFIG REQUIRED)
 find_package(pxr REQUIRED)
 
 option(BUILD_EXAMPLE "Build the example program" OFF)
@@ -46,8 +46,8 @@ target_link_libraries(
       ${PXR_LIBRARIES}
 )
 
-
 target_compile_definitions(openusd-c PRIVATE NOMINMAX BOOST_ALL_NO_LIB __TBB_show_deprecation_message_task_H)
+set_target_properties(openusd-c PROPERTIES CXX_STANDARD 17)
 
 if (MSVC)
     target_compile_options(openusd-c PRIVATE /bigobj)
