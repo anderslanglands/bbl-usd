@@ -22,6 +22,7 @@ set(bindfiles
     bind/usdLux.cpp
     bind/usdRender.cpp
     bind/usdShade.cpp
+    bind/usdImaging.cpp
     bind/vt.cpp
 )
 

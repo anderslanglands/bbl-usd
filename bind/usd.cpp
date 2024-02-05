@@ -359,8 +359,9 @@ BBL_MODULE(usd) {
 
     bbl::Class<PXR_NS::UsdEditTarget>("EditTarget")
         .ctor(bbl::Class<PXR_NS::UsdEditTarget>::Ctor<>(), "default")
-        .ctor(bbl::Class<PXR_NS::UsdEditTarget>::Ctor<PXR_NS::SdfLayerHandle, PXR_NS::SdfLayerOffset>(), "from_layer")
-        .ctor(bbl::Class<PXR_NS::UsdEditTarget>::Ctor<PXR_NS::SdfLayerHandle, PXR_NS::PcpNodeRef>(), "from_layer_and_node")
+        .ctor(bbl::Class<PXR_NS::UsdEditTarget>::Ctor<PXR_NS::SdfLayerHandle, PXR_NS::SdfLayerOffset>(), "from_layer_handle")
+        .ctor(bbl::Class<PXR_NS::UsdEditTarget>::Ctor<PXR_NS::SdfLayerRefPtr, PXR_NS::SdfLayerOffset>(), "from_layer_ref_ptr")
+        .ctor(bbl::Class<PXR_NS::UsdEditTarget>::Ctor<PXR_NS::SdfLayerHandle, PXR_NS::PcpNodeRef>(), "from_layer_handle_and_node")
         .m(&PXR_NS::UsdEditTarget::operator==, "op_eq")
         .m(&PXR_NS::UsdEditTarget::IsNull)
         .m(&PXR_NS::UsdEditTarget::IsValid)

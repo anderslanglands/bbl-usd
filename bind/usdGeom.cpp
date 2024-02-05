@@ -648,7 +648,9 @@ BBL_MODULE(usdGeom) {
         .ctor(bbl::Class<PXR_NS::UsdGeomXformable>::Ctor<PXR_NS::UsdPrim const&>(),"new")
         .m(&PXR_NS::UsdGeomXformable::GetXformOpOrderAttr)
         .m(&PXR_NS::UsdGeomXformable::AddXformOp)
+#if PXR_VERSION >= 2311
         .m(&PXR_NS::UsdGeomXformable::GetXformOp)
+#endif
         .m(&PXR_NS::UsdGeomXformable::AddTranslateOp)
         .m(&PXR_NS::UsdGeomXformable::AddScaleOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateXOp)

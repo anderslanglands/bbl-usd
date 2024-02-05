@@ -13,7 +13,13 @@ BBL_MODULE(std) {
     bbl::Class<std::string>("String")
         .ctor(bbl::Class<std::string>::Ctor<>(), "default")
         .ctor(bbl::Class<std::string>::Ctor<char const*>(), "from_char_ptr")
+        .ctor(bbl::Class<std::string>::Ctor<char const*, size_t>(), "from_char_ptr_and_count")
+        .ctor(bbl::Class<std::string>::Ctor<std::string&>(), "from_string")
         .m(&std::string::c_str)
+        .m((void (std::string::*)(size_t)) &std::string::resize)
+        .m((char* (std::string::*)()) &std::string::data)
+        .m((const char* (std::string::*)() const) &std::string::data, "data_const")
+        .m(&std::string::size)
     ;
 
     // We provide macros for automating the binding of common types' methods
