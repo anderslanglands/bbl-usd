@@ -46,6 +46,7 @@ BBL_MODULE(ndr) {
 
     bbl::Class<PXR_NS::NdrDiscoveryPluginRefPtr>("DiscoveryPluginRefPtr")
         .smartptr_to<PXR_NS::NdrDiscoveryPlugin>()
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::NdrDiscoveryUri>("DiscoveryUri")
@@ -74,6 +75,7 @@ BBL_MODULE(ndr) {
 
     bbl::Class<PXR_NS::NdrNodeUniquePtr>("NodeUniquePtr")
         .smartptr_to<PXR_NS::NdrNode>()
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::NdrNodeConstPtrVec>("NodeConstPtrVec")
@@ -114,6 +116,7 @@ BBL_MODULE(ndr) {
 
     bbl::Class<PXR_NS::NdrPropertyUniquePtr>("PropertyUniquePtr")
         .smartptr_to<PXR_NS::NdrProperty>()
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::NdrPropertyUniquePtrVec>("PropertyUniquePtrVec")
@@ -152,7 +155,9 @@ BBL_MODULE(ndr) {
         BBL_STD_VECTOR_METHODS(PXR_NS::NdrDiscoveryPluginRefPtr)
     ;
 
-    bbl::Class<PXR_NS::NdrTokenMap>("TokenMap");
+    bbl::Class<PXR_NS::NdrTokenMap>("TokenMap")
+        BBL_STD_MAP_METHODS(PXR_NS::NdrTokenMap)
+    ;
 
     bbl::Class<PXR_NS::NdrOptionVec>("OptionVec")
         BBL_STD_VECTOR_METHODS((std::pair<PXR_NS::TfToken, PXR_NS::TfToken>))

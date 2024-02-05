@@ -58,6 +58,19 @@ BBL_MODULE(vt) {
         .m(&Value::GetArraySize)
         .m(&Value::GetType)
         .m(&Value::GetTypeName)
+        .m(&Value::GetHash)
+        .m(&Value::CanHash)
+        .m((Value& (Value::*)(Value&))
+            &Value::Swap
+        )
+        .m((void (Value::*)(Value&))
+            &Value::UncheckedSwap
+        )
+        .m(&Value::operator==)
+        .m(&Value::GetKnownValueTypeIndex)
+        .m((Value& (Value::*)(Value const&))
+            &Value::CastToTypeOf
+        )
 
         .ctor(bbl::Class<Value>::Ctor<bool>("value"), "from_bool")
         .m((bool (Value::*)() const)
@@ -523,6 +536,24 @@ BBL_MODULE(vt) {
             &Value::Get<PXR_NS::VtMatrix4dArray>, "Get_VtMatrix4dArray"
         ) 
 
+        .ignore((Value& (Value::*)(char const*))
+            &Value::operator=
+        )
+        .ignore((Value& (Value::*)(char*))
+            &Value::operator=
+        )
+        .ignore(&Value::GetTypeid)
+        .ignore(&Value::GetElementTypeid)
+        .ignore((Value (*)(Value const&, Value const&))
+            &Value::CastToTypeOf
+        )
+        .ignore((Value (*)(Value const&, std::type_info const&))
+            &Value::CastToTypeid
+        )
+        .ignore((Value& (Value::*)(std::type_info const&))
+            &Value::CastToTypeid
+        )
+        .ignore(&Value::CanCastFromTypeidToTypeid)
     ;
 
     bbl::Class<std::vector<PXR_NS::VtValue>>("ValueVector")
@@ -571,6 +602,41 @@ BBL_MODULE(vt) {
 
     bbl::Class<PXR_NS::VtDictionary>("Dictionary")
         .m(&PXR_NS::VtDictionary::operator[], "op_index")
+        .m(bbl::Wrap((PXR_NS::VtValue const* (PXR_NS::VtDictionary::*)(std::string const&, char const*) const)&PXR_NS::VtDictionary::GetValueAtPath, [](PXR_NS::VtDictionary const& _this, char const* keyPath, char const* delimiters) -> PXR_NS::VtValue const* {
+            return _this.GetValueAtPath(keyPath, delimiters);
+        }))
+        .m(bbl::Wrap((void (PXR_NS::VtDictionary::*)(std::string const&, PXR_NS::VtValue const&, char const*))&PXR_NS::VtDictionary::SetValueAtPath, [](PXR_NS::VtDictionary& _this, char const* keyPath, PXR_NS::VtValue const& value, char const* delimiters) -> void {
+            _this.SetValueAtPath(keyPath, value, delimiters);
+        }))
+        .m(bbl::Wrap((void (PXR_NS::VtDictionary::*)(std::string const&, char const*))&PXR_NS::VtDictionary::EraseValueAtPath, [](PXR_NS::VtDictionary& _this, char const* keyPath, char const* delimiters) -> void {
+            return _this.EraseValueAtPath(keyPath, delimiters);
+        }))
+        .m((PXR_NS::VtDictionary::iterator (PXR_NS::VtDictionary::*)(char const*))
+            &PXR_NS::VtDictionary::find, "find"
+        )
+        .m((PXR_NS::VtDictionary::const_iterator (PXR_NS::VtDictionary::*)(char const*) const)
+            &PXR_NS::VtDictionary::find, "find_const"
+        )
+
+        .ignore_all_unbound()
+    ;
+
+    bbl::Class<PXR_NS::VtDictionary::iterator>("DictionaryIterator")
+        .m(&PXR_NS::VtDictionary::iterator::operator->, "op_deref")
+        .m(
+            (PXR_NS::VtDictionary::iterator& (PXR_NS::VtDictionary::iterator::*)())
+            &PXR_NS::VtDictionary::iterator::operator++
+        )
+        /// XXX: Need to revisit this. Naming the types necessary for operator==
+        /// is very hard due to their... interesting implementation
+        .ignore_all_unbound()
+    ;
+
+    bbl::Class<PXR_NS::VtDictionary::const_iterator>("DictionaryConstIterator")
+        .m(&PXR_NS::VtDictionary::const_iterator::operator->, "op_deref")
+        /// XXX: Need to revisit this. Naming the types necessary for operator==
+        /// is very hard due to their... interesting implementation
+        .ignore_all_unbound()
     ;
 }
 

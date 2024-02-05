@@ -96,6 +96,10 @@ bool StageRefPtr_ExportToString(
     return stage->ExportToString(*output, addSourceFileComment);
 }
 
+PXR_NS::UsdStageWeakPtr StageRefPtr_as_weak(PXR_NS::UsdStageRefPtr const& p) {
+    return p;
+}
+
 }
 
 
@@ -1516,9 +1520,12 @@ BBL_MODULE(usd) {
 
     bbl::Class<PXR_NS::UsdStageWeakPtr>("StageWeakPtr")
         .ctor(bbl::Class<PXR_NS::UsdStageWeakPtr>::Ctor<>(), "ctor")
+        // .ctor(bbl::Class<PXR_NS::UsdStageWeakPtr>::Ctor<PXR_NS::UsdStageRefPtr const&>("p"), "from_refptr")
         .m(&PXR_NS::UsdStageWeakPtr::operator->, "get")
         .m(&PXR_NS::UsdStageWeakPtr::operator!, "is_invalid")
     ;
+
+    bbl::fn(&bblext::StageRefPtr_as_weak);
 
     bbl::Class<PXR_NS::UsdStageCache>("StageCache")
         .ctor(bbl::Class<PXR_NS::UsdStageCache>::Ctor<>(), "default")

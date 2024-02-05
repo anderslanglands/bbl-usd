@@ -20,10 +20,20 @@
 #include <pxr/usd/usdShade/udimUtils.h>
 #include <pxr/usd/usdShade/utils.h>
 
+#define TF_SMALLVECTOR_METHODS(TY) \
+    .m(&bbl::detail::argument_type<void(TY)>::type::empty) \
+    .m(&bbl::detail::argument_type<void(TY)>::type::size) \
+    .m((bbl::detail::argument_type<void(TY)>::type::reference (bbl::detail::argument_type<void(TY)>::type::*)(bbl::detail::argument_type<void(TY)>::type::size_type i)) \
+        &bbl::detail::argument_type<void(TY)>::type::operator[]) \
+    .m((bbl::detail::argument_type<void(TY)>::type::const_reference (bbl::detail::argument_type<void(TY)>::type::*)(bbl::detail::argument_type<void(TY)>::type::size_type i) const) \
+        &bbl::detail::argument_type<void(TY)>::type::operator[], "op_index_const") \
+    .ignore_all_unbound()
+
 BBL_MODULE(usdShade) {
     // clang-format off
 
     bbl::Class<PXR_NS::UsdShadeAttributeVector>("AttributeVector")
+        TF_SMALLVECTOR_METHODS(PXR_NS::UsdShadeAttributeVector)
     ;
 
     bbl::Class<PXR_NS::UsdShadeConnectableAPI>("ConnectableAPI")
@@ -467,6 +477,7 @@ BBL_MODULE(usdShade) {
     ;
 
     bbl::Class<PXR_NS::UsdShadeNodeGraph::InterfaceInputConsumersMap>("NodeGraphInterfaceInputConsumersMap")
+        BBL_STD_MAP_METHODS(PXR_NS::UsdShadeNodeGraph::InterfaceInputConsumersMap)
     ;
 
     bbl::Class<PXR_NS::UsdShadeOutput>("Output")
@@ -531,6 +542,7 @@ BBL_MODULE(usdShade) {
     ;
 
     bbl::Class<PXR_NS::UsdShadeOutput::SourceInfoVector>("InputSourceInfoVector")
+        TF_SMALLVECTOR_METHODS(PXR_NS::UsdShadeOutput::SourceInfoVector)
     ;
 
     bbl::Class<PXR_NS::UsdShadeShader>("Shader")

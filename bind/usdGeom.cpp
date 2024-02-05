@@ -284,6 +284,7 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomMesh::GetCreaseSharpnessesAttr)
         .m(&PXR_NS::UsdGeomMesh::CreateCreaseSharpnessesAttr)
         .m(&PXR_NS::UsdGeomMesh::GetFaceCount)
+        .m(&PXR_NS::UsdGeomMesh::Define)
         ;
 
     bbl::Class<PXR_NS::UsdGeomModelAPI>("ModelAPI")

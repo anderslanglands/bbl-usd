@@ -2,6 +2,7 @@
 
 #include "babble"
 #include "babble-std"
+#include "babble-vt"
 
 #include <pxr/base/js/types.h>
 #include <pxr/base/js/value.h>
@@ -55,7 +56,9 @@ PXR_NS::SdfAssetPath AssetPath_from_path(char const* path) {
     return PXR_NS::SdfAssetPath(path);
 }
 
-PXR_NS::SdfAssetPath AssetPath_from_path_and_resolved_path(char const* path, char const* resolved_path) {
+PXR_NS::SdfAssetPath
+AssetPath_from_path_and_resolved_path(char const* path,
+                                      char const* resolved_path) {
     return PXR_NS::SdfAssetPath(path, resolved_path);
 }
 
@@ -66,6 +69,14 @@ char const* AssetPath_GetAssetPath(PXR_NS::SdfAssetPath const& path) {
 char const* AssetPath_GetResolvedPath(PXR_NS::SdfAssetPath const& path) {
     return path.GetResolvedPath().c_str();
 }
+
+PXR_NS::SdfLayerRefPtr Layer_CreateAnonymous(char const* tag) {
+    return PXR_NS::SdfLayer::CreateAnonymous(tag);
+}
+
+PXR_NS::SdfLayerHandle LayerRefPtr_as_handle(PXR_NS::SdfLayerRefPtr& ref) {
+    return ref;
+} 
 
 PXR_NS::SdfPath const&
 NamespaceEdit_get_current_path(PXR_NS::SdfNamespaceEdit const& edit) {
@@ -108,7 +119,8 @@ Payload_from_asset_path_and_prim_path(char const* assetPath,
 }
 
 PXR_NS::SdfPayload* Payload_from_asset_path_and_prim_path_and_layer_offset(
-    char const* assetPath, PXR_NS::SdfPath const& primPath,
+    char const* assetPath,
+    PXR_NS::SdfPath const& primPath,
     PXR_NS::SdfLayerOffset const& layerOffset) {
     return new PXR_NS::SdfPayload(assetPath, primPath, layerOffset);
 }
@@ -124,18 +136,20 @@ Reference_from_asset_path_and_prim_path(char const* assetPath,
 }
 
 PXR_NS::SdfReference* Reference_from_asset_path_and_prim_path_and_layer_offset(
-    char const* assetPath, PXR_NS::SdfPath const& primPath,
+    char const* assetPath,
+    PXR_NS::SdfPath const& primPath,
     PXR_NS::SdfLayerOffset const& layerOffset) {
     return new PXR_NS::SdfReference(assetPath, primPath, layerOffset);
 }
 
 PXR_NS::SdfReference*
 Reference_from_asset_path_and_prim_path_and_layer_offset_and_custom_data(
-    char const* assetPath, PXR_NS::SdfPath const& primPath,
+    char const* assetPath,
+    PXR_NS::SdfPath const& primPath,
     PXR_NS::SdfLayerOffset const& layerOffset,
     PXR_NS::VtDictionary const& customData) {
-    return new PXR_NS::SdfReference(assetPath, primPath, layerOffset,
-                                    customData);
+    return new PXR_NS::SdfReference(
+        assetPath, primPath, layerOffset, customData);
 }
 
 char const* ValueTypeName_GetCPPTypeName(PXR_NS::SdfValueTypeName const& vtn) {
@@ -159,9 +173,11 @@ PXR_NS::VtValue const& VariableExpressionResult_value(
 class FileFormatBase : public PXR_NS::SdfFileFormat {
 public:
     // expose protected members
-    FileFormatBase(PXR_NS::TfToken const& formatId, PXR_NS::TfToken const& versionString, PXR_NS::TfToken const& target, char const* extension)
-    : PXR_NS::SdfFileFormat(formatId, versionString, target, extension)
-    {}
+    FileFormatBase(PXR_NS::TfToken const& formatId,
+                   PXR_NS::TfToken const& versionString,
+                   PXR_NS::TfToken const& target,
+                   char const* extension)
+        : PXR_NS::SdfFileFormat(formatId, versionString, target, extension) {}
 
     virtual ~FileFormatBase() {}
 
@@ -169,21 +185,41 @@ public:
         return false;
     }
 
-    virtual auto Read(PXR_NS::SdfLayer* layer, std::string const& resolvedPath, bool metadaOnly) const -> bool override {
+    virtual auto Read(PXR_NS::SdfLayer* layer,
+                      std::string const& resolvedPath,
+                      bool metadaOnly) const -> bool override {
         return false;
     }
 
     // Helper function for _ReadDetached
-    auto _ReadAndCopyLayerDataToMemory(PXR_NS::SdfLayer* layer, char const* resolvedPath, bool metadataOnly, bool* didCopyData) const -> bool {
-        return PXR_NS::SdfFileFormat::_ReadAndCopyLayerDataToMemory(layer, resolvedPath, metadataOnly, didCopyData);
+    auto _ReadAndCopyLayerDataToMemory(PXR_NS::SdfLayer* layer,
+                                       char const* resolvedPath,
+                                       bool metadataOnly,
+                                       bool* didCopyData) const -> bool {
+        return PXR_NS::SdfFileFormat::_ReadAndCopyLayerDataToMemory(
+            layer, resolvedPath, metadataOnly, didCopyData);
     }
 
-    virtual auto _InstantiateNewLayer(PXR_NS::SdfFileFormatConstPtr const& fileFormat, const std::string &identifier, const std::string &realPath, const PXR_NS::ArAssetInfo &assetInfo, const PXR_NS::SdfFileFormat::FileFormatArguments &args) const -> PXR_NS::SdfLayer* override {
-        return PXR_NS::SdfFileFormat::_InstantiateNewLayer(fileFormat, identifier, realPath, assetInfo, args);
+    virtual auto _InstantiateNewLayer(
+        PXR_NS::SdfFileFormatConstPtr const& fileFormat,
+        const std::string& identifier,
+        const std::string& realPath,
+        const PXR_NS::ArAssetInfo& assetInfo,
+        const PXR_NS::SdfFileFormat::FileFormatArguments& args) const
+        -> PXR_NS::SdfLayer* override {
+        return PXR_NS::SdfFileFormat::_InstantiateNewLayer(
+            fileFormat, identifier, realPath, assetInfo, args);
     }
 
-    auto _InstantiateNewLayer_base(PXR_NS::SdfFileFormatConstPtr const& fileFormat, char const* identifier, char const* realPath, const PXR_NS::ArAssetInfo &assetInfo, const PXR_NS::SdfFileFormat::FileFormatArguments &args) const -> PXR_NS::SdfLayer* {
-        return PXR_NS::SdfFileFormat::_InstantiateNewLayer(fileFormat, identifier, realPath, assetInfo, args);
+    auto _InstantiateNewLayer_base(
+        PXR_NS::SdfFileFormatConstPtr const& fileFormat,
+        char const* identifier,
+        char const* realPath,
+        const PXR_NS::ArAssetInfo& assetInfo,
+        const PXR_NS::SdfFileFormat::FileFormatArguments& args) const
+        -> PXR_NS::SdfLayer* {
+        return PXR_NS::SdfFileFormat::_InstantiateNewLayer(
+            fileFormat, identifier, realPath, assetInfo, args);
     }
 
     virtual auto _ShouldSkipAnonymousReload() const -> bool override {
@@ -202,41 +238,149 @@ public:
         return PXR_NS::SdfFileFormat::ShouldReadAnonymousLayers();
     }
 
-    virtual auto _InitDetachedData(PXR_NS::SdfFileFormat::FileFormatArguments const& args) const -> PXR_NS::SdfAbstractDataRefPtr  override {
+    virtual auto _InitDetachedData(
+        PXR_NS::SdfFileFormat::FileFormatArguments const& args) const
+        -> PXR_NS::SdfAbstractDataRefPtr override {
         return PXR_NS::SdfFileFormat::InitDetachedData(args);
     }
 
-    auto _InitDetachedData_base(PXR_NS::SdfFileFormat::FileFormatArguments const& args) const -> PXR_NS::SdfAbstractDataRefPtr {
+    auto _InitDetachedData_base(
+        PXR_NS::SdfFileFormat::FileFormatArguments const& args) const
+        -> PXR_NS::SdfAbstractDataRefPtr {
         return PXR_NS::SdfFileFormat::_InitDetachedData(args);
     }
 
-    virtual bool _ReadDetached(PXR_NS::SdfLayer *layer, const std::string &resolvedPath, bool metadataOnly) const override {
-        return PXR_NS::SdfFileFormat::_ReadDetached(layer, resolvedPath, metadataOnly);
+    virtual bool _ReadDetached(PXR_NS::SdfLayer* layer,
+                               const std::string& resolvedPath,
+                               bool metadataOnly) const override {
+        return PXR_NS::SdfFileFormat::_ReadDetached(
+            layer, resolvedPath, metadataOnly);
     }
 
-    bool _ReadDetached_base(PXR_NS::SdfLayer *layer, const std::string &resolvedPath, bool metadataOnly) const {
-        return PXR_NS::SdfFileFormat::_ReadDetached(layer, resolvedPath, metadataOnly);
+    bool _ReadDetached_base(PXR_NS::SdfLayer* layer,
+                            const std::string& resolvedPath,
+                            bool metadataOnly) const {
+        return PXR_NS::SdfFileFormat::_ReadDetached(
+            layer, resolvedPath, metadataOnly);
     }
 
     // static protected member functions
-    static void _SetLayerData(PXR_NS::SdfLayer* layer, PXR_NS::SdfAbstractDataRefPtr& data) {
+    static void _SetLayerData(PXR_NS::SdfLayer* layer,
+                              PXR_NS::SdfAbstractDataRefPtr& data) {
         PXR_NS::SdfFileFormat::_SetLayerData(layer, data);
     }
 
-    static void _SetLayerData_with_hints(PXR_NS::SdfLayer* layer, PXR_NS::SdfAbstractDataRefPtr& data, PXR_NS::SdfLayerHints hints) {
+    static void _SetLayerData_with_hints(PXR_NS::SdfLayer* layer,
+                                         PXR_NS::SdfAbstractDataRefPtr& data,
+                                         PXR_NS::SdfLayerHints hints) {
         PXR_NS::SdfFileFormat::_SetLayerData(layer, data, hints);
     }
 
-    static auto _GetLayerData(PXR_NS::SdfLayer const& layer) -> PXR_NS::SdfAbstractDataConstPtr {
+    static auto _GetLayerData(PXR_NS::SdfLayer const& layer)
+        -> PXR_NS::SdfAbstractDataConstPtr {
         return PXR_NS::SdfFileFormat::_GetLayerData(layer);
     }
 };
 
+auto define_file_format(char const* name,
+                        char const* formatId,
+                        char const* versionString,
+                        char const* target,
+                        char const* extension,
+                        void* fn_can_read,
+                        void* fn_read) -> void {
+
+    typedef bool (*CanReadFn)(char const* file);
+    typedef bool (*ReadFn)(
+        PXR_NS::SdfLayer* layer, char const* resolvedPath, bool metadataOnly);
+
+    class FileFormatDerived : public PXR_NS::SdfFileFormat {
+        CanReadFn _fn_can_read;
+        ReadFn _fn_read;
+
+    public:
+        FileFormatDerived(char const* formatId,
+                          char const* versionString,
+                          char const* target,
+                          char const* extension,
+                          CanReadFn fn_can_read,
+                          ReadFn fn_read)
+            : PXR_NS::SdfFileFormat(PXR_NS::TfToken(formatId),
+                                    PXR_NS::TfToken(versionString),
+                                    PXR_NS::TfToken(target),
+                                    extension),
+              _fn_can_read(fn_can_read), _fn_read(fn_read) {}
+
+        virtual auto CanRead(std::string const& file) const -> bool override {
+            printf("CanRead\n");
+            return _fn_can_read(file.c_str());
+        }
+
+        virtual auto Read(PXR_NS::SdfLayer* layer,
+                          std::string const& resolvedPath,
+                          bool metadataOnly) const -> bool override {
+            printf("Read\n");
+            return _fn_read(layer, resolvedPath.c_str(), metadataOnly);
+        }
+    };
+
+    class FileFormatFactory : public PXR_NS::Sdf_FileFormatFactoryBase {
+        std::string _formatId;
+        std::string _versionString;
+        std::string _target;
+        std::string _extension;
+        CanReadFn _fn_can_read;
+        ReadFn _fn_read;
+
+    public:
+        FileFormatFactory(char const* formatId,
+                          char const* versionString,
+                          char const* target,
+                          char const* extension,
+                          CanReadFn fn_can_read,
+                          ReadFn fn_read)
+            : _formatId(formatId), _versionString(versionString),
+              _target(target), _extension(extension), _fn_can_read(fn_can_read),
+              _fn_read(fn_read) {}
+
+        virtual auto New() const -> PXR_NS::SdfFileFormatRefPtr override {
+            printf("NEW FILE FORMAT\n");
+            printf("    formatId: \"%s\"\n", _formatId.c_str());
+            printf("    versionString: \"%s\"\n", _versionString.c_str());
+            printf("    target: \"%s\"\n", _target.c_str());
+            printf("    extension: \"%s\"\n", _extension.c_str());
+            return PXR_NS::SdfFileFormatRefPtr(
+                new FileFormatDerived(_formatId.c_str(),
+                                      _versionString.c_str(),
+                                      _target.c_str(),
+                                      _extension.c_str(),
+                                      _fn_can_read,
+                                      _fn_read));
+        }
+    };
+
+    printf("Defining \"%s\"\n", name);
+    printf("    formatId: \"%s\"\n", formatId);
+    printf("    versionString: \"%s\"\n", versionString);
+    printf("    target: \"%s\"\n", target);
+    printf("    extension: \"%s\"\n", extension);
+
+    PXR_NS::TfType::Declare(name).SetFactory(
+        std::make_unique<FileFormatFactory>(formatId,
+                                            versionString,
+                                            target,
+                                            extension,
+                                            (CanReadFn)fn_can_read,
+                                            (ReadFn)fn_read));
 }
+
+} // namespace bblext
 
 BBL_MODULE(sdf) {
 
     // clang-format off
+
+    bbl::fn(&bblext::define_file_format);
 
     bbl::Class<PXR_NS::SdfAbstractData>("AbstractData")
         .m(&PXR_NS::SdfAbstractData::CopyFrom)
@@ -299,6 +443,9 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfAbstractDataPtr>("AbstractDataPtr")
         .smartptr_to<PXR_NS::SdfAbstractData>()
+        .m(&PXR_NS::SdfAbstractDataPtr::IsExpired)
+        .m(&PXR_NS::SdfAbstractDataPtr::IsInvalid)
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::SdfAbstractDataPtrVector>("AbstractDataPtrVector")
@@ -307,6 +454,9 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfAbstractDataConstPtr>("AbstractDataConstPtr")
         .smartptr_to<PXR_NS::SdfAbstractData const>()
+        .m(&PXR_NS::SdfAbstractDataConstPtr::IsExpired)
+        .m(&PXR_NS::SdfAbstractDataConstPtr::IsInvalid)
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::SdfAbstractDataConstPtrVector>("AbstractDataConstPtrVector")
@@ -315,6 +465,7 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfAbstractDataRefPtr>("AbstractDataRefPtr")
         .smartptr_to<PXR_NS::SdfAbstractData>()
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::SdfAbstractDataRefPtrVector>("AbstractDataRefPtrVector")
@@ -323,6 +474,7 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfAbstractDataConstRefPtr>("AbstractDataConstRefPtr")
         .smartptr_to<PXR_NS::SdfAbstractData const>()
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::SdfAbstractDataConstRefPtrVector>("AbstractDataConstRefPtrVector")
@@ -354,9 +506,13 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfAssetPath>("AssetPath")
         .ctor(bbl::Class<PXR_NS::SdfAssetPath>::Ctor<>(), "new")
-        .m(&pxrInternal_v0_23__pxrReserved__::SdfAssetPath::operator==, "op_eq")
-        .m(&pxrInternal_v0_23__pxrReserved__::SdfAssetPath::operator!=, "op_neq")
-        .m(&pxrInternal_v0_23__pxrReserved__::SdfAssetPath::operator<, "op_lt")
+        .m(&PXR_NS::SdfAssetPath::operator==, "op_eq")
+        .m(&PXR_NS::SdfAssetPath::operator!=, "op_neq")
+        .m(&PXR_NS::SdfAssetPath::operator<, "op_lt")
+        .m(&PXR_NS::SdfAssetPath::GetHash)
+
+        .ignore(&PXR_NS::SdfAssetPath::GetAssetPath)
+        .ignore(&PXR_NS::SdfAssetPath::GetResolvedPath)
     ;
 
     // we bind specific wrapper functions for these as there's no point
@@ -366,7 +522,9 @@ BBL_MODULE(sdf) {
     bbl::fn(&bblext::AssetPath_GetAssetPath);
     bbl::fn(&bblext::AssetPath_GetResolvedPath);
 
-    bbl::Class<PXR_NS::VtArray<PXR_NS::SdfAssetPath>>("AssetPathArray");
+    bbl::Class<PXR_NS::VtArray<PXR_NS::SdfAssetPath>>("AssetPathArray")
+        VTARRAY_METHODS(PXR_NS::SdfAssetPath)
+    ;
 
     bbl::Class<PXR_NS::SdfAttributeSpec>("AttributeSpec")
         .ctor(bbl::Class<PXR_NS::SdfAttributeSpec>::Ctor<>(), "default")
@@ -392,15 +550,30 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfAttributeSpecHandle>("AttributeSpecHandle")
         .smartptr_to<PXR_NS::SdfAttributeSpec>()
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::SdfAttributeSpecHandleVector>("AttributeSpecHandleVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::SdfAttributeSpecHandle)
     ;
-
     
     /// XXX: what's this
-    bbl::Class<PXR_NS::SdfAttributeSpecView>("AttributeSpecView");
+    bbl::Class<PXR_NS::SdfAttributeSpecView>("AttributeSpecView")
+        .m(&PXR_NS::SdfAttributeSpecView::begin)
+        .m(&PXR_NS::SdfAttributeSpecView::end)
+        .m(&PXR_NS::SdfAttributeSpecView::size)
+        .m(&PXR_NS::SdfAttributeSpecView::empty)
+        .m((PXR_NS::SdfAttributeSpecView::const_iterator (PXR_NS::SdfAttributeSpecView::*)(PXR_NS::SdfAttributeSpecView::key_type const&) const)
+            &PXR_NS::SdfAttributeSpecView::find, "find"
+        )
+        .m((PXR_NS::SdfAttributeSpecView::const_iterator (PXR_NS::SdfAttributeSpecView::*)(PXR_NS::SdfAttributeSpecView::value_type const&) const)
+            &PXR_NS::SdfAttributeSpecView::find, "find_value"
+        )
+    ;
+
+    bbl::Class<PXR_NS::SdfAttributeSpecView::const_iterator>("AttributeSpecViewConstIterator")
+        BBL_STD_ITERATOR_METHODS(PXR_NS::SdfAttributeSpecView::const_iterator)
+    ;
 
     bbl::Class<PXR_NS::SdfChangeBlock>("ChangeBlock")
         .ctor(bbl::Class<PXR_NS::SdfChangeBlock>::Ctor<>(), "default")
@@ -694,7 +867,12 @@ BBL_MODULE(sdf) {
 
         // static
         .m(&PXR_NS::SdfLayer::DumpLayerInfo)
+
+        // Primary API
+        .m(&PXR_NS::SdfLayer::TransferContent)
     ;
+
+    bbl::fn(&bblext::Layer_CreateAnonymous);
 
     bbl::Class<PXR_NS::SdfLayerHandle>("LayerHandle")
         .smartptr_to<PXR_NS::SdfLayer>()
@@ -703,6 +881,8 @@ BBL_MODULE(sdf) {
     bbl::Class<PXR_NS::SdfLayerRefPtr>("LayerRefPtr")
         .smartptr_to<PXR_NS::SdfLayer>()
     ;
+
+    bbl::fn(&bblext::LayerRefPtr_as_handle);
 
     bbl::Class<PXR_NS::SdfLayerHandleVector>("LayerHandleVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::SdfLayerHandle)
@@ -722,7 +902,7 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfLayerOffset>("LayerOffset")
         .ctor(bbl::Class<PXR_NS::SdfLayerOffset>::Ctor<double, double>("offset", "scale"), "ctor")
-        .ctor(bbl::Class<PXR_NS::SdfLayerOffset>::Ctor(), "default")
+        .ctor(bbl::Class<PXR_NS::SdfLayerOffset>::Ctor<>(), "default")
         .m(&PXR_NS::SdfLayerOffset::GetOffset)
         .m(&PXR_NS::SdfLayerOffset::GetScale)
         .m(&PXR_NS::SdfLayerOffset::SetOffset)

@@ -14,6 +14,8 @@ BBL_MODULE(std) {
         .ctor(bbl::Class<std::string>::Ctor<>(), "default")
         .ctor(bbl::Class<std::string>::Ctor<char const*>(), "from_char_ptr")
         .m(&std::string::c_str)
+
+        .ignore_all_unbound()
     ;
 
     // We provide macros for automating the binding of common types' methods

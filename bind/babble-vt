@@ -5,6 +5,7 @@
 // Bind std::vector<TY>
 #define VTARRAY_METHODS(TY)                                                                                             \
     .ctor(bbl::Class<PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>>::Ctor<>(), "new")                              \
+    .ctor(bbl::Class<PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>>::Ctor<bbl::detail::argument_type<void(TY)>::type const*, bbl::detail::argument_type<void(TY)>::type const*>("start", "end"), "from_range")                              \
     .m((bbl::detail::argument_type<void(TY)>::type* (PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::*)()) \
         &PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::data)                                             \
     .m((bbl::detail::argument_type<void(TY)>::type const* (PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::*)() const) \
@@ -14,4 +15,5 @@
         &PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::operator[], "op_index")                           \
     .m((bbl::detail::argument_type<void(TY)>::type const& (PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::*)(size_t) const) \
         &PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::operator[], "op_index_const")                     \
+    .ignore_all_unbound()
 ;

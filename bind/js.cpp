@@ -11,10 +11,18 @@ BBL_MODULE(js) {
     // clang-format off
     bbl::Class<PXR_NS::JsArray>("Array")
         BBL_STD_VECTOR_METHODS(PXR_NS::JsValue)
-        ;
+    ;
 
     bbl::Class<PXR_NS::JsObject>("Object")
-        ;
+        .m((PXR_NS::JsValue& (PXR_NS::JsObject::*)(std::string const&))
+            &PXR_NS::JsObject::at
+        )
+        .m((PXR_NS::JsValue const& (PXR_NS::JsObject::*)(std::string const&) const)
+            &PXR_NS::JsObject::at, "at_const"
+        )
+
+        .ignore_all_unbound()
+    ;
 
     bbl::Class<PXR_NS::JsValue>("Value")
         .ctor(bbl::Class<PXR_NS::JsValue>::Ctor<>(), "new")
@@ -39,7 +47,19 @@ BBL_MODULE(js) {
         .m(&PXR_NS::JsValue::IsInt)
         .m(&PXR_NS::JsValue::IsUInt64)
         .m(&PXR_NS::JsValue::IsReal)
-        ;
+        .m(&PXR_NS::JsValue::IsNull)
+        .m(&PXR_NS::JsValue::IsString)
+        .m(&PXR_NS::JsValue::GetType)
+        .m(&PXR_NS::JsValue::operator==)
+        .m(bbl::Wrap(&PXR_NS::JsValue::GetString, [](PXR_NS::JsValue const& val) -> char const* {
+            return val.GetString().c_str();
+        }))
+        
+        .ignore(&PXR_NS::JsValue::GetTypeName)
+        .ignore(&PXR_NS::JsValue::operator!=)
+    ;
+
+    bbl::Enum<PXR_NS::JsValue::Type>("ValueType");
 
     bbl::Class<std::pair<PXR_NS::TfToken, PXR_NS::JsValue>>("TokenValuePair")
     ;

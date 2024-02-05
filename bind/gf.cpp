@@ -212,7 +212,8 @@ BBL_MODULE(gf) {
     // functionality in higher-level language bindings
     bbl::Class<PXR_NS::GfVec2f>("Vec2f")
         .replace_with<Vec2f>()
-        ;
+        .ignore_all_unbound()
+    ;
     
     bbl::Class<PXR_NS::VtArray<PXR_NS::GfVec2f>>("Vec2fArray")
         VTARRAY_METHODS(PXR_NS::GfVec2f)
@@ -220,7 +221,8 @@ BBL_MODULE(gf) {
 
     bbl::Class<PXR_NS::GfVec3f>("Vec3f")
         .replace_with<Vec3f>()
-        ;
+        .ignore_all_unbound()
+    ;
 
     bbl::Class<PXR_NS::VtArray<PXR_NS::GfVec3f>>("Vec3fArray")
         VTARRAY_METHODS(PXR_NS::GfVec3f)
@@ -232,7 +234,8 @@ BBL_MODULE(gf) {
 
     bbl::Class<PXR_NS::GfVec4f>("Vec4f")
         .replace_with<Vec4f>()
-        ;
+        .ignore_all_unbound()
+    ;
 
     bbl::Class<PXR_NS::VtArray<PXR_NS::GfVec4f>>("Vec4fArray")
         VTARRAY_METHODS(PXR_NS::GfVec4f)
@@ -240,11 +243,12 @@ BBL_MODULE(gf) {
 
     bbl::Class<std::vector<PXR_NS::GfVec4f>>("Vec4fVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::GfVec4f)
-        ;
+    ;
 
     bbl::Class<PXR_NS::GfVec2h>("Vec2h")
         .replace_with<Vec2h>()
-        ;
+        .ignore_all_unbound()
+    ;
 
     bbl::Class<PXR_NS::VtArray<PXR_NS::GfVec2h>>("Vec2hArray")
         VTARRAY_METHODS(PXR_NS::GfVec2h)
@@ -252,6 +256,7 @@ BBL_MODULE(gf) {
 
     bbl::Class<PXR_NS::GfVec3h>("Vec3h")
         .replace_with<Vec3h>()
+        .ignore_all_unbound()
         ;
 
     bbl::Class<PXR_NS::VtArray<PXR_NS::GfVec3h>>("Vec3hArray")
@@ -260,7 +265,8 @@ BBL_MODULE(gf) {
 
     bbl::Class<PXR_NS::GfVec4h>("Vec4h")
         .replace_with<Vec4h>()
-        ;
+        .ignore_all_unbound()
+    ;
 
     bbl::Class<PXR_NS::VtArray<PXR_NS::GfVec4h>>("Vec4hArray")
         VTARRAY_METHODS(PXR_NS::GfVec4h)
@@ -268,6 +274,7 @@ BBL_MODULE(gf) {
 
     bbl::Class<PXR_NS::GfVec2d>("Vec2d")
         .replace_with<Vec2d>()
+        .ignore_all_unbound()
         ;
 
     bbl::Class<PXR_NS::VtArray<PXR_NS::GfVec2d>>("Vec2dArray")
@@ -276,7 +283,8 @@ BBL_MODULE(gf) {
 
     bbl::Class<PXR_NS::GfVec3d>("Vec3d")
         .replace_with<Vec3d>()
-        ;
+        .ignore_all_unbound()
+    ;
 
     bbl::Class<std::vector<PXR_NS::GfVec3d>>("Vec3dVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::GfVec3d)
@@ -288,7 +296,8 @@ BBL_MODULE(gf) {
 
     bbl::Class<PXR_NS::GfVec4d>("Vec4d")
         .replace_with<Vec4d>()
-        ;
+        .ignore_all_unbound()
+    ;
 
     bbl::Class<PXR_NS::VtArray<PXR_NS::GfVec4d>>("Vec4dArray")
         VTARRAY_METHODS(PXR_NS::GfVec4d)
@@ -296,7 +305,8 @@ BBL_MODULE(gf) {
 
     bbl::Class<PXR_NS::GfVec2i>("Vec2i")
         .replace_with<Vec2i>()
-        ;
+        .ignore_all_unbound()
+    ;
 
     bbl::Class<PXR_NS::VtArray<PXR_NS::GfVec2i>>("Vec2iArray")
         VTARRAY_METHODS(PXR_NS::GfVec2i)
@@ -304,7 +314,8 @@ BBL_MODULE(gf) {
 
     bbl::Class<PXR_NS::GfVec3i>("Vec3i")
         .replace_with<Vec3i>()
-        ;
+        .ignore_all_unbound()
+    ;
 
     bbl::Class<PXR_NS::VtArray<PXR_NS::GfVec3i>>("Vec3iArray")
         VTARRAY_METHODS(PXR_NS::GfVec3i)
@@ -312,7 +323,8 @@ BBL_MODULE(gf) {
 
     bbl::Class<PXR_NS::GfVec4i>("Vec4i")
         .replace_with<Vec4i>()
-        ;
+        .ignore_all_unbound()
+    ;
 
     bbl::Class<PXR_NS::VtArray<PXR_NS::GfVec4i>>("Vec4iArray")
         VTARRAY_METHODS(PXR_NS::GfVec4i)
@@ -338,6 +350,7 @@ BBL_MODULE(gf) {
         .m(&PXR_NS::GfBBox3d::Combine)
         .m(&PXR_NS::GfBBox3d::ComputeCentroid)
         .m(&PXR_NS::GfBBox3d::operator==, "op_eq")
+        .ignore(&PXR_NS::GfBBox3d::operator!=, "op_eq")
         ;
 
     bbl::Class<PXR_NS::GfCamera>("Camera")
@@ -375,12 +388,17 @@ BBL_MODULE(gf) {
         .m(&PXR_NS::GfCamera::GetHorizontalApertureOffset)
         .m(&PXR_NS::GfCamera::GetVerticalAperture)
         .m(&PXR_NS::GfCamera::GetVerticalApertureOffset)
-
         .m(&PXR_NS::GfCamera::GetFieldOfView)
         .m(&PXR_NS::GfCamera::GetFrustum)
         .m(&PXR_NS::GfCamera::SetPerspectiveFromAspectRatioAndFieldOfView)
         .m(&PXR_NS::GfCamera::SetOrthographicFromAspectRatioAndSize)
         .m(&PXR_NS::GfCamera::SetFromViewAndProjectionMatrix)
+        .m(&PXR_NS::GfCamera::SetProjection)
+        .m(&PXR_NS::GfCamera::GetProjection)
+        .m(&PXR_NS::GfCamera::GetAspectRatio)
+
+        .ignore(&PXR_NS::GfCamera::operator==)
+        .ignore(&PXR_NS::GfCamera::operator!=)
         ;
 
     bbl::Enum<PXR_NS::GfCamera::Projection>("CameraProjection");
@@ -556,11 +574,24 @@ BBL_MODULE(gf) {
             &PXR_NS::GfFrustum::Intersects, "Intersects_triangle")
 
         .m(&PXR_NS::GfFrustum::IntersectsViewVolume)
+        .m(&PXR_NS::GfFrustum::operator==, "op_eq")
+        .m((PXR_NS::GfFrustum (PXR_NS::GfFrustum::*)(PXR_NS::GfVec3d const&, PXR_NS::GfVec2d const&) const)
+            &PXR_NS::GfFrustum::ComputeNarrowedFrustum, "ComputeNarrowedFrustum_world")
+        .m(&PXR_NS::GfFrustum::ComputeUpVector)
+
+        .ignore(&PXR_NS::GfFrustum::operator!=)
+        .ignore((bool (PXR_NS::GfFrustum::*)(double*,double*,double*,double*) const)
+            &PXR_NS::GfFrustum::GetPerspective)
+        .ignore((void (PXR_NS::GfFrustum::*)(double,double,double,double))
+            &PXR_NS::GfFrustum::SetPerspective)
     ;
 
     bbl::Enum<PXR_NS::GfFrustum::ProjectionType>("FrustumProjectionType");
 
     bbl::Class<PXR_NS::GfHalf>("Half")
+        .m(&PXR_NS::GfHalf::bits)
+        .m(&PXR_NS::GfHalf::setBits)
+        .ignore_all_unbound()
     ;
 
     bbl::Class<std::pair<PXR_NS::GfHalf, PXR_NS::GfHalf>>("HalfPair");
@@ -630,6 +661,8 @@ BBL_MODULE(gf) {
         .m(&PXR_NS::GfLine::GetDirection)
         .m(&PXR_NS::GfLine::FindClosestPoint)
         .m(&PXR_NS::GfLine::operator==, "op_eq")
+
+        .ignore(&PXR_NS::GfLine::operator!=)
     ;
 
     bbl::Class<PXR_NS::GfLine2d>("Line2d")
@@ -640,6 +673,8 @@ BBL_MODULE(gf) {
         .m(&PXR_NS::GfLine2d::GetDirection)
         .m(&PXR_NS::GfLine2d::FindClosestPoint)
         .m(&PXR_NS::GfLine2d::operator==, "op_eq")
+
+        .ignore(&PXR_NS::GfLine2d::operator!=)
     ;
 
     bbl::Class<PXR_NS::GfLineSeg>("LineSeg")
@@ -650,6 +685,8 @@ BBL_MODULE(gf) {
         .m(&PXR_NS::GfLineSeg::GetLength)
         .m(&PXR_NS::GfLineSeg::FindClosestPoint)
         .m(&PXR_NS::GfLineSeg::operator==, "op_eq")
+
+        .ignore(&PXR_NS::GfLineSeg::operator!=)
     ;
 
     bbl::Class<PXR_NS::GfLineSeg2d>("LineSeg2d")
@@ -1216,12 +1253,19 @@ BBL_MODULE(gf) {
             &PXR_NS::GfMultiInterval::operator=, "op_assign_00")
         .m((PXR_NS::GfMultiInterval & (PXR_NS::GfMultiInterval::*)(PXR_NS::GfMultiInterval &&))
             &PXR_NS::GfMultiInterval::operator=, "op_assign_01")
+        .m(&PXR_NS::GfMultiInterval::swap)
     ;
 
     bbl::Class<PXR_NS::GfMultiInterval::Set>("MultiIntervalSet")
     ;
 
     bbl::Class<PXR_NS::GfMultiInterval::iterator>("MultiIntervalIterator")
+        .m(&PXR_NS::GfMultiInterval::iterator::operator->, "op_deref")
+        .m((PXR_NS::GfMultiInterval::iterator& (PXR_NS::GfMultiInterval::iterator::*)())
+            &PXR_NS::GfMultiInterval::iterator::operator++, "op_inc"
+        )
+        .m(&PXR_NS::GfMultiInterval::iterator::operator==, "op_eq")
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::GfPlane>("Plane")
@@ -1945,6 +1989,8 @@ BBL_MODULE(gf) {
             &PXR_NS::GfSize2::operator*=, "op_mul_assign_01")
         .m(&PXR_NS::GfSize2::operator/=, "op_div_assign")
         .m(&PXR_NS::GfSize2::operator=, "op_assign")
+
+        .ignore(&PXR_NS::GfSize2::operator PXR_NS::GfVec2i)
     ;
 
     bbl::Class<PXR_NS::GfSize3>("Size3")
@@ -1970,6 +2016,8 @@ BBL_MODULE(gf) {
             &PXR_NS::GfSize3::operator*=, "op_mul_assign_01")
         .m(&PXR_NS::GfSize3::operator/=, "op_div_assign")
         .m(&PXR_NS::GfSize3::operator=, "op_assign")
+
+        .ignore(&PXR_NS::GfSize3::operator PXR_NS::GfVec3i)
     ;
 
     bbl::Class<PXR_NS::GfTransform>("Transform")

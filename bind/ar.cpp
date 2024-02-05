@@ -22,13 +22,16 @@ BBL_MODULE(ar) {
 
     bbl::Class<std::shared_ptr<PXR_NS::ArAsset>>("AssetSharedPtr")
         .smartptr_to<PXR_NS::ArAsset>()
+        .ignore_all_unbound()
     ;
 
     bbl::Class<std::shared_ptr<char const>>("ConstCharSharedPtr")
         .m(&std::shared_ptr<char const>::get)
+        .ignore_all_unbound()
     ;
 
     bbl::Class<std::pair<FILE*, size_t>>("FileSizePair")
+        .ignore_all_unbound()
     ;
 
 
@@ -41,6 +44,7 @@ BBL_MODULE(ar) {
         .m(&PXR_NS::ArResolvedPath::GetPathString)
         .m(&PXR_NS::ArResolvedPath::GetHash)
         .m(&PXR_NS::ArResolvedPath::IsEmpty)
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::ArResolver>("Resolver")
@@ -110,6 +114,7 @@ BBL_MODULE(ar) {
 
     bbl::Class<std::shared_ptr<PXR_NS::ArWritableAsset>>("WritableAssetSharedPtr")
         .smartptr_to<PXR_NS::ArWritableAsset>()
+        .ignore_all_unbound()
     ;
 
 
