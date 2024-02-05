@@ -473,47 +473,47 @@ BBL_MODULE(usd) {
 
     bbl::Class<PXR_NS::UsdAttribute>("Attribute")
         .ctor(bbl::Class<PXR_NS::UsdAttribute>::Ctor<>(), "default")
-        .m(&PXR_NS::UsdAttribute::GetVariability)
-        .m(&PXR_NS::UsdAttribute::SetVariability)
-        .m(&PXR_NS::UsdAttribute::GetTypeName)
-        .m(&PXR_NS::UsdAttribute::SetTypeName)
-        .m(&PXR_NS::UsdAttribute::GetRoleName)
-        .m(&PXR_NS::UsdAttribute::AddConnection)
-        .m(&PXR_NS::UsdAttribute::RemoveConnection)
-        .m(&PXR_NS::UsdAttribute::SetConnections)
-        .m(&PXR_NS::UsdAttribute::ClearConnections)
-        .m(&PXR_NS::UsdAttribute::GetConnections)
-        .m(&PXR_NS::UsdAttribute::HasAuthoredConnections)
-        .m(&PXR_NS::UsdAttribute::GetColorSpace)
-        .m(&PXR_NS::UsdAttribute::SetColorSpace)
-        .m(&PXR_NS::UsdAttribute::HasColorSpace)
-        .m(&PXR_NS::UsdAttribute::ClearColorSpace)
-        .m(&PXR_NS::UsdAttribute::GetTimeSamples)
-        .m(&PXR_NS::UsdAttribute::GetTimeSamplesInInterval)
-        .m(&PXR_NS::UsdAttribute::GetNumTimeSamples)
-        .m(&PXR_NS::UsdAttribute::GetBracketingTimeSamples)
-        .m(&PXR_NS::UsdAttribute::HasValue)
-        .m(&PXR_NS::UsdAttribute::HasAuthoredValueOpinion)
-        .m(&PXR_NS::UsdAttribute::HasAuthoredValue)
-        .m(&PXR_NS::UsdAttribute::HasFallbackValue)
-        .m(&PXR_NS::UsdAttribute::ValueMightBeTimeVarying)
-        .m((bool(PXR_NS::UsdAttribute::*)(PXR_NS::VtValue*, PXR_NS::UsdTimeCode) const)
+        .m(&PXR_NS::UsdAttribute::GetVariability)                                                   
+        .m(&PXR_NS::UsdAttribute::SetVariability)                                               
+        .m(&PXR_NS::UsdAttribute::GetTypeName)                                                  
+        .m(&PXR_NS::UsdAttribute::SetTypeName)                                                  
+        .m(&PXR_NS::UsdAttribute::GetRoleName)                                                  
+        .m(&PXR_NS::UsdAttribute::AddConnection)                                                
+        .m(&PXR_NS::UsdAttribute::RemoveConnection)                                             
+        .m(&PXR_NS::UsdAttribute::SetConnections)                                               
+        .m(&PXR_NS::UsdAttribute::ClearConnections)                                             
+        .m(&PXR_NS::UsdAttribute::GetConnections)                                               
+        .m(&PXR_NS::UsdAttribute::HasAuthoredConnections)                                       
+        .m(&PXR_NS::UsdAttribute::GetColorSpace)                                                
+        .m(&PXR_NS::UsdAttribute::SetColorSpace)                                                
+        .m(&PXR_NS::UsdAttribute::HasColorSpace)                                                
+        .m(&PXR_NS::UsdAttribute::ClearColorSpace)                                              
+        .m(&PXR_NS::UsdAttribute::GetTimeSamples)                                               
+        .m(&PXR_NS::UsdAttribute::GetTimeSamplesInInterval)                                     
+        .m(&PXR_NS::UsdAttribute::GetNumTimeSamples)                                            
+        .m(&PXR_NS::UsdAttribute::GetBracketingTimeSamples)                                     
+        .m(&PXR_NS::UsdAttribute::HasValue)                                                     
+        .m(&PXR_NS::UsdAttribute::HasAuthoredValueOpinion)                                      
+        .m(&PXR_NS::UsdAttribute::HasAuthoredValue)                                             
+        .m(&PXR_NS::UsdAttribute::HasFallbackValue)                                             
+        .m(&PXR_NS::UsdAttribute::ValueMightBeTimeVarying)                                      
+        .m((bool(PXR_NS::UsdAttribute::*)(PXR_NS::VtValue*, PXR_NS::UsdTimeCode) const) 
             &PXR_NS::UsdAttribute::Get
-        )
-        .m((PXR_NS::UsdResolveInfo(PXR_NS::UsdAttribute::*)(PXR_NS::UsdTimeCode) const)
+        ) 
+        .m((PXR_NS::UsdResolveInfo(PXR_NS::UsdAttribute::*)(PXR_NS::UsdTimeCode) const) 
             &PXR_NS::UsdAttribute::GetResolveInfo, "GetResolveInfo_at_time"
         )
-        .m((PXR_NS::UsdResolveInfo(PXR_NS::UsdAttribute::*)() const)
+        .m((PXR_NS::UsdResolveInfo(PXR_NS::UsdAttribute::*)() const) 
             &PXR_NS::UsdAttribute::GetResolveInfo
-        )
-        .m((bool(PXR_NS::UsdAttribute::*)(PXR_NS::VtValue const&, PXR_NS::UsdTimeCode) const)
+        ) 
+        .m((bool(PXR_NS::UsdAttribute::*)(PXR_NS::VtValue const&, PXR_NS::UsdTimeCode) const) 
             &PXR_NS::UsdAttribute::Set
-        )
-        .m(&PXR_NS::UsdAttribute::Clear)
-        .m(&PXR_NS::UsdAttribute::ClearAtTime)
-        .m(&PXR_NS::UsdAttribute::ClearDefault)
-        .m(&PXR_NS::UsdAttribute::Block)
-        .m(&PXR_NS::UsdAttribute::GetUnionedTimeSamples)
+        ) 
+        .m(&PXR_NS::UsdAttribute::Clear)                                                        
+        .m(&PXR_NS::UsdAttribute::ClearAtTime)                                                  
+        .m(&PXR_NS::UsdAttribute::ClearDefault)                                                 
+        .m(&PXR_NS::UsdAttribute::Block)                                                        
+        .m(&PXR_NS::UsdAttribute::GetUnionedTimeSamples)                                        
         .m(&PXR_NS::UsdAttribute::GetUnionedTimeSamplesInInterval)
     ;
 
@@ -531,65 +531,65 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdObject::As<PXR_NS::UsdRelationship>, "As_Relationship")
         .m(&PXR_NS::UsdObject::As<PXR_NS::UsdProperty>, "As_Property")
         .m(&PXR_NS::UsdObject::As<PXR_NS::UsdPrim>, "As_Prim")
-        .m((bool(PXR_NS::UsdObject::*)(PXR_NS::TfToken const&, PXR_NS::VtValue*) const)
+        .m((bool(PXR_NS::UsdObject::*)(PXR_NS::TfToken const&, PXR_NS::VtValue*) const) 
             &PXR_NS::UsdObject::GetMetadata, "GetMetadata_value"
         )
-        .m((bool(PXR_NS::UsdObject::*)(PXR_NS::TfToken const&, PXR_NS::VtValue const&) const)
+        .m((bool(PXR_NS::UsdObject::*)(PXR_NS::TfToken const&, PXR_NS::VtValue const&) const) 
             &PXR_NS::UsdObject::SetMetadata, "SetMetadata_value"
         )
-        .m(&PXR_NS::UsdObject::ClearMetadata)
-        .m(&PXR_NS::UsdObject::HasMetadata)
-        .m(&PXR_NS::UsdObject::HasAuthoredMetadata)
-        .m((bool(PXR_NS::UsdObject::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&, PXR_NS::VtValue*) const)
+        .m(&PXR_NS::UsdObject::ClearMetadata)                                                
+        .m(&PXR_NS::UsdObject::HasMetadata)                                                  
+        .m(&PXR_NS::UsdObject::HasAuthoredMetadata)                                          
+        .m((bool(PXR_NS::UsdObject::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&, PXR_NS::VtValue*) const) 
             &PXR_NS::UsdObject::GetMetadataByDictKey, "GetMetadataByDictKey_value"
         )
         .m((bool(PXR_NS::UsdObject::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&, PXR_NS::VtValue const&) const)
             &PXR_NS::UsdObject::SetMetadataByDictKey, "SetMetadataByDictKey_value"
-        )
-        .m(&PXR_NS::UsdObject::ClearMetadataByDictKey)
-        .m(&PXR_NS::UsdObject::HasMetadataDictKey)
-        .m(&PXR_NS::UsdObject::HasAuthoredMetadataDictKey)
-        .m(&PXR_NS::UsdObject::GetAllMetadata)
-        .m(&PXR_NS::UsdObject::GetAllAuthoredMetadata)
-        .m(&PXR_NS::UsdObject::IsHidden)
-        .m(&PXR_NS::UsdObject::SetHidden)
-        .m(&PXR_NS::UsdObject::ClearHidden)
-        .m(&PXR_NS::UsdObject::HasAuthoredHidden)
-        .m(&PXR_NS::UsdObject::GetCustomData)
-        .m(&PXR_NS::UsdObject::GetCustomDataByKey)
-        .m(&PXR_NS::UsdObject::SetCustomData)
-        .m(&PXR_NS::UsdObject::SetCustomDataByKey)
-        .m(&PXR_NS::UsdObject::ClearCustomData)
-        .m(&PXR_NS::UsdObject::ClearCustomDataByKey)
-        .m(&PXR_NS::UsdObject::HasCustomData)
-        .m(&PXR_NS::UsdObject::HasCustomDataKey)
-        .m(&PXR_NS::UsdObject::HasAuthoredCustomData)
-        .m(&PXR_NS::UsdObject::HasAuthoredCustomDataKey)
-        .m(&PXR_NS::UsdObject::GetAssetInfo)
-        .m(&PXR_NS::UsdObject::GetAssetInfoByKey)
-        .m(&PXR_NS::UsdObject::SetAssetInfo)
-        .m(&PXR_NS::UsdObject::SetAssetInfoByKey)
-        .m(&PXR_NS::UsdObject::ClearAssetInfo)
-        .m(&PXR_NS::UsdObject::ClearAssetInfoByKey)
-        .m(&PXR_NS::UsdObject::HasAssetInfo)
-        .m(&PXR_NS::UsdObject::HasAssetInfoKey)
-        .m(&PXR_NS::UsdObject::HasAuthoredAssetInfo)
-        .m(&PXR_NS::UsdObject::HasAuthoredAssetInfoKey)
-        .m(&PXR_NS::UsdObject::GetDocumentation)
-        .m(&PXR_NS::UsdObject::SetDocumentation)
-        .m(&PXR_NS::UsdObject::ClearDocumentation)
-        .m(&PXR_NS::UsdObject::HasAuthoredDocumentation)
-        .m(&PXR_NS::UsdObject::GetDisplayName)
-        .m(&PXR_NS::UsdObject::SetDisplayName)
-        .m(&PXR_NS::UsdObject::ClearDisplayName)
-        .m(&PXR_NS::UsdObject::HasAuthoredDisplayName)
-        .m(&PXR_NS::UsdObject::IsValid)
-        .m(&PXR_NS::UsdObject::GetStage)
-        .m(&PXR_NS::UsdObject::GetPath)
-        .m(&PXR_NS::UsdObject::GetPrimPath)
-        .m(&PXR_NS::UsdObject::GetPrim)
-        .m(&PXR_NS::UsdObject::GetName)
-        .m(&PXR_NS::UsdObject::GetNamespaceDelimiter)
+        )                                       
+        .m(&PXR_NS::UsdObject::ClearMetadataByDictKey)                                       
+        .m(&PXR_NS::UsdObject::HasMetadataDictKey)                                           
+        .m(&PXR_NS::UsdObject::HasAuthoredMetadataDictKey)                                   
+        .m(&PXR_NS::UsdObject::GetAllMetadata)                                               
+        .m(&PXR_NS::UsdObject::GetAllAuthoredMetadata)                                       
+        .m(&PXR_NS::UsdObject::IsHidden)                                                     
+        .m(&PXR_NS::UsdObject::SetHidden)                                                    
+        .m(&PXR_NS::UsdObject::ClearHidden)                                                  
+        .m(&PXR_NS::UsdObject::HasAuthoredHidden)                                            
+        .m(&PXR_NS::UsdObject::GetCustomData)                                                
+        .m(&PXR_NS::UsdObject::GetCustomDataByKey)                                           
+        .m(&PXR_NS::UsdObject::SetCustomData)                                                
+        .m(&PXR_NS::UsdObject::SetCustomDataByKey)                                           
+        .m(&PXR_NS::UsdObject::ClearCustomData)                                              
+        .m(&PXR_NS::UsdObject::ClearCustomDataByKey)                                         
+        .m(&PXR_NS::UsdObject::HasCustomData)                                                
+        .m(&PXR_NS::UsdObject::HasCustomDataKey)                                             
+        .m(&PXR_NS::UsdObject::HasAuthoredCustomData)                                        
+        .m(&PXR_NS::UsdObject::HasAuthoredCustomDataKey)                                     
+        .m(&PXR_NS::UsdObject::GetAssetInfo)                                                 
+        .m(&PXR_NS::UsdObject::GetAssetInfoByKey)                                            
+        .m(&PXR_NS::UsdObject::SetAssetInfo)                                                 
+        .m(&PXR_NS::UsdObject::SetAssetInfoByKey)                                            
+        .m(&PXR_NS::UsdObject::ClearAssetInfo)                                               
+        .m(&PXR_NS::UsdObject::ClearAssetInfoByKey)                                          
+        .m(&PXR_NS::UsdObject::HasAssetInfo)                                                 
+        .m(&PXR_NS::UsdObject::HasAssetInfoKey)                                              
+        .m(&PXR_NS::UsdObject::HasAuthoredAssetInfo)                                         
+        .m(&PXR_NS::UsdObject::HasAuthoredAssetInfoKey)                                      
+        .m(&PXR_NS::UsdObject::GetDocumentation)                                             
+        .m(&PXR_NS::UsdObject::SetDocumentation)                                             
+        .m(&PXR_NS::UsdObject::ClearDocumentation)                                           
+        .m(&PXR_NS::UsdObject::HasAuthoredDocumentation)                                     
+        .m(&PXR_NS::UsdObject::GetDisplayName)                                               
+        .m(&PXR_NS::UsdObject::SetDisplayName)                                               
+        .m(&PXR_NS::UsdObject::ClearDisplayName)                                             
+        .m(&PXR_NS::UsdObject::HasAuthoredDisplayName)                                       
+        .m(&PXR_NS::UsdObject::IsValid)                                                      
+        .m(&PXR_NS::UsdObject::GetStage)                                                     
+        .m(&PXR_NS::UsdObject::GetPath)                                                      
+        .m(&PXR_NS::UsdObject::GetPrimPath)                                                  
+        .m(&PXR_NS::UsdObject::GetPrim)                                                      
+        .m(&PXR_NS::UsdObject::GetName)                                                      
+        .m(&PXR_NS::UsdObject::GetNamespaceDelimiter)                                        
         .m(&PXR_NS::UsdObject::GetDescription)
     ;
 
@@ -630,10 +630,10 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdPrim::GetAuthoredPropertyNames)
         .m(&PXR_NS::UsdPrim::GetProperties, "GetProperties_matching_predicate")
         .m(&PXR_NS::UsdPrim::GetAuthoredProperties, "GetAuthoredProperties_matching_predicate")
-        .m((std::vector<PXR_NS::UsdProperty>(PXR_NS::UsdPrim::*)(std::string const&) const)
+        .m((std::vector<PXR_NS::UsdProperty>(PXR_NS::UsdPrim::*)(std::string const&) const) 
             &PXR_NS::UsdPrim::GetPropertiesInNamespace
         )
-        .m((std::vector<PXR_NS::UsdProperty>(PXR_NS::UsdPrim::*)(std::string const&) const)
+        .m((std::vector<PXR_NS::UsdProperty>(PXR_NS::UsdPrim::*)(std::string const&) const) 
             &PXR_NS::UsdPrim::GetAuthoredPropertiesInNamespace
         )
         .m(&PXR_NS::UsdPrim::GetPropertyOrder)
@@ -646,55 +646,55 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdPrim::RemoveAppliedSchema)
 
         // IsA
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&) const) 
             &PXR_NS::UsdPrim::IsA
         )
 
         // methods can be renamed to give useful names to overloads
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion) const) 
             &PXR_NS::UsdPrim::IsA, "IsA_with_version"
         )
 
         // IsInFamily
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&) const) 
             &PXR_NS::UsdPrim::IsInFamily
         )
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaRegistry::VersionPolicy) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaRegistry::VersionPolicy) const) 
             &PXR_NS::UsdPrim::IsInFamily, "IsInFamily_with_policy"
         )
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion, PXR_NS::UsdSchemaRegistry::VersionPolicy) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion, PXR_NS::UsdSchemaRegistry::VersionPolicy) const) 
             &PXR_NS::UsdPrim::IsInFamily, "IsInFamily_with_policy_and_version"
         )
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&, PXR_NS::UsdSchemaRegistry::VersionPolicy) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&, PXR_NS::UsdSchemaRegistry::VersionPolicy) const) 
             &PXR_NS::UsdPrim::IsInFamily, "IsInFamily_with_type"
         )
         .m(&PXR_NS::UsdPrim::GetVersionIfIsInFamily)
 
         // HasAPI
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&) const) 
             &PXR_NS::UsdPrim::HasAPI
         )
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&, PXR_NS::TfToken const&) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&, PXR_NS::TfToken const&) const) 
             &PXR_NS::UsdPrim::HasAPI, "HasAPI_with_instance_name"
         )
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&) const) 
             &PXR_NS::UsdPrim::HasAPI, "HasAPI_with_schema_identifier"
         )
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&) const) 
             &PXR_NS::UsdPrim::HasAPI, "HasAPI_with_instance_name_and_schema_identifier"
         )
 
         // HasAPIInFamily
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&) const) 
             &PXR_NS::UsdPrim::HasAPIInFamily
         )
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&) const) 
             &PXR_NS::UsdPrim::HasAPIInFamily, "HasAPIInFamily_with_instance"
         )
-        .m((bool(PXR_NS::UsdPrim::*)( PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion, PXR_NS::UsdSchemaRegistry::VersionPolicy) const)
+        .m((bool(PXR_NS::UsdPrim::*)( PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion, PXR_NS::UsdSchemaRegistry::VersionPolicy) const) 
             &PXR_NS::UsdPrim::HasAPIInFamily, "HasAPIInFamily_with_version"
         )
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion, PXR_NS::UsdSchemaRegistry::VersionPolicy, PXR_NS::TfToken const&) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion, PXR_NS::UsdSchemaRegistry::VersionPolicy, PXR_NS::TfToken const&) const) 
             &PXR_NS::UsdPrim::HasAPIInFamily, "HasAPIInFamily_with_version_and_instance"
         )
         // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&,
@@ -716,14 +716,14 @@ BBL_MODULE(usd) {
         // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&,
         //                              PXR_NS::UsdSchemaVersion*) const) &
         //    PXR_NS::UsdPrim::GetVersionIfHasAPIInFamily)
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion*) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion*) const) 
             &PXR_NS::UsdPrim::GetVersionIfHasAPIInFamily
         )
 
         // CanApplyAPI
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&, std::string*) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&, std::string*) const) 
             &PXR_NS::UsdPrim::CanApplyAPI
-        )
+        ) 
         // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&,
         //                              PXR_NS::TfToken const&, std::string*)
         //         const) &
@@ -741,7 +741,7 @@ BBL_MODULE(usd) {
         //    PXR_NS::UsdPrim::CanApplyAPI)
 
         // ApplyAPI
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&) const) 
             &PXR_NS::UsdPrim::ApplyAPI
         )
         // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&,
@@ -761,7 +761,7 @@ BBL_MODULE(usd) {
         //    PXR_NS::UsdPrim::ApplyAPI)
 
         // RemoveAPI
-        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&) const)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&) const) 
             &PXR_NS::UsdPrim::RemoveAPI
         )
         // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&,
@@ -813,7 +813,7 @@ BBL_MODULE(usd) {
         // Attributes
         // We'll only do one of these create methods as the rest are for
         // convenience, and we should do convenience on the FFI side
-        .m((PXR_NS::UsdAttribute(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::SdfValueTypeName const&, bool, PXR_NS::SdfVariability) const)
+        .m((PXR_NS::UsdAttribute(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::SdfValueTypeName const&, bool, PXR_NS::SdfVariability) const) 
             &PXR_NS::UsdPrim::CreateAttribute
         )
         .m(&PXR_NS::UsdPrim::GetAttributes)
@@ -823,7 +823,7 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdPrim::FindAllAttributeConnectionPaths)
 
         // Relationships
-        .m((PXR_NS::UsdRelationship(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, bool) const)
+        .m((PXR_NS::UsdRelationship(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, bool) const) 
             &PXR_NS::UsdPrim::CreateRelationship
         )
         .m(&PXR_NS::UsdPrim::GetRelationships)
@@ -891,29 +891,29 @@ BBL_MODULE(usd) {
 
     bbl::Class<PXR_NS::UsdProperty>("Property")
         .ctor(bbl::Class<PXR_NS::UsdProperty>::Ctor<>(), "default")
-        .m(&PXR_NS::UsdProperty::GetPropertyStack)
-        .m(&PXR_NS::UsdProperty::GetPropertyStackWithLayerOffsets)
-        .m(&PXR_NS::UsdProperty::GetBaseName)
-        .m(&PXR_NS::UsdProperty::GetNamespace)
-        .m(&PXR_NS::UsdProperty::SplitName)
-        .m(&PXR_NS::UsdProperty::GetDisplayGroup)
-        .m(&PXR_NS::UsdProperty::SetDisplayGroup)
-        .m(&PXR_NS::UsdProperty::ClearDisplayGroup)
-        .m(&PXR_NS::UsdProperty::HasAuthoredDisplayGroup)
-        .m(&PXR_NS::UsdProperty::GetNestedDisplayGroups)
-        .m(&PXR_NS::UsdProperty::SetNestedDisplayGroups)
-        .m(&PXR_NS::UsdProperty::IsCustom)
-        .m(&PXR_NS::UsdProperty::SetCustom)
-        .m(&PXR_NS::UsdProperty::IsDefined)
-        .m(&PXR_NS::UsdProperty::IsAuthored)
-        .m(&PXR_NS::UsdProperty::IsAuthoredAt)
-        .m((PXR_NS::UsdProperty (PXR_NS::UsdProperty::*)(PXR_NS::UsdPrim const&) const)
+        .m(&PXR_NS::UsdProperty::GetPropertyStack)                                                 
+        .m(&PXR_NS::UsdProperty::GetPropertyStackWithLayerOffsets)                             
+        .m(&PXR_NS::UsdProperty::GetBaseName)                                                  
+        .m(&PXR_NS::UsdProperty::GetNamespace)                                                 
+        .m(&PXR_NS::UsdProperty::SplitName)                                                    
+        .m(&PXR_NS::UsdProperty::GetDisplayGroup)                                              
+        .m(&PXR_NS::UsdProperty::SetDisplayGroup)                                              
+        .m(&PXR_NS::UsdProperty::ClearDisplayGroup)                                            
+        .m(&PXR_NS::UsdProperty::HasAuthoredDisplayGroup)                                      
+        .m(&PXR_NS::UsdProperty::GetNestedDisplayGroups)                                       
+        .m(&PXR_NS::UsdProperty::SetNestedDisplayGroups)                                       
+        .m(&PXR_NS::UsdProperty::IsCustom)                                                     
+        .m(&PXR_NS::UsdProperty::SetCustom)                                                    
+        .m(&PXR_NS::UsdProperty::IsDefined)                                                    
+        .m(&PXR_NS::UsdProperty::IsAuthored)                                                   
+        .m(&PXR_NS::UsdProperty::IsAuthoredAt)                                                 
+        .m((PXR_NS::UsdProperty (PXR_NS::UsdProperty::*)(PXR_NS::UsdPrim const&) const) 
             &PXR_NS::UsdProperty::FlattenTo, "FlattenTo_prim"
-        )
+        )                                                   
         .m((PXR_NS::UsdProperty(PXR_NS::UsdProperty::*)(PXR_NS::UsdPrim const&, PXR_NS::TfToken const&) const)
             & PXR_NS::UsdProperty::FlattenTo, "FlattenTo_named_property"
-        )
-        .m((PXR_NS::UsdProperty(PXR_NS::UsdProperty::*)(PXR_NS::UsdProperty const&) const)
+        )  
+        .m((PXR_NS::UsdProperty(PXR_NS::UsdProperty::*)(PXR_NS::UsdProperty const&) const) 
             &PXR_NS::UsdProperty::FlattenTo, "FlattenTo_property"
         )
     ;
@@ -985,16 +985,16 @@ BBL_MODULE(usd) {
         // Arc editing
         .m(&PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingLayer)
         .m(&PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingPrimPath)
-        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)(PXR_NS::SdfReferenceEditorProxy*, PXR_NS::SdfReference*) const)
+        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)(PXR_NS::SdfReferenceEditorProxy*, PXR_NS::SdfReference*) const) 
             &PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingListEditor, "GetIntroducingListEditor_reference"
         )
-        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)(PXR_NS::SdfPayloadEditorProxy*, PXR_NS::SdfPayload*) const)
+        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)(PXR_NS::SdfPayloadEditorProxy*, PXR_NS::SdfPayload*) const) 
             &PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingListEditor, "GetIntroducingListEditor_payload"
         )
-        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)( PXR_NS::SdfPathEditorProxy*, PXR_NS::SdfPath*) const)
+        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)( PXR_NS::SdfPathEditorProxy*, PXR_NS::SdfPath*) const) 
             &PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingListEditor, "GetIntroducingListEditor_path"
         )
-        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)(PXR_NS::SdfNameEditorProxy*, std::string*) const)
+        .m((bool(PXR_NS::UsdPrimCompositionQueryArc::*)(PXR_NS::SdfNameEditorProxy*, std::string*) const) 
             &PXR_NS::UsdPrimCompositionQueryArc::GetIntroducingListEditor, "GetIntroducingListEditor_name"
         )
 
@@ -1049,13 +1049,13 @@ BBL_MODULE(usd) {
         // GetPropertyMetadata
         // GetPropertyMetadataByDictKey
         .m(&PXR_NS::UsdPrimDefinition::GetPropertyDocumentation)
-        .m((bool(PXR_NS::UsdPrimDefinition::*)(PXR_NS::SdfLayerHandle const&, PXR_NS::SdfPath const&, PXR_NS::SdfSpecifier) const)
+        .m((bool(PXR_NS::UsdPrimDefinition::*)(PXR_NS::SdfLayerHandle const&, PXR_NS::SdfPath const&, PXR_NS::SdfSpecifier) const) 
             &PXR_NS::UsdPrimDefinition::FlattenTo
         )
-        .m((PXR_NS::UsdPrim(PXR_NS::UsdPrimDefinition::*)( PXR_NS::UsdPrim const&, PXR_NS::TfToken const& name, PXR_NS::SdfSpecifier) const)
+        .m((PXR_NS::UsdPrim(PXR_NS::UsdPrimDefinition::*)( PXR_NS::UsdPrim const&, PXR_NS::TfToken const& name, PXR_NS::SdfSpecifier) const) 
             &PXR_NS::UsdPrimDefinition::FlattenTo, "FlattenTo_prim_under_parent"
         )
-        .m((PXR_NS::UsdPrim(PXR_NS::UsdPrimDefinition::*)( PXR_NS::UsdPrim const&, PXR_NS::SdfSpecifier) const)
+        .m((PXR_NS::UsdPrim(PXR_NS::UsdPrimDefinition::*)( PXR_NS::UsdPrim const&, PXR_NS::SdfSpecifier) const) 
             &PXR_NS::UsdPrimDefinition::FlattenTo, "FlattenTo_prim"
         )
     ;
@@ -1110,7 +1110,7 @@ BBL_MODULE(usd) {
         .m((PXR_NS::UsdPrimRange::iterator & (PXR_NS::UsdPrimRange::iterator::*)(PXR_NS::UsdPrimRange::iterator const&))
             &PXR_NS::UsdPrimRange::iterator::operator=, "op_assign"
         )
-        .m((bool(PXR_NS::UsdPrimRange::iterator::*)(PXR_NS::UsdPrimRange::iterator const&) const)
+        .m((bool(PXR_NS::UsdPrimRange::iterator::*)(PXR_NS::UsdPrimRange::iterator const&) const) 
             &PXR_NS::UsdPrimRange::iterator::operator==, "op_eq"
         )
         .m(&PXR_NS::UsdPrimRange::iterator::operator*, "deref");
@@ -1332,7 +1332,7 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdStage::SetLoadRules)
         .m(&PXR_NS::UsdStage::GetPopulationMask)
         .m(&PXR_NS::UsdStage::SetPopulationMask)
-        .m(&PXR_NS::UsdStage::ExpandPopulationMask)
+        .m(&PXR_NS::UsdStage::ExpandPopulationMask) 
 
         // Layers and Edit Targets
         .m(&PXR_NS::UsdStage::GetSessionLayer)
@@ -1712,3 +1712,4 @@ BBL_MODULE(usd) {
 }
 
 #endif
+

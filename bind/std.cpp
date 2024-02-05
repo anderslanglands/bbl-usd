@@ -44,8 +44,9 @@ BBL_MODULE(std) {
 
     bbl::Class<std::pair<double, double>>("DoublePair");
     bbl::Class<std::pair<float, float>>("FloatPair");
-
+    
 }
 
 
 #endif
+

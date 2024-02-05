@@ -412,7 +412,7 @@ BBL_MODULE(sdf) {
         BBL_STD_VECTOR_METHODS(PXR_NS::SdfAttributeSpecHandle)
     ;
 
-
+    
     /// XXX: what's this
     bbl::Class<PXR_NS::SdfAttributeSpecView>("AttributeSpecView");
 
@@ -868,7 +868,7 @@ BBL_MODULE(sdf) {
         BBL_STD_VECTOR_METHODS(PXR_NS::SdfNamespaceEdit)
         ;
 
-
+    
     bbl::Class<PXR_NS::SdfNamespaceEditDetail>("NamespaceEditDetail")
         .ctor(bbl::Class<PXR_NS::SdfNamespaceEditDetail>::Ctor<>(), "default")
     ;
@@ -1485,7 +1485,7 @@ BBL_MODULE(sdf) {
     bbl::Class<std::pair<PXR_NS::SdfRelationshipSpecHandle, PXR_NS::SdfLayerOffset>>("RelationshipSpecHandleOffsetPair")
     ;
 
-    bbl::Class<std::vector< std::pair<PXR_NS::SdfRelationshipSpecHandle, PXR_NS::SdfLayerOffset>>>( "RelationshipSpecHandleOffsetPairVector")
+    bbl::Class<std::vector< std::pair<PXR_NS::SdfRelationshipSpecHandle, PXR_NS::SdfLayerOffset>>>( "RelationshipSpecHandleOffsetPairVector") 
         BBL_STD_VECTOR_METHODS((std::pair<PXR_NS::SdfRelationshipSpecHandle, PXR_NS::SdfLayerOffset>))
     ;
 
@@ -1708,13 +1708,13 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfVariantSpec::GetVariantSets)
         .m(&PXR_NS::SdfVariantSpec::GetVariantNames)
     ;
-
+    
     bbl::Class<PXR_NS::SdfVariantSpecHandle>("VariantSpecHandle");
 
     bbl::Class<PXR_NS::SdfVariantSpecHandleVector>("VariantSpecHandleVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::SdfVariantSpecHandle)
     ;
-
+    
     bbl::Class<PXR_NS::SdfVariantView>("VariantView");
 
 }
