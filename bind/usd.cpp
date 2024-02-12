@@ -3,6 +3,7 @@
 #include <babble>
 #include <babble-std>
 
+#include <pxr/usd/sdf/pathExpression.h>
 #include <pxr/usd/usd/attributeQuery.h>
 #include <pxr/usd/usd/clipsAPI.h>
 #include <pxr/usd/usd/collectionAPI.h>

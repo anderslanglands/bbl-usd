@@ -25,6 +25,7 @@
 #include <pxr/usd/pcp/site.h>
 #include <pxr/usd/pcp/targetIndex.h>
 #include <pxr/usd/pcp/types.h>
+#include <pxr/usd/sdf/pathExpression.h>
 
 namespace bblext {
 
@@ -157,18 +158,7 @@ BBL_MODULE(pcp) {
         BBL_STD_MAP_METHODS((std::map<PXR_NS::SdfPath, std::vector<std::string>, PXR_NS::SdfPath::FastLessThan>))
     ;
 
-    bbl::Class<PXR_NS::PcpCache::PayloadSet>("CachePayloadSet")
-        BBL_STD_SET_METHODS(PXR_NS::PcpCache::PayloadSet)
-    ;
-
-    // It's always const
-    // bbl::Class<PXR_NS::PcpCache::PayloadSet::iterator>("CachePayloadSetIterator")
-    //     BBL_STD_ITERATOR_METHODS(PXR_NS::PcpCache::PayloadSet::iterator)
-    // ;
-
-    bbl::Class<PXR_NS::PcpCache::PayloadSet::const_iterator>("CachePayloadSetConstIterator")
-        BBL_STD_ITERATOR_METHODS(PXR_NS::PcpCache::PayloadSet::const_iterator)
-    ;
+    BBL_STD_SET(PXR_NS::PcpCache::PayloadSet, CachePayloadSet);
 
     bbl::Class<PXR_NS::PcpChanges>("Changes")
         .ctor(bbl::Class<PXR_NS::PcpChanges>::Ctor<>(), "default")
