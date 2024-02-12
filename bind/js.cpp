@@ -57,6 +57,7 @@ BBL_MODULE(js) {
         
         .ignore(&PXR_NS::JsValue::GetTypeName)
         .ignore(&PXR_NS::JsValue::operator!=)
+        .ignore(&PXR_NS::JsValue::operator bool)
     ;
 
     bbl::Enum<PXR_NS::JsValue::Type>("ValueType");

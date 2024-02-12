@@ -123,8 +123,7 @@ BBL_MODULE(ndr) {
         BBL_STD_VECTOR_METHODS(PXR_NS::NdrPropertyUniquePtr)
     ;
 
-    bbl::Class<PXR_NS::NdrSdfTypeIndicator>("SdfTypeIndicator")
-    ;
+    BBL_STD_PAIR(PXR_NS::NdrSdfTypeIndicator, SdfTypeIndicator);
 
     bbl::Class<PXR_NS::NdrRegistry>("Registry")
         .m((void (PXR_NS::NdrRegistry::*)(PXR_NS::NdrRegistry::DiscoveryPluginRefPtrVec))

@@ -60,7 +60,19 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomBasisCurves::CreateBasisAttr)
         .m(&PXR_NS::UsdGeomBasisCurves::GetWrapAttr)
         .m(&PXR_NS::UsdGeomBasisCurves::CreateWrapAttr)
-        ;
+        .m(&PXR_NS::UsdGeomBasisCurves::Get)
+        .m(&PXR_NS::UsdGeomBasisCurves::ComputeInterpolationForSize)
+        .m(&PXR_NS::UsdGeomBasisCurves::Define)
+        .m(&PXR_NS::UsdGeomBasisCurves::ComputeVertexDataSize)
+        .m(&PXR_NS::UsdGeomBasisCurves::ComputeVaryingDataSize)
+        .m(&PXR_NS::UsdGeomBasisCurves::ComputeUniformDataSize)
+    ;
+
+    bbl::Class<PXR_NS::UsdGeomBasisCurves::ComputeInterpolationInfo>("BasisCurvesComputeInterpolationInfo")
+        BBL_STD_VECTOR_METHODS((std::pair<PXR_NS::TfToken, size_t>))
+    ;
+
+    BBL_STD_PAIR((std::pair<PXR_NS::TfToken, size_t>), TokenSizePair);
 
     bbl::Class<PXR_NS::UsdGeomBBoxCache>("BBoxCache")
         .ctor(bbl::Class<PXR_NS::UsdGeomBBoxCache>::Ctor<PXR_NS::UsdTimeCode, PXR_NS::TfTokenVector, bool, bool>("time", "includedPurposes", "useExtentsHint", "ignoreVisibility"))
@@ -69,6 +81,8 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomBBoxCache::ComputeRelativeBound)
         .m(&PXR_NS::UsdGeomBBoxCache::ComputeLocalBound)
         .m((PXR_NS::GfBBox3d (PXR_NS::UsdGeomBBoxCache::*)(PXR_NS::UsdPrim const&))
+            &PXR_NS::UsdGeomBBoxCache::ComputeUntransformedBound)
+        .ignore((PXR_NS::GfBBox3d (PXR_NS::UsdGeomBBoxCache::*)(PXR_NS::UsdPrim const&, PXR_NS::SdfPathSet const&, PXR_NS::TfHashMap<PXR_NS::SdfPath, PXR_NS::GfMatrix4d, PXR_NS::SdfPath::Hash> const&))
             &PXR_NS::UsdGeomBBoxCache::ComputeUntransformedBound)
         .m(&PXR_NS::UsdGeomBBoxCache::ComputePointInstanceWorldBound)
         .m(&PXR_NS::UsdGeomBBoxCache::ComputePointInstanceWorldBounds)
@@ -92,7 +106,9 @@ BBL_MODULE(usdGeom) {
     ;
 
     bbl::Class<PXR_NS::TfHashMap<PXR_NS::SdfPath, PXR_NS::GfMatrix4d, PXR_NS::SdfPath::Hash>>("PathMatrixHashMap")
+        .ignore_all_unbound()
     ;
+    // BBL_STD_MAP((PXR_NS::TfHashMap<PXR_NS::SdfPath, PXR_NS::GfMatrix4d, PXR_NS::SdfPath::Hash>), PathMatrixMap);
 
 
     bbl::Class<PXR_NS::UsdGeomBoundable>("Boundable")
@@ -100,13 +116,20 @@ BBL_MODULE(usdGeom) {
 
         .m(&PXR_NS::UsdGeomBoundable::GetExtentAttr)
         .m(&PXR_NS::UsdGeomBoundable::CreateExtentAttr)
-        // XXX: ComputeExtent
-
-        ;
+        // .m(&PXR_NS::UsdGeomBoundable::ComputeExtent, "ComputeExtent_boundable")
+        .m(&PXR_NS::UsdGeomBoundable::Get)
+        .m((bool (*)(PXR_NS::UsdGeomBoundable const&, PXR_NS::UsdTimeCode const&, PXR_NS::GfMatrix4d const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomBoundable::ComputeExtentFromPlugins, "ComputeExtentFromPlugins_with_transform"
+        )
+        .m((bool (*)(PXR_NS::UsdGeomBoundable const&, PXR_NS::UsdTimeCode const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomBoundable::ComputeExtentFromPlugins
+        )
+    ;
 
     bbl::Class<PXR_NS::UsdGeomCamera>("Camera")
         .ctor(bbl::Class<PXR_NS::UsdGeomCamera>::Ctor<PXR_NS::UsdPrim const&>(), "new")
 
+        .m(&PXR_NS::UsdGeomCamera::Define)
         .m(&PXR_NS::UsdGeomCamera::GetProjectionAttr)
         .m(&PXR_NS::UsdGeomCamera::CreateProjectionAttr)
         .m(&PXR_NS::UsdGeomCamera::GetHorizontalApertureAttr)
@@ -137,7 +160,8 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomCamera::CreateExposureAttr)
         .m(&PXR_NS::UsdGeomCamera::GetCamera)
         .m(&PXR_NS::UsdGeomCamera::SetFromCamera)
-        ;
+        .m(&PXR_NS::UsdGeomCamera::Get)
+    ;
 
     bbl::Class<PXR_NS::UsdGeomCapsule>("Capsule")
         .ctor(bbl::Class<PXR_NS::UsdGeomCapsule>::Ctor<PXR_NS::UsdPrim const&>(), "new")
@@ -148,7 +172,15 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomCapsule::CreateRadiusAttr)
         .m(&PXR_NS::UsdGeomCapsule::GetAxisAttr)
         .m(&PXR_NS::UsdGeomCapsule::CreateAxisAttr)
-        ;
+        .m(&PXR_NS::UsdGeomCapsule::Get)
+        .m(&PXR_NS::UsdGeomCapsule::Define)
+        .m((bool (*)(double, double, PXR_NS::TfToken const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomCapsule::ComputeExtent
+        )
+        .m((bool (*)(double, double, PXR_NS::TfToken const&, PXR_NS::GfMatrix4d const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomCapsule::ComputeExtent, "ComputeExtent_with_transform"
+        )
+    ;
 
     bbl::Class<PXR_NS::UsdGeomCone>("Cone")
         .ctor(bbl::Class<PXR_NS::UsdGeomCone>::Ctor<PXR_NS::UsdPrim const&>(), "new")
@@ -159,7 +191,15 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomCone::CreateRadiusAttr)
         .m(&PXR_NS::UsdGeomCone::GetAxisAttr)
         .m(&PXR_NS::UsdGeomCone::CreateAxisAttr)
-        ;
+        .m(&PXR_NS::UsdGeomCone::Get)
+        .m(&PXR_NS::UsdGeomCone::Define)
+        .m((bool (*)(double, double, PXR_NS::TfToken const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomCone::ComputeExtent
+        )
+        .m((bool (*)(double, double, PXR_NS::TfToken const&, PXR_NS::GfMatrix4d const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomCone::ComputeExtent, "ComputeExtent_with_transform"
+        )
+    ;
 
     bbl::Class<PXR_NS::UsdGeomConstraintTarget>("ConstraintTarget")
         .ctor(bbl::Class<PXR_NS::UsdGeomConstraintTarget>::Ctor<PXR_NS::UsdAttribute const&>(), "new")
@@ -172,7 +212,10 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomConstraintTarget::SetIdentifier)
         .m(&PXR_NS::UsdGeomConstraintTarget::ComputeInWorldSpace)
         .m(&PXR_NS::UsdGeomConstraintTarget::GetConstraintAttrName)
-        ;
+
+        .ignore(&PXR_NS::UsdGeomConstraintTarget::operator const pxrInternal_v0_23__pxrReserved__::UsdAttribute &)
+        .ignore(&PXR_NS::UsdGeomConstraintTarget::operator bool)
+    ;
 
     bbl::Class<std::vector<PXR_NS::UsdGeomConstraintTarget>>("ConstraintTargetVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::UsdGeomConstraintTarget)
@@ -183,7 +226,16 @@ BBL_MODULE(usdGeom) {
 
         .m(&PXR_NS::UsdGeomCube::GetSizeAttr)
         .m(&PXR_NS::UsdGeomCube::CreateSizeAttr)
-        ;
+
+        .m(&PXR_NS::UsdGeomCube::Get)
+        .m(&PXR_NS::UsdGeomCube::Define)
+        .m((bool (*)(double, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomCube::ComputeExtent
+        )
+        .m((bool (*)(double, PXR_NS::GfMatrix4d const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomCube::ComputeExtent, "ComputeExtent_with_transform"
+        )
+    ;
 
     bbl::Class<PXR_NS::UsdGeomCurves>("Curves")
         .ctor(bbl::Class<PXR_NS::UsdGeomCurves>::Ctor<PXR_NS::UsdPrim const&>(), "new")
@@ -194,7 +246,15 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomCurves::GetWidthsInterpolation) 
         .m(&PXR_NS::UsdGeomCurves::SetWidthsInterpolation) 
         .m(&PXR_NS::UsdGeomCurves::GetCurveCount)
-        ;
+
+        .m(&PXR_NS::UsdGeomCurves::Get)
+        .m((bool (*)(PXR_NS::VtVec3fArray const&, PXR_NS::VtFloatArray const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomCurves::ComputeExtent
+        )
+        .m((bool (*)(PXR_NS::VtVec3fArray const&, PXR_NS::VtFloatArray const&, PXR_NS::GfMatrix4d const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomCurves::ComputeExtent, "ComputeExtent_with_transform"
+        )
+    ;
 
     bbl::Class<PXR_NS::UsdGeomCylinder>("Cylinder")
         .ctor(bbl::Class<PXR_NS::UsdGeomCylinder>::Ctor<PXR_NS::UsdPrim const&>(), "new")
@@ -204,7 +264,16 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomCylinder::CreateRadiusAttr)
         .m(&PXR_NS::UsdGeomCylinder::GetAxisAttr)
         .m(&PXR_NS::UsdGeomCylinder::CreateAxisAttr)
-        ;
+
+        .m(&PXR_NS::UsdGeomCylinder::Get)
+        .m(&PXR_NS::UsdGeomCylinder::Define)
+        .m((bool (*)(double, double, PXR_NS::TfToken const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomCylinder::ComputeExtent
+        )
+        .m((bool (*)(double, double, PXR_NS::TfToken const&, PXR_NS::GfMatrix4d const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomCylinder::ComputeExtent, "ComputeExtent_with_transform"
+        )
+    ;
 
 
     bbl::Class<PXR_NS::UsdGeomGprim>("Gprim")
@@ -219,13 +288,18 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomGprim::CreateOrientationAttr) 
         .m(&PXR_NS::UsdGeomGprim::GetDisplayColorPrimvar) 
         .m(&PXR_NS::UsdGeomGprim::CreateDisplayColorPrimvar)
-        ;
+        .m(&PXR_NS::UsdGeomGprim::GetDisplayOpacityPrimvar) 
+        .m(&PXR_NS::UsdGeomGprim::CreateDisplayOpacityPrimvar) 
+        .m(&PXR_NS::UsdGeomGprim::Get) 
+    ;
 
     bbl::Class<PXR_NS::UsdGeomHermiteCurves>("HermiteCurves")
         .ctor(bbl::Class<PXR_NS::UsdGeomHermiteCurves>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomHermiteCurves::GetTangentsAttr)
         .m(&PXR_NS::UsdGeomHermiteCurves::CreateTangentsAttr)
-        ;
+        .m(&PXR_NS::UsdGeomHermiteCurves::Define)
+        .m(&PXR_NS::UsdGeomHermiteCurves::Get)
+    ;
 
 
     bbl::Class<PXR_NS::UsdGeomImageable>("Imageable")
@@ -253,9 +327,20 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomImageable::ComputeUntransformedBound) 
         .m(&PXR_NS::UsdGeomImageable::ComputeLocalToWorldTransform) 
         .m(&PXR_NS::UsdGeomImageable::ComputeParentToWorldTransform)
-        ;
+        .m((bool (PXR_NS::UsdGeomImageable::*)(PXR_NS::UsdSchemaBase const&) const)
+            &PXR_NS::UsdGeomImageable::SetProxyPrim, "SetProxyPrim_with_schema"
+        )
+        .m(&PXR_NS::UsdGeomImageable::Get)
+        .m(&PXR_NS::UsdGeomImageable::GetOrderedPurposeTokens)
+        .m(&PXR_NS::UsdGeomImageable::ComputeEffectiveVisibility)
+    ;
 
-    bbl::Class<PXR_NS::UsdGeomImageable::PurposeInfo>("ImageablePurposeInfo");
+    bbl::Class<PXR_NS::UsdGeomImageable::PurposeInfo>("ImageablePurposeInfo")
+        .m(&PXR_NS::UsdGeomImageable::PurposeInfo::operator==)
+        .ignore(&PXR_NS::UsdGeomImageable::PurposeInfo::operator!=)
+        .m(&PXR_NS::UsdGeomImageable::PurposeInfo::operator bool)
+        .m(&PXR_NS::UsdGeomImageable::PurposeInfo::GetInheritablePurpose)
+    ;
 
     bbl::Class<PXR_NS::UsdGeomMesh>("Mesh")
         .ctor(bbl::Class<PXR_NS::UsdGeomMesh>::Ctor<PXR_NS::UsdPrim const&>(), "new")
@@ -285,7 +370,10 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomMesh::CreateCreaseSharpnessesAttr)
         .m(&PXR_NS::UsdGeomMesh::GetFaceCount)
         .m(&PXR_NS::UsdGeomMesh::Define)
-        ;
+        .m(&PXR_NS::UsdGeomMesh::ValidateTopology)
+        .m(&PXR_NS::UsdGeomMesh::Get)
+        .m(&PXR_NS::UsdGeomMesh::IsSharpnessInfinite)
+    ;
 
     bbl::Class<PXR_NS::UsdGeomModelAPI>("ModelAPI")
         .ctor(bbl::Class<PXR_NS::UsdGeomModelAPI>::Ctor<PXR_NS::UsdPrim const&>(), "new")
@@ -317,7 +405,12 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomModelAPI::GetConstraintTarget)
         .m(&PXR_NS::UsdGeomModelAPI::GetConstraintTargets)
         .m(&PXR_NS::UsdGeomModelAPI::CreateConstraintTarget)
-        ;
+        .m(&PXR_NS::UsdGeomModelAPI::CreateModelApplyDrawModeAttr)
+        .m(&PXR_NS::UsdGeomModelAPI::Get)
+        .m(&PXR_NS::UsdGeomModelAPI::CanApply)
+        .m(&PXR_NS::UsdGeomModelAPI::Apply)
+        .m(&PXR_NS::UsdGeomModelAPI::GetModelApplyDrawModeAttr)
+    ;
 
     bbl::Class<PXR_NS::UsdGeomMotionAPI>("MotionAPI")
         .ctor(bbl::Class<PXR_NS::UsdGeomMotionAPI>::Ctor<PXR_NS::UsdPrim const&>(), "new")
@@ -330,7 +423,10 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomMotionAPI::ComputeVelocityScale)
         .m(&PXR_NS::UsdGeomMotionAPI::ComputeMotionBlurScale)
         .m(&PXR_NS::UsdGeomMotionAPI::ComputeNonlinearSampleCount)
-        ;
+        .m(&PXR_NS::UsdGeomMotionAPI::Get)
+        .m(&PXR_NS::UsdGeomMotionAPI::CanApply)
+        .m(&PXR_NS::UsdGeomMotionAPI::Apply)
+    ;
 
     bbl::Class<PXR_NS::UsdGeomNurbsCurves>("NurbsCurves")
         .ctor(bbl::Class<PXR_NS::UsdGeomNurbsCurves>::Ctor<PXR_NS::UsdPrim const&>(), "new")
@@ -342,7 +438,9 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomNurbsCurves::CreateRangesAttr)
         .m(&PXR_NS::UsdGeomNurbsCurves::GetPointWeightsAttr)
         .m(&PXR_NS::UsdGeomNurbsCurves::CreatePointWeightsAttr)
-        ;
+        .m(&PXR_NS::UsdGeomNurbsCurves::Define)
+        .m(&PXR_NS::UsdGeomNurbsCurves::Get)
+    ;
 
     bbl::Class<PXR_NS::UsdGeomNurbsPatch>("NurbsPatch")
         .ctor(bbl::Class<PXR_NS::UsdGeomNurbsPatch>::Ctor<PXR_NS::UsdPrim const&>(), "new")
@@ -380,7 +478,9 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomNurbsPatch::CreateTrimCurveRangesAttr)
         .m(&PXR_NS::UsdGeomNurbsPatch::GetTrimCurvePointsAttr)
         .m(&PXR_NS::UsdGeomNurbsPatch::CreateTrimCurvePointsAttr)
-        ;
+        .m(&PXR_NS::UsdGeomNurbsPatch::Define)
+        .m(&PXR_NS::UsdGeomNurbsPatch::Get)
+    ;
 
     bbl::Class<PXR_NS::UsdGeomPlane>("Plane")
         .ctor(bbl::Class<PXR_NS::UsdGeomPlane>::Ctor<PXR_NS::UsdPrim const&>(), "new")
@@ -390,7 +490,15 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomPlane::CreateLengthAttr)
         .m(&PXR_NS::UsdGeomPlane::GetAxisAttr)
         .m(&PXR_NS::UsdGeomPlane::CreateAxisAttr)
-        ;
+        .m(&PXR_NS::UsdGeomPlane::Get)
+        .m(&PXR_NS::UsdGeomPlane::Define)
+        .m((bool (*)(double, double, PXR_NS::TfToken const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomPlane::ComputeExtent
+        )
+        .m((bool (*)(double, double, PXR_NS::TfToken const&, PXR_NS::GfMatrix4d const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomPlane::ComputeExtent, "ComputeExtent_with_transform"
+        )
+    ;
 
 
     bbl::Class<PXR_NS::UsdGeomPointBased>("PointBased")
@@ -407,8 +515,18 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomPointBased::SetNormalsInterpolation) 
         .m((bool (PXR_NS::UsdGeomPointBased::*)(PXR_NS::VtArray<PXR_NS::GfVec3f>*, PXR_NS::UsdTimeCode const, PXR_NS::UsdTimeCode const) const) 
             &PXR_NS::UsdGeomPointBased::ComputePointsAtTime)
-
-        ;
+        .m(&PXR_NS::UsdGeomPointBased::Get)
+        .m((bool (*)(PXR_NS::VtVec3fArray const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomPointBased::ComputeExtent
+        )
+        .m((bool (*)(PXR_NS::VtVec3fArray const&, PXR_NS::GfMatrix4d const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomPointBased::ComputeExtent, "ComputeExtent_with_transform"
+        )
+        .m((bool (*)(PXR_NS::VtArray<PXR_NS::GfVec3f> *, PXR_NS::UsdStageWeakPtr&, PXR_NS::UsdTimeCode, const PXR_NS::VtVec3fArray &, const PXR_NS::VtVec3fArray &, PXR_NS::UsdTimeCode, const PXR_NS::VtVec3fArray&, float))
+            &PXR_NS::UsdGeomPointBased::ComputePointsAtTime, "ComputePointsAtTime_with"
+        ) 
+        .m(&PXR_NS::UsdGeomPointBased::ComputePointsAtTimes)
+    ;
 
     bbl::Class<PXR_NS::UsdGeomPointInstancer>("PointInstancer")
         .ctor(bbl::Class<PXR_NS::UsdGeomPointInstancer>::Ctor<PXR_NS::UsdPrim const&>(), "new")
@@ -442,7 +560,21 @@ BBL_MODULE(usdGeom) {
         .m((bool (PXR_NS::UsdGeomPointInstancer::*)(std::vector<PXR_NS::VtVec3fArray>*, std::vector<PXR_NS::UsdTimeCode> const&, PXR_NS::UsdTimeCode const, PXR_NS::GfMatrix4d const&) const)
             &PXR_NS::UsdGeomPointInstancer::ComputeExtentAtTimes, "ComputeExtentAtTimes_with_transform")
         .m(&PXR_NS::UsdGeomPointInstancer::GetInstanceCount)
-        ;
+        .m(&PXR_NS::UsdGeomPointInstancer::VisId)
+        .m(&PXR_NS::UsdGeomPointInstancer::VisIds)
+        .m(&PXR_NS::UsdGeomPointInstancer::VisAllIds)
+        .m(&PXR_NS::UsdGeomPointInstancer::Get)
+        .m(&PXR_NS::UsdGeomPointInstancer::Define)
+        .m(&PXR_NS::UsdGeomPointInstancer::DeactivateId)
+        .m(&PXR_NS::UsdGeomPointInstancer::DeactivateIds)
+        .m(&PXR_NS::UsdGeomPointInstancer::GetInvisibleIdsAttr)
+        .m(&PXR_NS::UsdGeomPointInstancer::CreateInvisibleIdsAttr)
+        .m(&PXR_NS::UsdGeomPointInstancer::ActivateId)
+        .m(&PXR_NS::UsdGeomPointInstancer::ActivateIds)
+        .m(&PXR_NS::UsdGeomPointInstancer::ComputeMaskAtTime)
+        .m(&PXR_NS::UsdGeomPointInstancer::InvisId)
+        .m(&PXR_NS::UsdGeomPointInstancer::InvisIds)
+    ;
     
     bbl::Enum<PXR_NS::UsdGeomPointInstancer::ProtoXformInclusion>("ProtoXformInclusion");
     bbl::Enum<PXR_NS::UsdGeomPointInstancer::MaskApplication>("MaskApplication");
@@ -456,7 +588,15 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomPoints::GetWidthsInterpolation)
         .m(&PXR_NS::UsdGeomPoints::SetWidthsInterpolation)
         .m(&PXR_NS::UsdGeomPoints::GetPointCount)
-        ;
+        .m(&PXR_NS::UsdGeomPoints::Get)
+        .m(&PXR_NS::UsdGeomPoints::Define)
+        .m((bool (*)(PXR_NS::VtVec3fArray const&, PXR_NS::VtFloatArray const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomPoints::ComputeExtent
+        )
+        .m((bool (*)(PXR_NS::VtVec3fArray const&, PXR_NS::VtFloatArray const&, PXR_NS::GfMatrix4d const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomPoints::ComputeExtent, "ComputeExtent_with_transform"
+        )
+    ;
 
     bbl::Class<PXR_NS::UsdGeomPrimvar>("Primvar")
         .ctor(bbl::Class<PXR_NS::UsdGeomPrimvar>::Ctor<PXR_NS::UsdAttribute const&>(), "new")
@@ -495,7 +635,22 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomPrimvar::IsValidPrimvarName)
         .m(&PXR_NS::UsdGeomPrimvar::StripPrimvarsName)
         .m(&PXR_NS::UsdGeomPrimvar::IsValidInterpolation)
-        ;
+
+        .m(&PXR_NS::UsdGeomPrimvar::operator bool)
+        .m(&PXR_NS::UsdGeomPrimvar::SetIndices)
+        .m((bool (PXR_NS::UsdGeomPrimvar::*)(PXR_NS::VtValue*, PXR_NS::UsdTimeCode) const)
+            &PXR_NS::UsdGeomPrimvar::ComputeFlattened
+        )
+        .m(&PXR_NS::UsdGeomPrimvar::GetUnauthoredValuesIndex)
+        .m(&PXR_NS::UsdGeomPrimvar::SetUnauthoredValuesIndex)
+        .m(&PXR_NS::UsdGeomPrimvar::GetIndices)
+        .m(&PXR_NS::UsdGeomPrimvar::BlockIndices)
+        .m(&PXR_NS::UsdGeomPrimvar::IsIndexed)
+        .m(&PXR_NS::UsdGeomPrimvar::GetIndicesAttr)
+        .m(&PXR_NS::UsdGeomPrimvar::CreateIndicesAttr)
+
+        .ignore(&PXR_NS::UsdGeomPrimvar::operator const pxrInternal_v0_23__pxrReserved__::UsdAttribute &)
+    ;
 
     bbl::Class<std::vector<PXR_NS::UsdGeomPrimvar>>("PrimvarVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::UsdGeomPrimvar)
@@ -529,20 +684,29 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomPrimvarsAPI::GetSchemaAttributeNames)
         .m(&PXR_NS::UsdGeomPrimvarsAPI::Get)
         .m(&PXR_NS::UsdGeomPrimvarsAPI::CanContainPropertyName)
-        ;
+    ;
 
     bbl::Class<PXR_NS::UsdGeomScope>("Scope")
         .ctor(bbl::Class<PXR_NS::UsdGeomScope>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomScope::Get)
         .m(&PXR_NS::UsdGeomScope::GetSchemaAttributeNames)
         .m(&PXR_NS::UsdGeomScope::Define)
-        ;
+    ;
 
     bbl::Class<PXR_NS::UsdGeomSphere>("Sphere")
         .ctor(bbl::Class<PXR_NS::UsdGeomSphere>::Ctor<PXR_NS::UsdPrim const&>(), "new")
         .m(&PXR_NS::UsdGeomSphere::GetRadiusAttr)
         .m(&PXR_NS::UsdGeomSphere::CreateRadiusAttr)
-        ;
+
+        .m(&PXR_NS::UsdGeomSphere::Get)
+        .m(&PXR_NS::UsdGeomSphere::Define)
+        .m((bool (*)(double, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomSphere::ComputeExtent
+        )
+        .m((bool (*)(double, PXR_NS::GfMatrix4d const&, PXR_NS::VtVec3fArray*))
+            &PXR_NS::UsdGeomSphere::ComputeExtent, "ComputeExtent_with_transform"
+        )
+    ;
 
     bbl::Class<PXR_NS::UsdGeomSubset>("Subset")
         .ctor(bbl::Class<PXR_NS::UsdGeomSubset>::Ctor<PXR_NS::UsdPrim const&>(), "new")
@@ -648,28 +812,44 @@ BBL_MODULE(usdGeom) {
     bbl::Class<PXR_NS::UsdGeomXformable>("Xformable")
         .ctor(bbl::Class<PXR_NS::UsdGeomXformable>::Ctor<PXR_NS::UsdPrim const&>(),"new")
         .m(&PXR_NS::UsdGeomXformable::GetXformOpOrderAttr)
+        .m(&PXR_NS::UsdGeomXformable::Get)
         .m(&PXR_NS::UsdGeomXformable::AddXformOp)
 #if PXR_VERSION >= 2311
         .m(&PXR_NS::UsdGeomXformable::GetXformOp)
 #endif
         .m(&PXR_NS::UsdGeomXformable::AddTranslateOp)
+        .m(&PXR_NS::UsdGeomXformable::GetTranslateOp)
         .m(&PXR_NS::UsdGeomXformable::AddScaleOp)
+        .m(&PXR_NS::UsdGeomXformable::GetScaleOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateXOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateXOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateYOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateYOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateZOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateZOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateXYZOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateXYZOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateXZYOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateXZYOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateYXZOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateYXZOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateYZXOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateYZXOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateZXYOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateZXYOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateZYXOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateZYXOp)
         .m(&PXR_NS::UsdGeomXformable::AddOrientOp)
+        .m(&PXR_NS::UsdGeomXformable::GetOrientOp)
         .m(&PXR_NS::UsdGeomXformable::AddTransformOp)
+        .m(&PXR_NS::UsdGeomXformable::GetTransformOp)
         .m(&PXR_NS::UsdGeomXformable::SetResetXformStack)
         .m(&PXR_NS::UsdGeomXformable::SetXformOpOrder)
         .m(&PXR_NS::UsdGeomXformable::GetOrderedXformOps)
         .m(&PXR_NS::UsdGeomXformable::ClearXformOpOrder)
+        .m(&PXR_NS::UsdGeomXformable::CreateXformOpOrderAttr)
         .m(&PXR_NS::UsdGeomXformable::MakeMatrixXform)
+        .m(&PXR_NS::UsdGeomXformable::GetResetXformStack)
         .m((bool (PXR_NS::UsdGeomXformable::*)() const)
             &PXR_NS::UsdGeomXformable::TransformMightBeTimeVarying)
         .m((bool (PXR_NS::UsdGeomXformable::*)(std::vector<PXR_NS::UsdGeomXformOp> const&) const)
@@ -682,7 +862,14 @@ BBL_MODULE(usdGeom) {
             &PXR_NS::UsdGeomXformable::GetLocalTransformation)
         .m((bool (PXR_NS::UsdGeomXformable::*)(PXR_NS::GfMatrix4d*, bool*, std::vector<PXR_NS::UsdGeomXformOp> const&, PXR_NS::UsdTimeCode const) const)
             &PXR_NS::UsdGeomXformable::GetLocalTransformation, "GetLocalTransformation_with_ops")
-        ;
+        .m(&PXR_NS::UsdGeomXformable::IsTransformationAffectedByAttrNamed)
+        .ignore((bool (*)(std::vector<PXR_NS::UsdGeomXformOp> const&, PXR_NS::GfInterval const&, std::vector<double>* times))
+            &PXR_NS::UsdGeomXformable::GetTimeSamplesInInterval
+        )
+        .ignore((bool (*)(std::vector<PXR_NS::UsdGeomXformOp> const&, std::vector<double>* times))
+            &PXR_NS::UsdGeomXformable::GetTimeSamples
+        )
+    ;
 
     bbl::Class<PXR_NS::UsdGeomXformOp>("XformOp")
         .ctor(bbl::Class<PXR_NS::UsdGeomXformOp>::Ctor<PXR_NS::UsdAttribute const&, bool>("attr", "isInverseOp"), "new")
@@ -709,6 +896,25 @@ BBL_MODULE(usdGeom) {
         .m((PXR_NS::GfMatrix4d (PXR_NS::UsdGeomXformOp::*)(PXR_NS::UsdTimeCode) const)
             &PXR_NS::UsdGeomXformOp::GetOpTransform)
         .m(&PXR_NS::UsdGeomXformOp::MightBeTimeVarying)
+        .m((bool (*)(PXR_NS::UsdAttribute const&))
+            &PXR_NS::UsdGeomXformOp::IsXformOp, "IsXformOp_with_attribute"
+        )
+        .m((bool (*)(PXR_NS::TfToken const&))
+            &PXR_NS::UsdGeomXformOp::IsXformOp
+        )
+        .m(&PXR_NS::UsdGeomXformOp::GetOpTypeToken)
+        .m(&PXR_NS::UsdGeomXformOp::GetOpTypeEnum)
+        .m(&PXR_NS::UsdGeomXformOp::GetPrecisionFromValueTypeName)
+        .m(&PXR_NS::UsdGeomXformOp::GetValueTypeName)
+        .m(&PXR_NS::UsdGeomXformOp::operator bool)
+
+        .ignore((PXR_NS::TfToken (*)(PXR_NS::UsdGeomXformOp::Type const, PXR_NS::TfToken const&, bool))
+            &PXR_NS::UsdGeomXformOp::GetOpName
+        )
+        .ignore((PXR_NS::GfMatrix4d (*)(PXR_NS::UsdGeomXformOp::Type const, PXR_NS::VtValue const&, bool))
+            &PXR_NS::UsdGeomXformOp::GetOpTransform
+        )
+        .ignore(&PXR_NS::UsdGeomXformOp::operator const PXR_NS::UsdAttribute &)
     ;
 
     bbl::Enum<PXR_NS::UsdGeomXformOp::Type>("XformOpType");

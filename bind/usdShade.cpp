@@ -2,6 +2,8 @@
 
 #include "babble"
 #include "babble-std"
+#include "babble-usd"
+
 
 #include <pxr/usd/usdShade/connectableAPI.h>
 #include <pxr/usd/usdShade/connectableAPIBehavior.h>
@@ -19,15 +21,6 @@
 #include <pxr/usd/usdShade/types.h>
 #include <pxr/usd/usdShade/udimUtils.h>
 #include <pxr/usd/usdShade/utils.h>
-
-#define TF_SMALLVECTOR_METHODS(TY) \
-    .m(&bbl::detail::argument_type<void(TY)>::type::empty) \
-    .m(&bbl::detail::argument_type<void(TY)>::type::size) \
-    .m((bbl::detail::argument_type<void(TY)>::type::reference (bbl::detail::argument_type<void(TY)>::type::*)(bbl::detail::argument_type<void(TY)>::type::size_type i)) \
-        &bbl::detail::argument_type<void(TY)>::type::operator[]) \
-    .m((bbl::detail::argument_type<void(TY)>::type::const_reference (bbl::detail::argument_type<void(TY)>::type::*)(bbl::detail::argument_type<void(TY)>::type::size_type i) const) \
-        &bbl::detail::argument_type<void(TY)>::type::operator[], "op_index_const") \
-    .ignore_all_unbound()
 
 BBL_MODULE(usdShade) {
     // clang-format off
@@ -311,6 +304,8 @@ BBL_MODULE(usdShade) {
         .m(&PXR_NS::UsdShadeInput::ClearConnectability)
         .m(&PXR_NS::UsdShadeInput::GetValueProducingAttributes)
         .m(&PXR_NS::UsdShadeInput::GetValueProducingAttribute)
+
+        .ignore(&PXR_NS::UsdShadeInput::operator PXR_NS::UsdAttribute const&)
     ;
 
     bbl::Class<std::vector<PXR_NS::UsdShadeInput>>("InputVector")
@@ -392,8 +387,6 @@ BBL_MODULE(usdShade) {
         .m(&PXR_NS::UsdShadeMaterialBindingAPI::AddPrimToBindingCollection)
         .m(&PXR_NS::UsdShadeMaterialBindingAPI::GetMaterialPurposes)
         .m(&PXR_NS::UsdShadeMaterialBindingAPI::GetResolvedTargetPathFromBindingRel)
-        // .m((PXR_NS::UsdShadeMaterial (PXR_NS::UsdShadeMaterialBindingAPI::*)(BindingsCache *, CollectionQueryCache *, const PXR_NS::TfToken &, PXR_NS::UsdRelationship *, bool) const)
-        //     &PXR_NS::UsdShadeMaterialBindingAPI::ComputeBoundMaterial, "ComputeBoundMaterial_00")
         .m((PXR_NS::UsdShadeMaterial (PXR_NS::UsdShadeMaterialBindingAPI::*)(const PXR_NS::TfToken &, PXR_NS::UsdRelationship *, bool) const)
             &PXR_NS::UsdShadeMaterialBindingAPI::ComputeBoundMaterial, "ComputeBoundMaterial")
         .m(&PXR_NS::UsdShadeMaterialBindingAPI::ComputeBoundMaterials)
@@ -402,6 +395,27 @@ BBL_MODULE(usdShade) {
         .m(&PXR_NS::UsdShadeMaterialBindingAPI::SetMaterialBindSubsetsFamilyType)
         .m(&PXR_NS::UsdShadeMaterialBindingAPI::GetMaterialBindSubsetsFamilyType)
         .m(&PXR_NS::UsdShadeMaterialBindingAPI::CanContainPropertyName)
+
+        .m((PXR_NS::UsdShadeMaterial (PXR_NS::UsdShadeMaterialBindingAPI::*)(PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache *, PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache *, const PXR_NS::TfToken &, PXR_NS::UsdRelationship *, bool) const)
+            &PXR_NS::UsdShadeMaterialBindingAPI::ComputeBoundMaterial, "ComputeBoundMaterial_00")
+    ;
+
+    bbl::Class<PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache>("MaterialBindingAPIBindingsCache")
+        .m((PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache::mapped_type& (PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache::*)(PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache::key_type const&))
+            &PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache::at
+        )
+        .m((PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache::mapped_type const& (PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache::*)(PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache::key_type const&) const)
+            &PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache::at, "at_const"
+        )
+    ;
+
+    bbl::Class<PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache>("MaterialBindingAPICollectionQueryCache")
+        .m((PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache::mapped_type& (PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache::*)(PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache::key_type const&))
+            &PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache::at
+        )
+        .m((PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache::mapped_type const& (PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache::*)(PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache::key_type const&) const)
+            &PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache::at, "at_const"
+        )
     ;
 
     bbl::Class<PXR_NS::UsdShadeMaterialBindingAPI::DirectBinding>("MaterialBindingAPIDirectBinding")
@@ -432,6 +446,11 @@ BBL_MODULE(usdShade) {
 
     bbl::Class<PXR_NS::UsdShadeMaterialBindingAPI::BindingsAtPrim>("MaterialBindingAPIBindingsAtPrim")
         .ctor(bbl::Class<PXR_NS::UsdShadeMaterialBindingAPI::BindingsAtPrim>::Ctor<const PXR_NS::UsdPrim &, const PXR_NS::TfToken &, bool>("prim", "materialPurpose", "supportLegacyBindings"), "from_prim")
+    ;
+
+    bbl::Class<std::unique_ptr<PXR_NS::UsdShadeMaterialBindingAPI::BindingsAtPrim>>("MaterialBindingsAPIBindingsAtPrimPtr")
+        .smartptr_to<PXR_NS::UsdShadeMaterialBindingAPI::BindingsAtPrim>()
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::UsdShadeNodeDefAPI>("NodeDefAPI")

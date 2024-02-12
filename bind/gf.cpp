@@ -2,7 +2,7 @@
 
 #include "babble"
 #include "babble-std"
-#include "babble-vt"
+#include "babble-usd"
 
 #include <pxr/base/gf/interval.h>
 #include <pxr/base/gf/vec2f.h>
@@ -594,7 +594,7 @@ BBL_MODULE(gf) {
         .ignore_all_unbound()
     ;
 
-    bbl::Class<std::pair<PXR_NS::GfHalf, PXR_NS::GfHalf>>("HalfPair");
+    BBL_STD_PAIR((std::pair<PXR_NS::GfHalf, PXR_NS::GfHalf>), HalfPair);
 
     bbl::Class<PXR_NS::GfInterval>("Interval")
         .ctor(bbl::Class<PXR_NS::GfInterval>::Ctor<>(), "default")
@@ -1248,25 +1248,23 @@ BBL_MODULE(gf) {
         .m(&PXR_NS::GfMultiInterval::GetPriorNonContainingInterval)
         .m(&PXR_NS::GfMultiInterval::GetContainingInterval)
         .m(&PXR_NS::GfMultiInterval::GetFullInterval)
-        .m(&PXR_NS::GfMultiInterval::swap)
         .m((PXR_NS::GfMultiInterval & (PXR_NS::GfMultiInterval::*)(const PXR_NS::GfMultiInterval &))
             &PXR_NS::GfMultiInterval::operator=, "op_assign_00")
-        .m((PXR_NS::GfMultiInterval & (PXR_NS::GfMultiInterval::*)(PXR_NS::GfMultiInterval &&))
-            &PXR_NS::GfMultiInterval::operator=, "op_assign_01")
+        .ignore((PXR_NS::GfMultiInterval & (PXR_NS::GfMultiInterval::*)(PXR_NS::GfMultiInterval &&))
+            &PXR_NS::GfMultiInterval::operator=)
         .m(&PXR_NS::GfMultiInterval::swap)
     ;
 
-    bbl::Class<PXR_NS::GfMultiInterval::Set>("MultiIntervalSet")
-    ;
+    BBL_STD_SET(PXR_NS::GfMultiInterval::Set, MultiIntervalSet);
 
-    bbl::Class<PXR_NS::GfMultiInterval::iterator>("MultiIntervalIterator")
-        .m(&PXR_NS::GfMultiInterval::iterator::operator->, "op_deref")
-        .m((PXR_NS::GfMultiInterval::iterator& (PXR_NS::GfMultiInterval::iterator::*)())
-            &PXR_NS::GfMultiInterval::iterator::operator++, "op_inc"
-        )
-        .m(&PXR_NS::GfMultiInterval::iterator::operator==, "op_eq")
-        .ignore_all_unbound()
-    ;
+    // bbl::Class<PXR_NS::GfMultiInterval::iterator>("MultiIntervalIterator")
+    //     .m(&PXR_NS::GfMultiInterval::iterator::operator->, "op_deref")
+    //     .m((PXR_NS::GfMultiInterval::iterator& (PXR_NS::GfMultiInterval::iterator::*)())
+    //         &PXR_NS::GfMultiInterval::iterator::operator++, "op_inc"
+    //     )
+    //     .m(&PXR_NS::GfMultiInterval::iterator::operator==, "op_eq")
+    //     .ignore_all_unbound()
+    // ;
 
     bbl::Class<PXR_NS::GfPlane>("Plane")
         .ctor(bbl::Class<PXR_NS::GfPlane>::Ctor<>(), "default")

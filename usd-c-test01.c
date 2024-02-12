@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
     // Iterate over the stage and print out all prim paths and all their properties
     while (!done) {
         usd_Prim_t* prim;
-        usd_PrimRangeIterator_deref(current, &prim);
+        usd_PrimRangeIterator_op_deref(current, &prim);
 
         // print out the prim's path
         sdf_Path_t* path;

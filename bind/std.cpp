@@ -29,24 +29,41 @@ BBL_MODULE(std) {
         BBL_STD_VECTOR_METHODS(std::string)
     ;
 
-    bbl::Class<std::pair<std::string, std::string>>("StringPair")
-    ;
+    BBL_STD_PAIR((std::pair<std::string, std::string>), StringPair);
+    BBL_STD_PAIR((std::pair<std::string, bool>), StringBoolPair);
 
     bbl::Class<std::vector<std::pair<std::string, std::string>>>("StringPairVector")
         BBL_STD_VECTOR_METHODS((std::pair<std::string, std::string>))
     ;
 
-    bbl::Class<std::set<std::string>>("StringSet");
-    bbl::Class<std::unordered_set<std::string>>("StringUnorderedSet");
+    BBL_STD_SET(std::set<std::string>, StringSet);
+    BBL_STD_SET(std::unordered_set<std::string>, StringUnorderedSet);
 
     bbl::Class<std::vector<double>>("DoubleVector")
-        BBL_STD_VECTOR_METHODS(double);
+        BBL_STD_VECTOR_METHODS(double)
+    ;
 
-    bbl::Class<std::set<double>>("DoubleSet");
+    bbl::Class<std::vector<bool>>("BoolVector")
+        .m(&std::vector<bool>::size)
+        .m(&std::vector<bool>::empty)
+        .m((bool (std::vector<bool>::*)(size_t) const)
+            &std::vector<bool>::at
+        )
 
-    bbl::Class<std::pair<double, double>>("DoublePair");
-    bbl::Class<std::pair<float, float>>("FloatPair");
+        .ignore_all_unbound()
+    ;
+
+    BBL_STD_SET(std::set<double>, DoubleSet);
+
+    BBL_STD_PAIR((std::pair<double, double>), DoublePair);
+    BBL_STD_PAIR((std::pair<float, float>), FloatPair);
     
+    bbl::Class<std::type_info>("StdTypeInfo")
+        .m(&std::type_info::name)
+        .m(&std::type_info::hash_code)
+
+        .ignore_all_unbound()
+    ;
 }
 
 

@@ -257,6 +257,10 @@ BBL_MODULE(usdLux) {
         .m(&PXR_NS::UsdLuxPortalLight::GetSchemaAttributeNames)
         .m(&PXR_NS::UsdLuxPortalLight::Get)
         .m(&PXR_NS::UsdLuxPortalLight::Define)
+        .m(&PXR_NS::UsdLuxPortalLight::CreateHeightAttr)
+        .m(&PXR_NS::UsdLuxPortalLight::GetHeightAttr)
+        .m(&PXR_NS::UsdLuxPortalLight::CreateWidthAttr)
+        .m(&PXR_NS::UsdLuxPortalLight::GetWidthAttr)
     ;
 
     bbl::Class<PXR_NS::UsdLuxRectLight>("RectLight")
