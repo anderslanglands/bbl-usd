@@ -3,6 +3,7 @@
 #include <babble>
 #include <babble-std>
 
+#include <pxr/usd/sdf/pathExpression.h>
 #include <pxr/usd/usd/attributeQuery.h>
 #include <pxr/usd/usd/clipsAPI.h>
 #include <pxr/usd/usd/collectionAPI.h>
@@ -51,10 +52,6 @@ auto UsdPrim_GetProperties(PXR_NS::UsdPrim prim) -> std::vector<PXR_NS::UsdPrope
 
 auto UsdPrim_GetAuthoredProperties(PXR_NS::UsdPrim prim) -> std::vector<PXR_NS::UsdProperty> {
     return prim.GetAuthoredProperties();
-}
-
-auto PrimSiblingIterator_op_eq(PXR_NS::UsdPrimSiblingIterator const& lhs, PXR_NS::UsdPrimSiblingIterator const& rhs) -> bool {
-    return lhs == rhs;
 }
 
 auto UsdSchemaRegistrySchemaInfo_identifier(
@@ -129,6 +126,7 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdAttributeQuery::ValueMightBeTimeVarying)
         .m(&PXR_NS::UsdAttributeQuery::GetUnionedTimeSamples)
         .m(&PXR_NS::UsdAttributeQuery::GetUnionedTimeSamplesInInterval)
+        .m(&PXR_NS::UsdAttributeQuery::operator bool)
     ;
 
     bbl::Class<std::vector<PXR_NS::UsdAttributeQuery>>("AttributeQueryVector")
@@ -289,6 +287,14 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdCollectionAPI::ResetCollection)
         .m(&PXR_NS::UsdCollectionAPI::BlockCollection)
         .m(&PXR_NS::UsdCollectionAPI::CanContainPropertyName)
+        .m(&PXR_NS::UsdCollectionAPI::GetMembershipExpressionAttr)
+        .m(&PXR_NS::UsdCollectionAPI::CreateMembershipExpressionAttr)
+        .m((PXR_NS::SdfPathExpression (PXR_NS::UsdCollectionAPI::*)() const)
+            &PXR_NS::UsdCollectionAPI::ResolveCompleteMembershipExpression
+        )
+        .ignore((PXR_NS::SdfPathExpression (*)(PXR_NS::SdfPathExpression, PXR_NS::UsdPrim const&))
+            &PXR_NS::UsdCollectionAPI::ResolveCompleteMembershipExpression
+        )
     ;
 
     bbl::Class<std::vector<PXR_NS::UsdCollectionAPI>>("CollectionAPIVector")
@@ -305,18 +311,29 @@ BBL_MODULE(usd) {
             &PXR_NS::UsdCollectionMembershipQuery::IsPathIncluded, "IsPathIncluded_01")
         .m(&PXR_NS::UsdCollectionMembershipQuery::HasExcludes)
         .m(&PXR_NS::UsdCollectionMembershipQuery::operator==, "op_eq")
-        .m(&PXR_NS::UsdCollectionMembershipQuery::operator!=, "op_neq")
         .m(&PXR_NS::UsdCollectionMembershipQuery::GetHash)
         .m(&PXR_NS::UsdCollectionMembershipQuery::GetAsPathExpansionRuleMap)
         .m(&PXR_NS::UsdCollectionMembershipQuery::GetIncludedCollections)
+        .m(&PXR_NS::UsdCollectionMembershipQuery::GetTopExpansionRule)
+        .m(&PXR_NS::UsdCollectionMembershipQuery::HasExpression)
+
+        .ignore(&PXR_NS::UsdCollectionMembershipQuery::operator!=, "op_neq")
+        .ignore(&PXR_NS::UsdCollectionMembershipQuery::GetExpressionEvaluator)
     ;
 
     bbl::Class<PXR_NS::UsdCollectionMembershipQuery::Hash>("CollectionMembershipQueryHash")
         .ctor(bbl::Class<PXR_NS::UsdCollectionMembershipQuery::Hash>::Ctor<>(), "default")
+        .ignore(&PXR_NS::UsdCollectionMembershipQuery::Hash::operator())
+    ;
+
+    bbl::Class<std::unique_ptr<PXR_NS::UsdCollectionMembershipQuery>>("CollectionMembershipQueryPtr")
+        .smartptr_to<PXR_NS::UsdCollectionMembershipQuery>()
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::UsdCollectionMembershipQuery::PathExpansionRuleMap>("CollectionMembershipQueryPathExpansionRuleMap")
         .ctor(bbl::Class<PXR_NS::UsdCollectionMembershipQuery::PathExpansionRuleMap>::Ctor<>(), "default")
+        BBL_STD_MAP_METHODS(PXR_NS::UsdCollectionMembershipQuery::PathExpansionRuleMap)
     ;
 
     bbl::Enum<PXR_NS::UsdInterpolationType>("InterpolationType");
@@ -324,14 +341,7 @@ BBL_MODULE(usd) {
     bbl::Enum<PXR_NS::UsdLoadPolicy>("LoadPolicy");
     bbl::Enum<PXR_NS::UsdSchemaKind>("SchemaKind");
 
-    bbl::Class<PXR_NS::UsdMetadataValueMap>("MetadataValueMap")
-        .m((PXR_NS::UsdMetadataValueMap::mapped_type const& (PXR_NS::UsdMetadataValueMap::*)(PXR_NS::UsdMetadataValueMap::key_type const&) const)
-            &PXR_NS::UsdMetadataValueMap::at, "at_const"
-        )
-        .m((PXR_NS::UsdMetadataValueMap::mapped_type& (PXR_NS::UsdMetadataValueMap::*)(PXR_NS::UsdMetadataValueMap::key_type const&))
-            &PXR_NS::UsdMetadataValueMap::at
-        )
-    ;
+    BBL_STD_MAP(PXR_NS::UsdMetadataValueMap, MetadataValueMap);
 
     bbl::Class<PXR_NS::UsdCrateInfo>("CrateInfo")
         .m(&PXR_NS::UsdCrateInfo::Open)
@@ -370,8 +380,11 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdEditTarget::IsNull)
         .m(&PXR_NS::UsdEditTarget::IsValid)
         .m((PXR_NS::SdfLayerHandle const& (PXR_NS::UsdEditTarget::*)() const&)
-            &PXR_NS::UsdEditTarget::GetLayer
+            &PXR_NS::UsdEditTarget::GetLayer, "GetLayer_const"
         )
+        // .ignore((PXR_NS::SdfLayerHandle (PXR_NS::UsdEditTarget::*)()&&)
+        //     &PXR_NS::UsdEditTarget::GetLayer
+        // )
         .m(&PXR_NS::UsdEditTarget::MapToSpecPath)
         .m(&PXR_NS::UsdEditTarget::GetPrimSpecForScenePath)
         .m(&PXR_NS::UsdEditTarget::GetPropertySpecForScenePath)
@@ -379,7 +392,9 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdEditTarget::GetMapFunction)
         .m(&PXR_NS::UsdEditTarget::ComposeOver)
         .m(&PXR_NS::UsdEditTarget::ForLocalDirectVariant)
-        ;
+
+        .ignore(&PXR_NS::UsdEditTarget::operator!=)
+    ;
 
     bbl::Class<PXR_NS::UsdInherits>("Inherits")
         .m(&PXR_NS::UsdInherits::AddInherit)
@@ -388,6 +403,9 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdInherits::SetInherits)
         .m(&PXR_NS::UsdInherits::GetAllDirectInherits)
         .m((PXR_NS::UsdPrim const&(PXR_NS::UsdInherits::*)() const)
+            &PXR_NS::UsdInherits::GetPrim
+        )
+        .ignore((PXR_NS::UsdPrim (PXR_NS::UsdInherits::*)())
             &PXR_NS::UsdInherits::GetPrim
         )
         .m(&PXR_NS::UsdInherits::operator bool, "op_bool")
@@ -437,6 +455,8 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdNotice::ObjectsChanged::ResyncedObject)
         .m(&PXR_NS::UsdNotice::ObjectsChanged::ChangedInfoOnly)
         .m(&PXR_NS::UsdNotice::ObjectsChanged::GetResyncedPaths)
+        .m(&PXR_NS::UsdNotice::ObjectsChanged::GetResolvedAssetPathsResyncedPaths)
+        .m(&PXR_NS::UsdNotice::ObjectsChanged::ResolvedAssetPathsResynced)
         .m(&PXR_NS::UsdNotice::ObjectsChanged::GetChangedInfoOnlyPaths)
         .m((PXR_NS::TfTokenVector (PXR_NS::UsdNotice::ObjectsChanged::*)(const PXR_NS::UsdObject &) const)
             &PXR_NS::UsdNotice::ObjectsChanged::GetChangedFields, "GetChangedFields_00")
@@ -457,12 +477,15 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::end)
         .m(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::cend)
         .m(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::find)
+        .ignore(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::operator PXR_NS::SdfPathVector)
     ;
 
     bbl::Class<PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator>("ObjectsChangedPathRangeIterator")
         .ctor(bbl::Class<PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator>::Ctor<>(), "default")
         .m(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::GetChangedFields)
         .m(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::HasChangedFields)
+        
+        BBL_STD_ITERATOR_METHODS(PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator)
     ;
 
     bbl::Class<PXR_NS::UsdNotice::StageEditTargetChanged>("StageEditTargetChanged")
@@ -512,6 +535,9 @@ BBL_MODULE(usd) {
         ) 
         .m((bool(PXR_NS::UsdAttribute::*)(PXR_NS::VtValue const&, PXR_NS::UsdTimeCode) const) 
             &PXR_NS::UsdAttribute::Set
+        ) 
+        .m((bool(PXR_NS::UsdAttribute::*)(char const* value, PXR_NS::UsdTimeCode) const) 
+            &PXR_NS::UsdAttribute::Set, "Set_c_str"
         ) 
         .m(&PXR_NS::UsdAttribute::Clear)                                                        
         .m(&PXR_NS::UsdAttribute::ClearAtTime)                                                  
@@ -595,6 +621,7 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdObject::GetName)                                                      
         .m(&PXR_NS::UsdObject::GetNamespaceDelimiter)                                        
         .m(&PXR_NS::UsdObject::GetDescription)
+        .ignore(&PXR_NS::UsdObject::operator bool)
     ;
 
     bbl::Enum<PXR_NS::UsdObjType>();
@@ -602,9 +629,7 @@ BBL_MODULE(usd) {
     bbl::fn(&PXR_NS::UsdIsConvertible);
     bbl::fn(&PXR_NS::UsdIsConcrete);
 
-    bbl::Class<std::set<PXR_NS::UsdObject>>("ObjectSet")
-        .ctor(bbl::Class<std::set<PXR_NS::UsdObject>>::Ctor<>(), "default")
-    ;
+    BBL_STD_SET(std::set<PXR_NS::UsdObject>, ObjectSet);
 
     bbl::Class<PXR_NS::UsdPrim>("Prim")
         .opaque_ptr()
@@ -637,8 +662,14 @@ BBL_MODULE(usd) {
         .m((std::vector<PXR_NS::UsdProperty>(PXR_NS::UsdPrim::*)(std::string const&) const) 
             &PXR_NS::UsdPrim::GetPropertiesInNamespace
         )
+        .m((std::vector<PXR_NS::UsdProperty>(PXR_NS::UsdPrim::*)(std::vector<std::string> const&) const) 
+            &PXR_NS::UsdPrim::GetPropertiesInNamespace, "GetPropertiesInNamespace_elements"
+        )
         .m((std::vector<PXR_NS::UsdProperty>(PXR_NS::UsdPrim::*)(std::string const&) const) 
             &PXR_NS::UsdPrim::GetAuthoredPropertiesInNamespace
+        )
+        .m((std::vector<PXR_NS::UsdProperty>(PXR_NS::UsdPrim::*)(std::vector<std::string> const&) const) 
+            &PXR_NS::UsdPrim::GetAuthoredPropertiesInNamespace, "GetAuthoredPropertiesInNamespace_elements"
         )
         .m(&PXR_NS::UsdPrim::GetPropertyOrder)
         .m(&PXR_NS::UsdPrim::SetPropertyOrder)
@@ -652,6 +683,9 @@ BBL_MODULE(usd) {
         // IsA
         .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&) const) 
             &PXR_NS::UsdPrim::IsA
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&) const) 
+            &PXR_NS::UsdPrim::IsA, "IsA_type"
         )
 
         // methods can be renamed to give useful names to overloads
@@ -678,6 +712,12 @@ BBL_MODULE(usd) {
         .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&) const) 
             &PXR_NS::UsdPrim::HasAPI
         )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion) const) 
+            &PXR_NS::UsdPrim::HasAPI, "HasAPI_with_version"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion, PXR_NS::TfToken const&) const) 
+            &PXR_NS::UsdPrim::HasAPI, "HasAPI_with_version_and_instance_name"
+        )
         .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&, PXR_NS::TfToken const&) const) 
             &PXR_NS::UsdPrim::HasAPI, "HasAPI_with_instance_name"
         )
@@ -701,93 +741,90 @@ BBL_MODULE(usd) {
         .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion, PXR_NS::UsdSchemaRegistry::VersionPolicy, PXR_NS::TfToken const&) const) 
             &PXR_NS::UsdPrim::HasAPIInFamily, "HasAPIInFamily_with_version_and_instance"
         )
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&,
-        //                              PXR_NS::UsdSchemaRegistry::VersionPolicy)
-        //         const) &
-        //    PXR_NS::UsdPrim::HasAPIInFamily)
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&,
-        //                              PXR_NS::UsdSchemaRegistry::VersionPolicy,
-        //                              PXR_NS::TfToken const&) const) &
-        //    PXR_NS::UsdPrim::HasAPIInFamily)
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&,
-        //                              PXR_NS::UsdSchemaRegistry::VersionPolicy)
-        //         const) &
-        //    PXR_NS::UsdPrim::HasAPIInFamily)
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&,
-        //                              PXR_NS::UsdSchemaRegistry::VersionPolicy,
-        //                              PXR_NS::TfToken const&) const) &
-        //    PXR_NS::UsdPrim::HasAPIInFamily)
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&,
-        //                              PXR_NS::UsdSchemaVersion*) const) &
-        //    PXR_NS::UsdPrim::GetVersionIfHasAPIInFamily)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&, PXR_NS::UsdSchemaRegistry::VersionPolicy) const) 
+            &PXR_NS::UsdPrim::HasAPIInFamily, "HasAPIInFamily_with_schema_type_and_version"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&, PXR_NS::UsdSchemaRegistry::VersionPolicy, PXR_NS::TfToken const&) const) 
+            &PXR_NS::UsdPrim::HasAPIInFamily, "HasAPIInFamily_with_schema_type_version_and_instance_name"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaRegistry::VersionPolicy) const) 
+            &PXR_NS::UsdPrim::HasAPIInFamily, "HasAPIInFamily_with_schema_family_and_version"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaRegistry::VersionPolicy, PXR_NS::TfToken const&) const) 
+            &PXR_NS::UsdPrim::HasAPIInFamily, "HasAPIInFamily_with_schema_family_version_and_instance_name"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&,
+                                     PXR_NS::UsdSchemaVersion*) const) &
+           PXR_NS::UsdPrim::GetVersionIfHasAPIInFamily)
         .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion*) const) 
-            &PXR_NS::UsdPrim::GetVersionIfHasAPIInFamily
+            &PXR_NS::UsdPrim::GetVersionIfHasAPIInFamily, "GetVersionIfHasAPIInFamily_with_instance_name"
         )
 
         // CanApplyAPI
         .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&, std::string*) const) 
             &PXR_NS::UsdPrim::CanApplyAPI
         ) 
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&,
-        //                              PXR_NS::TfToken const&, std::string*)
-        //         const) &
-        //    PXR_NS::UsdPrim::CanApplyAPI)
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, std::string*)
-        //         const) &
-        //    PXR_NS::UsdPrim::CanApplyAPI)
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&,
-        //                              PXR_NS::TfToken const&, std::string*)
-        //         const) &
-        //    PXR_NS::UsdPrim::CanApplyAPI)
-        // .m((bool(PXR_NS::UsdPrim::*)(
-        //        PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion,
-        //        PXR_NS::TfToken const&, std::string*) const) &
-        //    PXR_NS::UsdPrim::CanApplyAPI)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&, PXR_NS::TfToken const&, std::string*) const) 
+            &PXR_NS::UsdPrim::CanApplyAPI, "CanApplyAPI_with_instance_name"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, std::string*) const) 
+            &PXR_NS::UsdPrim::CanApplyAPI, "CanApplyAPI_with_schema_identifier"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&, std::string*) const) 
+            &PXR_NS::UsdPrim::CanApplyAPI, "CanApplyAPI_with_schema_identifier_and_instance_name"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)( PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion, PXR_NS::TfToken const&, std::string*) const) 
+            &PXR_NS::UsdPrim::CanApplyAPI, "CanApplyAPI_with_schema_family_version_and_instance_name"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)( PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion, std::string*) const) 
+            &PXR_NS::UsdPrim::CanApplyAPI, "CanApplyAPI_with_schema_family_and_version"
+        )
 
         // ApplyAPI
         .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&) const) 
             &PXR_NS::UsdPrim::ApplyAPI
         )
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&,
-        //                              PXR_NS::TfToken const&) const) &
-        //    PXR_NS::UsdPrim::ApplyAPI)
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&) const) &
-        //    PXR_NS::UsdPrim::ApplyAPI)
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&,
-        //                              PXR_NS::TfToken const&) const) &
-        //    PXR_NS::UsdPrim::ApplyAPI)
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&,
-        //                              PXR_NS::UsdSchemaVersion) const) &
-        //    PXR_NS::UsdPrim::ApplyAPI)
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&,
-        //                              PXR_NS::UsdSchemaVersion,
-        //                              PXR_NS::TfToken const&) const) &
-        //    PXR_NS::UsdPrim::ApplyAPI)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&, PXR_NS::TfToken const&) const) 
+            &PXR_NS::UsdPrim::ApplyAPI, "ApplyAPI_with_instance_name"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&) const) 
+            &PXR_NS::UsdPrim::ApplyAPI, "ApplyAPI_with_schema_identifier"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&) const) 
+            &PXR_NS::UsdPrim::ApplyAPI, "ApplyAPI_with_schema_identifier_and_instance_name"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion) const) 
+            &PXR_NS::UsdPrim::ApplyAPI, "ApplyAPI_with_schema_family_and_version"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion, PXR_NS::TfToken const&) const) 
+            &PXR_NS::UsdPrim::ApplyAPI, "ApplyAPI_with_schema_family_version_and_instance_name"
+        )
 
         // RemoveAPI
         .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&) const) 
             &PXR_NS::UsdPrim::RemoveAPI
         )
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&,
-        //                              PXR_NS::TfToken const&) const) &
-        //    PXR_NS::UsdPrim::RemoveAPI)
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&) const) &
-        //    PXR_NS::UsdPrim::RemoveAPI)
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&,
-        //                              PXR_NS::TfToken const&) const) &
-        //    PXR_NS::UsdPrim::RemoveAPI)
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&,
-        //                              PXR_NS::UsdSchemaVersion) const) &
-        //    PXR_NS::UsdPrim::RemoveAPI)
-        // .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&,
-        //                              PXR_NS::UsdSchemaVersion,
-        //                              PXR_NS::TfToken const&) const) &
-        //    PXR_NS::UsdPrim::RemoveAPI)
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfType const&,
+                                     PXR_NS::TfToken const&) const) &
+           PXR_NS::UsdPrim::RemoveAPI, "RemoveAPI_with_instance_name")
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&) const) 
+            &PXR_NS::UsdPrim::RemoveAPI, "RemoveAPI_with_schema_identifier"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&) const) 
+            &PXR_NS::UsdPrim::RemoveAPI, "RemoveAPI_with_schema_identifier_and_instance_name"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion) const) 
+            &PXR_NS::UsdPrim::RemoveAPI, "RemoveAPI_with_schema_family_and_version"
+        )
+        .m((bool(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::UsdSchemaVersion, PXR_NS::TfToken const&) const) 
+            &PXR_NS::UsdPrim::RemoveAPI, "RemoveAPI_with_schema_family_version_and_instance_name"
+        )
 
         // PXR_NS::UsdPrim Children
         .m(&PXR_NS::UsdPrim::GetChild)
         .m(&PXR_NS::UsdPrim::GetChildren)
         .m(&PXR_NS::UsdPrim::GetAllChildren)
+        .m(&PXR_NS::UsdPrim::GetAllChildrenNames)
         .m(&PXR_NS::UsdPrim::GetFilteredChildren)
         .m(&PXR_NS::UsdPrim::GetChildrenNames)
         .m(&PXR_NS::UsdPrim::GetFilteredChildrenNames)
@@ -820,6 +857,15 @@ BBL_MODULE(usd) {
         .m((PXR_NS::UsdAttribute(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::SdfValueTypeName const&, bool, PXR_NS::SdfVariability) const) 
             &PXR_NS::UsdPrim::CreateAttribute
         )
+        .ignore((PXR_NS::UsdAttribute (PXR_NS::UsdPrim::*)(std::vector<std::string> const&, PXR_NS::SdfValueTypeName const&, bool, PXR_NS::SdfVariability) const)
+            &PXR_NS::UsdPrim::CreateAttribute
+        )
+        .ignore((PXR_NS::UsdAttribute (PXR_NS::UsdPrim::*)(std::vector<std::string> const&, PXR_NS::SdfValueTypeName const&, PXR_NS::SdfVariability) const)
+            &PXR_NS::UsdPrim::CreateAttribute
+        )
+        .ignore((PXR_NS::UsdAttribute(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, PXR_NS::SdfValueTypeName const&, PXR_NS::SdfVariability) const) 
+            &PXR_NS::UsdPrim::CreateAttribute
+        )
         .m(&PXR_NS::UsdPrim::GetAttributes)
         .m(&PXR_NS::UsdPrim::GetAuthoredAttributes)
         .m(&PXR_NS::UsdPrim::GetAttribute)
@@ -829,6 +875,9 @@ BBL_MODULE(usd) {
         // Relationships
         .m((PXR_NS::UsdRelationship(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, bool) const) 
             &PXR_NS::UsdPrim::CreateRelationship
+        )
+        .m((PXR_NS::UsdRelationship(PXR_NS::UsdPrim::*)(std::vector<std::string> const&, bool) const) 
+            &PXR_NS::UsdPrim::CreateRelationship, "CreateRelationship_with_elements"
         )
         .m(&PXR_NS::UsdPrim::GetRelationships)
         .m(&PXR_NS::UsdPrim::GetAuthoredRelationships)
@@ -841,6 +890,17 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdPrim::HasAuthoredPayloads)
         .m(&PXR_NS::UsdPrim::Load)
         .m(&PXR_NS::UsdPrim::Unload)
+        .m(&PXR_NS::UsdPrim::HasPayload)
+        .m(&PXR_NS::UsdPrim::ClearPayload)
+        .ignore((bool (PXR_NS::UsdPrim::*)(PXR_NS::SdfLayerHandle const&, PXR_NS::SdfPath const&) const)
+            &PXR_NS::UsdPrim::SetPayload
+        )
+        .ignore((bool (PXR_NS::UsdPrim::*)(std::string const&, PXR_NS::SdfPath const&) const)
+            &PXR_NS::UsdPrim::SetPayload
+        )
+        .m((bool (PXR_NS::UsdPrim::*)(PXR_NS::SdfPayload const&) const)
+            &PXR_NS::UsdPrim::SetPayload
+        )
 
         // References
         .m(&PXR_NS::UsdPrim::GetReferences)
@@ -874,7 +934,12 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdPrim::ComputeExpandedPrimIndex)
         .m(&PXR_NS::UsdPrim::MakeResolveTargetUpToEditTarget)
         .m(&PXR_NS::UsdPrim::MakeResolveTargetStrongerThanEditTarget)
-        ;
+
+        .m(&PXR_NS::UsdPrim::GetKind)
+        .m(&PXR_NS::UsdPrim::SetKind)
+        .m(&PXR_NS::UsdPrim::IsComponent)
+        .m(&PXR_NS::UsdPrim::IsSubComponent)
+    ;
 
     bbl::Class<PXR_NS::UsdPrimTypeInfo>("PrimTypeInfo")
         .m(&PXR_NS::UsdPrimTypeInfo::GetTypeName)
@@ -883,11 +948,22 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdPrimTypeInfo::GetSchemaTypeName)
         .m(&PXR_NS::UsdPrimTypeInfo::GetPrimDefinition)
         .m(&PXR_NS::UsdPrimTypeInfo::GetEmptyPrimType)
+        .m(&PXR_NS::UsdPrimTypeInfo::operator==)
+
+        .ignore(&PXR_NS::UsdPrimTypeInfo::operator!=)
     ;
 
     bbl::Class<std::vector<PXR_NS::UsdPrim>>("PrimVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::UsdPrim);
-    bbl::Class<PXR_NS::Usd_PrimFlagsPredicate>("PrimFlagsPredicate");
+
+    bbl::Class<PXR_NS::Usd_PrimFlagsPredicate>("PrimFlagsPredicate")
+        .m(&PXR_NS::Usd_PrimFlagsPredicate::Tautology)
+        .m(&PXR_NS::Usd_PrimFlagsPredicate::Contradiction)
+        .m(&PXR_NS::Usd_PrimFlagsPredicate::TraverseInstanceProxies)
+        .m(&PXR_NS::Usd_PrimFlagsPredicate::IncludeInstanceProxiesInTraversal)
+
+        .ignore(&PXR_NS::Usd_PrimFlagsPredicate::operator())
+    ;
 
     // Manually generate overrides that don't take a stdfunction for convenience
     bbl::fn(&bblext::UsdPrim_GetProperties, "Prim_GetProperties");
@@ -965,6 +1041,10 @@ BBL_MODULE(usd) {
             &PXR_NS::UsdPayloads::GetPrim
         )
         .m(&PXR_NS::UsdPayloads::operator bool, "op_bool")
+
+        .ignore((PXR_NS::UsdPrim (PXR_NS::UsdPayloads::*)())
+            &PXR_NS::UsdPayloads::GetPrim
+        )
     ;
 
     bbl::Class<PXR_NS::UsdPrimCompositionQuery>("PrimCompositionQuery")
@@ -1022,7 +1102,10 @@ BBL_MODULE(usd) {
         .f(&PXR_NS::UsdPrimCompositionQuery::Filter::dependencyTypeFilter)
         .f(&PXR_NS::UsdPrimCompositionQuery::Filter::arcIntroducedFilter)
         .f(&PXR_NS::UsdPrimCompositionQuery::Filter::hasSpecsFilter)
-        ;
+
+        .ignore(&PXR_NS::UsdPrimCompositionQuery::Filter::operator==)
+        .ignore(&PXR_NS::UsdPrimCompositionQuery::Filter::operator!=)
+    ;
 
     bbl::Enum<PXR_NS::UsdPrimCompositionQuery::ArcTypeFilter>(
         "PrimCompositionQueryArcTypeFilter");
@@ -1096,48 +1179,82 @@ BBL_MODULE(usd) {
     ;
 
     bbl::Class<PXR_NS::UsdPrimRange>("PrimRange")
-        .opaque_ptr()
         .ctor(bbl::Class<PXR_NS::UsdPrimRange>::Ctor<PXR_NS::UsdPrim>("start"), "from_prim")
         .m(&PXR_NS::UsdPrimRange::begin)
-        .m(&PXR_NS::UsdPrimRange::end);
+        .m(&PXR_NS::UsdPrimRange::end)
+        .m(&PXR_NS::UsdPrimRange::empty)
+        .m((PXR_NS::UsdPrimRange (*)(PXR_NS::UsdPrim const&))
+            &PXR_NS::UsdPrimRange::PreAndPostVisit
+        )
+        .m((PXR_NS::UsdPrimRange (*)(PXR_NS::UsdPrim const&, PXR_NS::Usd_PrimFlagsPredicate const&))
+            &PXR_NS::UsdPrimRange::PreAndPostVisit, "PreAndPostVisit_with_predicate"
+        )
+        .m(&PXR_NS::UsdPrimRange::AllPrims)
+        .m(&PXR_NS::UsdPrimRange::AllPrimsPreAndPostVisit)
+        .m(&PXR_NS::UsdPrimRange::Stage)
+        .m(&PXR_NS::UsdPrimRange::operator==)
+
+        .ignore(&PXR_NS::UsdPrimRange::operator!=)
+        .ignore(&PXR_NS::UsdPrimRange::cbegin)
+        .ignore(&PXR_NS::UsdPrimRange::front)
+        .ignore(&PXR_NS::UsdPrimRange::cend)
+        .ignore(&PXR_NS::UsdPrimRange::increment_begin)
+        .ignore(&PXR_NS::UsdPrimRange::set_begin)
+        .ignore(&PXR_NS::UsdPrimRange::operator bool)
+    ;
 
     bbl::Class<PXR_NS::UsdPrimRange::iterator>("PrimRangeIterator")
-        .opaque_ptr()
         .ctor(bbl::Class<PXR_NS::UsdPrimRange::iterator>::Ctor<>(), "new")
-#if PXR_VERSION <= 2308
-        .m(&PXR_NS::UsdPrimRange::iterator::operator++, "op_inc")
-#else
         .m((PXR_NS::UsdPrimRange::iterator & (PXR_NS::UsdPrimRange::iterator::*)())
             &PXR_NS::UsdPrimRange::iterator::operator++, "op_inc"
         )
-#endif
         .m((PXR_NS::UsdPrimRange::iterator & (PXR_NS::UsdPrimRange::iterator::*)(PXR_NS::UsdPrimRange::iterator const&))
             &PXR_NS::UsdPrimRange::iterator::operator=, "op_assign"
         )
         .m((bool(PXR_NS::UsdPrimRange::iterator::*)(PXR_NS::UsdPrimRange::iterator const&) const) 
             &PXR_NS::UsdPrimRange::iterator::operator==, "op_eq"
         )
-        .m(&PXR_NS::UsdPrimRange::iterator::operator*, "deref");
+        .m(&PXR_NS::UsdPrimRange::iterator::operator*, "op_deref")
+        .m(&PXR_NS::UsdPrimRange::iterator::IsPostVisit)
+        .m(&PXR_NS::UsdPrimRange::iterator::PruneChildren)
+
+        .ignore_all_unbound()
+    ;
 
     bbl::Class<PXR_NS::UsdPrimSiblingRange>("PrimSiblingRange")
+        .m(&PXR_NS::UsdPrimSiblingRange::empty)
         .m(&PXR_NS::UsdPrimSiblingRange::begin)
         .m(&PXR_NS::UsdPrimSiblingRange::end)
+
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::UsdPrimSiblingIterator>("PrimSiblingIterator")
+        .m(&PXR_NS::UsdPrimSiblingIterator::operator==)
         .m(&PXR_NS::UsdPrimSiblingIterator::operator*, "deref")
-    #if PXR_VERSION <= 2308
-        .m(&PXR_NS::UsdPrimSiblingIterator::operator++, "op_inc")
-#else
         .m((PXR_NS::UsdPrimSiblingIterator & (PXR_NS::UsdPrimSiblingIterator::*)())
             &PXR_NS::UsdPrimSiblingIterator::operator++, "op_inc"
         )
-#endif
+
+        .ignore_all_unbound()
     ;
 
-    bbl::fn(&bblext::PrimSiblingIterator_op_eq);
-
     bbl::Class<PXR_NS::UsdPrimSubtreeRange>("PrimSubtreeRange")
+        .m(&PXR_NS::UsdPrimSubtreeRange::empty)
+        .m(&PXR_NS::UsdPrimSubtreeRange::begin)
+        .m(&PXR_NS::UsdPrimSubtreeRange::end)
+
+        .ignore_all_unbound()
+    ;
+
+    bbl::Class<PXR_NS::UsdPrimSubtreeRange::iterator>("PrimSubtreeRangeIterator")
+        .m(&PXR_NS::UsdPrimSubtreeRange::iterator::operator==)
+        .m((PXR_NS::UsdPrimSubtreeRange::iterator& (PXR_NS::UsdPrimSubtreeRange::iterator::*)())
+            &PXR_NS::UsdPrimSubtreeRange::iterator::operator++
+        )
+        .m(&PXR_NS::UsdPrimSubtreeRange::iterator::operator*)
+
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::UsdReferences>("References")
@@ -1155,6 +1272,9 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdReferences::ClearReferences)
         .m(&PXR_NS::UsdReferences::SetReferences)
         .m((PXR_NS::UsdPrim const& (PXR_NS::UsdReferences::*)() const)
+            &PXR_NS::UsdReferences::GetPrim
+        )
+        .ignore((PXR_NS::UsdPrim (PXR_NS::UsdReferences::*)())
             &PXR_NS::UsdReferences::GetPrim
         )
         .m(&PXR_NS::UsdReferences::operator bool)
@@ -1304,10 +1424,12 @@ BBL_MODULE(usd) {
     ;
 
     bbl::Class<PXR_NS::UsdSchemaRegistry::TokenToTokenVectorMap>("SchemaRegistryTokenToTokenVectorMap")
+        BBL_STD_MAP_METHODS(PXR_NS::UsdSchemaRegistry::TokenToTokenVectorMap)
     ;
 
     bbl::Class<std::unique_ptr<PXR_NS::UsdPrimDefinition>>("PrimDefinitionPtr")
         .smartptr_to<PXR_NS::UsdPrimDefinition>()
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::UsdSpecializes>("Specializes")
@@ -1319,6 +1441,10 @@ BBL_MODULE(usd) {
             &PXR_NS::UsdSpecializes::GetPrim
         )
         .m(&PXR_NS::UsdSpecializes::operator bool, "op_bool")
+
+        .ignore((PXR_NS::UsdPrim (PXR_NS::UsdSpecializes::*)())
+            &PXR_NS::UsdSpecializes::GetPrim
+        )
     ;
 
     bbl::Class<PXR_NS::UsdStage>("Stage")
@@ -1494,13 +1620,18 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdStage::GetPropertyAtPath)
         .m(&PXR_NS::UsdStage::GetAttributeAtPath)
         .m(&PXR_NS::UsdStage::GetRelationshipAtPath)
-        // Cannot bind Traverse because it returns a PrimRange by value and PrimRange has no default constructor
-        // Could possibly work around this by defining one ourselves that just zeroed the memory...
+        .m((PXR_NS::UsdPrimRange (PXR_NS::UsdStage::*)())
+            &PXR_NS::UsdStage::Traverse
+        )
+        .m((PXR_NS::UsdPrimRange (PXR_NS::UsdStage::*)(PXR_NS::Usd_PrimFlagsPredicate const&))
+            &PXR_NS::UsdStage::Traverse, "Traverse_with_predicate"
+        )
+        .m(&PXR_NS::UsdStage::TraverseAll)
         .m(&PXR_NS::UsdStage::OverridePrim)
         .m(&PXR_NS::UsdStage::DefinePrim)
         .m(&PXR_NS::UsdStage::CreateClassPrim)
         .m(&PXR_NS::UsdStage::RemovePrim)
-        ;
+    ;
 
     bbl::fn(&bblext::Stage_Open);
     bbl::fn(&bblext::StageRefPtr_ExportToString);
@@ -1512,6 +1643,8 @@ BBL_MODULE(usd) {
         .smartptr_to<PXR_NS::UsdStage>()
         .m(&PXR_NS::UsdStageRefPtr::operator->, "get")
         .m(&PXR_NS::UsdStageRefPtr::operator!, "is_invalid")
+
+        .ignore_all_unbound()
     ;
 
 
@@ -1524,6 +1657,7 @@ BBL_MODULE(usd) {
         // .ctor(bbl::Class<PXR_NS::UsdStageWeakPtr>::Ctor<PXR_NS::UsdStageRefPtr const&>("p"), "from_refptr")
         .m(&PXR_NS::UsdStageWeakPtr::operator->, "get")
         .m(&PXR_NS::UsdStageWeakPtr::operator!, "is_invalid")
+        .m(&PXR_NS::UsdStageWeakPtr::IsExpired)
     ;
 
     bbl::fn(&bblext::StageRefPtr_as_weak);
@@ -1584,7 +1718,10 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdStageCache::Clear)
         .m(&PXR_NS::UsdStageCache::SetDebugName)
         .m(&PXR_NS::UsdStageCache::GetDebugName)
-        ;
+        .m(&PXR_NS::UsdStageCache::swap)
+
+        .ignore(&PXR_NS::UsdStageCache::RequestStage)
+    ;
 
     bbl::Class<PXR_NS::UsdStageCache::Id>("StageCacheId")
         .m(&PXR_NS::UsdStageCache::Id::ToLongInt)
@@ -1592,7 +1729,8 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdStageCache::Id::IsValid)
         .m(&PXR_NS::UsdStageCache::Id::FromLongInt)
         .m(&PXR_NS::UsdStageCache::Id::FromString)
-        ;
+        .ignore(&PXR_NS::UsdStageCache::Id::operator bool)
+    ;
 
     bbl::Class<PXR_NS::UsdStageCacheRequest>()
         .m((bool (PXR_NS::UsdStageCacheRequest::*)(const PXR_NS::UsdStageRefPtr &) const)
@@ -1609,7 +1747,6 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdStageLoadRules::Unload)
         .m(&PXR_NS::UsdStageLoadRules::LoadAndUnload)
         .m(&PXR_NS::UsdStageLoadRules::AddRule)
-        // SetRules
         .m(&PXR_NS::UsdStageLoadRules::Minimize)
         .m(&PXR_NS::UsdStageLoadRules::IsLoaded)
         .m(&PXR_NS::UsdStageLoadRules::IsLoadedWithAllDescendants)
@@ -1618,12 +1755,23 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdStageLoadRules::GetRules)
         .m(&PXR_NS::UsdStageLoadRules::LoadAll)
         .m(&PXR_NS::UsdStageLoadRules::LoadNone)
-        ;
+        .m(&PXR_NS::UsdStageLoadRules::swap)
+        .m(&PXR_NS::UsdStageLoadRules::operator==)
+        .m((void (PXR_NS::UsdStageLoadRules::*)(std::vector<std::pair<PXR_NS::SdfPath, PXR_NS::UsdStageLoadRules::Rule>> const&))
+            &PXR_NS::UsdStageLoadRules::SetRules
+        )
 
-    bbl::Class<std::pair<PXR_NS::SdfPath, PXR_NS::UsdStageLoadRules::Rule>>("PathStageLoadRulesRulePair");
+        .ignore((void (PXR_NS::UsdStageLoadRules::*)(std::vector<std::pair<PXR_NS::SdfPath, PXR_NS::UsdStageLoadRules::Rule>>&&))
+            &PXR_NS::UsdStageLoadRules::SetRules
+        )
+        .ignore(&PXR_NS::UsdStageLoadRules::operator!=)
+    ;
+
+    BBL_STD_PAIR((std::pair<PXR_NS::SdfPath, PXR_NS::UsdStageLoadRules::Rule>), PathStageLoadRulesRulePair);
+
     bbl::Class<std::vector<std::pair<PXR_NS::SdfPath, PXR_NS::UsdStageLoadRules::Rule>>>("PathStageLoadRulesRulePairVector")
         BBL_STD_VECTOR_METHODS((std::pair<PXR_NS::SdfPath, PXR_NS::UsdStageLoadRules::Rule>))
-        ;
+    ;
 
     bbl::Enum<PXR_NS::UsdStageLoadRules::Rule>("StageLoadRulesRule");
 

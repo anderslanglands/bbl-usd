@@ -25,6 +25,7 @@
 #include <pxr/usd/pcp/site.h>
 #include <pxr/usd/pcp/targetIndex.h>
 #include <pxr/usd/pcp/types.h>
+#include <pxr/usd/sdf/pathExpression.h>
 
 namespace bblext {
 
@@ -157,18 +158,7 @@ BBL_MODULE(pcp) {
         BBL_STD_MAP_METHODS((std::map<PXR_NS::SdfPath, std::vector<std::string>, PXR_NS::SdfPath::FastLessThan>))
     ;
 
-    bbl::Class<PXR_NS::PcpCache::PayloadSet>("CachePayloadSet")
-        BBL_STD_SET_METHODS(PXR_NS::PcpCache::PayloadSet)
-    ;
-
-    // It's always const
-    // bbl::Class<PXR_NS::PcpCache::PayloadSet::iterator>("CachePayloadSetIterator")
-    //     BBL_STD_ITERATOR_METHODS(PXR_NS::PcpCache::PayloadSet::iterator)
-    // ;
-
-    bbl::Class<PXR_NS::PcpCache::PayloadSet::const_iterator>("CachePayloadSetConstIterator")
-        BBL_STD_ITERATOR_METHODS(PXR_NS::PcpCache::PayloadSet::const_iterator)
-    ;
+    BBL_STD_SET(PXR_NS::PcpCache::PayloadSet, CachePayloadSet);
 
     bbl::Class<PXR_NS::PcpChanges>("Changes")
         .ctor(bbl::Class<PXR_NS::PcpChanges>::Ctor<>(), "default")
@@ -598,7 +588,7 @@ BBL_MODULE(pcp) {
         .ctor(bbl::Class<PXR_NS::PcpNodeIterator>::Ctor<>(), "default")
         .m(&PXR_NS::PcpNodeIterator::GetCompressedSdSite)
         .m(&PXR_NS::PcpNodeIterator::operator==)
-        .m(&PXR_NS::PcpNodeIterator::operator->, "op_deref")
+        .m(&PXR_NS::PcpNodeIterator::operator*, "op_deref")
         .m((PXR_NS::PcpNodeIterator& (PXR_NS::PcpNodeIterator::*)())
             &PXR_NS::PcpNodeIterator::operator++, "op_inc"
         )
@@ -610,7 +600,7 @@ BBL_MODULE(pcp) {
 
     bbl::Class<PXR_NS::PcpNodeReverseIterator>("NodeReverseIterator")
         .ctor(bbl::Class<PXR_NS::PcpNodeReverseIterator>::Ctor<>(), "default")
-        .m(&PXR_NS::PcpNodeReverseIterator::operator->, "op_deref")
+        .m(&PXR_NS::PcpNodeReverseIterator::operator*, "op_deref")
         .ignore_all_unbound()
     ;
 
@@ -619,7 +609,7 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpPrimIterator::GetNode)
         .m(&PXR_NS::PcpPrimIterator::_GetSiteRef)
         .m(&PXR_NS::PcpPrimIterator::operator==)
-        .m(&PXR_NS::PcpPrimIterator::operator->, "op_deref")
+        .m(&PXR_NS::PcpPrimIterator::operator*, "op_deref")
         .m((PXR_NS::PcpPrimIterator& (PXR_NS::PcpPrimIterator::*)())
             &PXR_NS::PcpPrimIterator::operator++, "op_inc"
         )
@@ -692,6 +682,7 @@ BBL_MODULE(pcp) {
 
     bbl::Class<PXR_NS::PcpLayerStackPtr>("LayerStackPtr")
         .smartptr_to<PXR_NS::PcpLayerStack>()
+
         .ignore_all_unbound()
     ;
 
@@ -701,6 +692,8 @@ BBL_MODULE(pcp) {
 
     bbl::Class<PXR_NS::PcpLayerStackRefPtr>("LayerStackRefPtr")
         .smartptr_to<PXR_NS::PcpLayerStack>()
+
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::PcpLayerStackIdentifier>("LayerStackIdentifier")
@@ -759,10 +752,18 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpMapFunction::IsIdentity)
         .m(&PXR_NS::PcpMapFunction::IsIdentityPathMapping)
         .m(&PXR_NS::PcpMapFunction::HasRootIdentity)
-#if PXR_VERSION <= 2308
-        .m(&PXR_NS::PcpMapFunction::MapSourceToTarget)
-        .m(&PXR_NS::PcpMapFunction::MapTargetToSource)
-#endif
+        .m((PXR_NS::SdfPathExpression (PXR_NS::PcpMapFunction::*)(const PXR_NS::SdfPathExpression & pathExpr, std::vector<PXR_NS::SdfPathExpression::PathPattern> * unmappedPatterns, std::vector<PXR_NS::SdfPathExpression::ExpressionReference> * unmappedRefs) const)
+            &PXR_NS::PcpMapFunction::MapSourceToTarget, "MapSourceToTarget_expression"
+        )
+        .m((PXR_NS::SdfPath (PXR_NS::PcpMapFunction::*)(PXR_NS::SdfPath const&) const)
+            &PXR_NS::PcpMapFunction::MapSourceToTarget
+        )
+        .m((PXR_NS::SdfPathExpression (PXR_NS::PcpMapFunction::*)(const PXR_NS::SdfPathExpression & pathExpr, std::vector<PXR_NS::SdfPathExpression::PathPattern> * unmappedPatterns, std::vector<PXR_NS::SdfPathExpression::ExpressionReference> * unmappedRefs) const)
+            &PXR_NS::PcpMapFunction::MapTargetToSource, "MapTargetToSource_expression"
+        )
+        .m((PXR_NS::SdfPath (PXR_NS::PcpMapFunction::*)(PXR_NS::SdfPath const&) const)
+            &PXR_NS::PcpMapFunction::MapTargetToSource
+        )
         .m(&PXR_NS::PcpMapFunction::Compose)
         .m(&PXR_NS::PcpMapFunction::ComposeOffset)
         .m(&PXR_NS::PcpMapFunction::GetInverse)
@@ -773,9 +774,15 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpMapFunction::Create)
         .m(&PXR_NS::PcpMapFunction::Identity)
         .m(&PXR_NS::PcpMapFunction::IdentityPathMap)
+        .m(&PXR_NS::PcpMapFunction::operator==)
+        .m(&PXR_NS::PcpMapFunction::Swap)
+
+        .ignore(&PXR_NS::PcpMapFunction::operator!=)
+        .ignore(&PXR_NS::PcpMapFunction::swap)
     ;
 
     bbl::Class<PXR_NS::PcpMapFunction::PathMap>("MapFunctionPathMap")
+        BBL_STD_MAP_METHODS(PXR_NS::PcpMapFunction::PathMap)
     ;
 
 
@@ -840,13 +847,24 @@ BBL_MODULE(pcp) {
     ;
 
     bbl::Class<PXR_NS::PcpNodeRange>("NodeRange")
+        .ignore(&PXR_NS::PcpNodeRange::swap)
     ;
 
     bbl::Class<PXR_NS::PcpNodeRef::child_const_iterator>("NodeRef_child_const_iterator")
+        .m((PXR_NS::PcpNodeRef::child_const_iterator& (PXR_NS::PcpNodeRef::child_const_iterator::*)())
+            &PXR_NS::PcpNodeRef::child_const_iterator::operator++
+        )
+        .m(&PXR_NS::PcpNodeRef::child_const_iterator::operator==)
+        .ignore_all_unbound()
     ;
 
-    bbl::Class<PXR_NS::PcpNodeRef::child_const_reverse_iterator>("NodeRef_child_const_reverse_iterator")
-    ;
+    bbl::fn([](PXR_NS::PcpNodeRef::child_const_iterator& _this) -> PXR_NS::PcpNodeRef {
+        return *_this;
+    }, "NodeRef_child_const_iterator_op_deref");
+
+    // bbl::Class<PXR_NS::PcpNodeRef::child_const_reverse_iterator>("NodeRef_child_const_reverse_iterator")
+    //     BBL_STD_ITERATOR_METHODS(PXR_NS::PcpNodeRef::child_const_reverse_iterator)
+    // ;
 
     bbl::Class<PXR_NS::PcpNodeRef::child_const_range>("NodeRef_child_const_range")
     ;
@@ -880,26 +898,31 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpPrimIndex::ComputePrimPropertyNames)
         .m(&PXR_NS::PcpPrimIndex::ComposeAuthoredVariantSelections)
         .m(&PXR_NS::PcpPrimIndex::GetSelectionAppliedForVariantSet)
+        .m(&PXR_NS::PcpPrimIndex::GetNodeSubtreeRange)
     ;
 
     bbl::Class<PXR_NS::PcpPrimIndexOutputs>("PrimIndexOutputs")
         /// XXX: rvalue ref
-        // .m(&PXR_NS::PcpPrimIndexOutputs::Append)
+        .ignore(&PXR_NS::PcpPrimIndexOutputs::Append)
     ;
 
     bbl::Class<PXR_NS::PcpPrimIndexInputs>("PrimIndexInputs")
         .ctor(bbl::Class<PXR_NS::PcpPrimIndexInputs>::Ctor<>(), "default")
-        /// XXX: link fails
-        // .m(&PXR_NS::PcpPrimIndexInputs::IsEquivalentTo)
         .m(&PXR_NS::PcpPrimIndexInputs::Cache)
         .m(&PXR_NS::PcpPrimIndexInputs::VariantFallbacks)
         .m(&PXR_NS::PcpPrimIndexInputs::IncludedPayloads)
-        /// XXX: tbb mutex
-        // .m(&PXR_NS::PcpPrimIndexInputs::IncludedPayloadsMutex)
         .m(&PXR_NS::PcpPrimIndexInputs::IncludePayloadPredicate)
         .m(&PXR_NS::PcpPrimIndexInputs::Cull)
         .m(&PXR_NS::PcpPrimIndexInputs::USD)
         .m(&PXR_NS::PcpPrimIndexInputs::FileFormatTarget)
+
+        /// XXX: link fails
+        .ignore(&PXR_NS::PcpPrimIndexInputs::IsEquivalentTo)
+        /// XXX: tbb mutex
+        .ignore(&PXR_NS::PcpPrimIndexInputs::IncludedPayloadsMutex)
+    ;
+
+    bbl::Class<std::function<bool(PXR_NS::SdfPath const&)>>("SdfPathPredicate")
     ;
 
     bbl::ClassIncomplete<PXR_NS::PcpPrimIndex_Graph>("PrimIndex_Graph")
@@ -907,6 +930,8 @@ BBL_MODULE(pcp) {
 
     bbl::Class<PXR_NS::PcpPrimIndex_GraphRefPtr>("PrimIndex_GraphRefPtr")
         .smartptr_to<PXR_NS::PcpPrimIndex_Graph>()
+
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::PcpPrimRange>("PrimRange")
@@ -925,6 +950,13 @@ BBL_MODULE(pcp) {
     ;
 
     bbl::Class<PXR_NS::Pcp_SdSiteRef>("SdSiteRef")
+        .m(&PXR_NS::Pcp_SdSiteRef::operator==)
+        .m(&PXR_NS::Pcp_SdSiteRef::operator<)
+
+        .ignore(&PXR_NS::Pcp_SdSiteRef::operator<=)
+        .ignore(&PXR_NS::Pcp_SdSiteRef::operator>=)
+        .ignore(&PXR_NS::Pcp_SdSiteRef::operator!=)
+        .ignore(&PXR_NS::Pcp_SdSiteRef::operator>)
     ;
 
     bbl::Class<PXR_NS::PcpSite>("Site")
@@ -934,15 +966,12 @@ BBL_MODULE(pcp) {
         .ctor(bbl::Class<PXR_NS::PcpSite>::Ctor<const PXR_NS::SdfLayerHandle &, const PXR_NS::SdfPath &>("param_00", "path"), "ctor_03")
         .ctor(bbl::Class<PXR_NS::PcpSite>::Ctor<const PXR_NS::PcpLayerStackSite &>("param_00"), "ctor_04")
         .m(&PXR_NS::PcpSite::operator==, "op_eq")
-        .m(&PXR_NS::PcpSite::operator!=, "op_neq")
-        .m(&PXR_NS::PcpSite::operator<, "op_lt")
-        .m(&PXR_NS::PcpSite::operator<=, "op_lte")
-        .m(&PXR_NS::PcpSite::operator>, "op_gt")
-        .m(&PXR_NS::PcpSite::operator>=, "op_gte")
-        .m((PXR_NS::PcpSite & (PXR_NS::PcpSite::*)(const PXR_NS::PcpSite &))
-            &PXR_NS::PcpSite::operator=, "op_assign_00")
-        .m((PXR_NS::PcpSite & (PXR_NS::PcpSite::*)(PXR_NS::PcpSite &&))
-            &PXR_NS::PcpSite::operator=, "op_assign_01")
+
+        .ignore(&PXR_NS::PcpSite::operator!=)
+        .ignore(&PXR_NS::PcpSite::operator<)
+        .ignore(&PXR_NS::PcpSite::operator<=)
+        .ignore(&PXR_NS::PcpSite::operator>)
+        .ignore(&PXR_NS::PcpSite::operator>=)
     ;
 
     bbl::Class<PXR_NS::PcpTargetIndex>("TargetIndex")
@@ -953,10 +982,32 @@ BBL_MODULE(pcp) {
     ;
 
     bbl::Class<PXR_NS::PcpTokenSet::iterator>("TokenSetIterator")
+        .m(&PXR_NS::PcpTokenSet::iterator::key)
+        .m(&PXR_NS::PcpTokenSet::iterator::operator*)
+        .ignore_all_unbound()
     ;
 
+    bbl::fn([](PXR_NS::PcpTokenSet::iterator& _this) -> PXR_NS::PcpTokenSet::iterator {
+        return _this++;
+    }, "TokenSetIterator_op_inc");
+
+    bbl::fn([](PXR_NS::PcpTokenSet::iterator& _this, PXR_NS::PcpTokenSet::iterator& rhs) -> bool {
+        return _this == rhs;
+    }, "TokenSetIterator_op_eq");
+
     bbl::Class<PXR_NS::PcpTokenSet::const_iterator>("TokenSetConstIterator")
+        .m(&PXR_NS::PcpTokenSet::const_iterator::key)
+        .m(&PXR_NS::PcpTokenSet::const_iterator::operator*)
+        .ignore_all_unbound()
     ;
+
+    bbl::fn([](PXR_NS::PcpTokenSet::const_iterator& _this) -> PXR_NS::PcpTokenSet::const_iterator {
+        return _this++;
+    }, "TokenSetConstIterator_op_inc");
+
+    bbl::fn([](PXR_NS::PcpTokenSet::const_iterator& _this, PXR_NS::PcpTokenSet::const_iterator& rhs) -> bool {
+        return _this == rhs;
+    }, "TokenSetConstIterator_op_eq");
 
     bbl::Class<PXR_NS::PcpVariantFallbackMap>("VariantFallbackMap")
         BBL_STD_MAP_METHODS(PXR_NS::PcpVariantFallbackMap)

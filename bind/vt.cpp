@@ -2,7 +2,7 @@
 
 #include "babble"
 #include "babble-std"
-#include "babble-vt"
+#include "babble-usd"
 
 #include <pxr/base/vt/dictionary.h>
 #include <pxr/base/vt/value.h>
@@ -60,6 +60,7 @@ BBL_MODULE(vt) {
         .m(&Value::GetTypeName)
         .m(&Value::GetHash)
         .m(&Value::CanHash)
+        .m(&Value::CanCastToTypeOf)
         .m((Value& (Value::*)(Value&))
             &Value::Swap
         )
@@ -554,6 +555,8 @@ BBL_MODULE(vt) {
             &Value::CastToTypeid
         )
         .ignore(&Value::CanCastFromTypeidToTypeid)
+        .ignore(&Value::CanCastToTypeid)
+        .ignore(&Value::operator!=)
     ;
 
     bbl::Class<std::vector<PXR_NS::VtValue>>("ValueVector")
@@ -622,7 +625,6 @@ BBL_MODULE(vt) {
     ;
 
     bbl::Class<PXR_NS::VtDictionary::iterator>("DictionaryIterator")
-        .m(&PXR_NS::VtDictionary::iterator::operator->, "op_deref")
         .m(
             (PXR_NS::VtDictionary::iterator& (PXR_NS::VtDictionary::iterator::*)())
             &PXR_NS::VtDictionary::iterator::operator++
@@ -633,11 +635,33 @@ BBL_MODULE(vt) {
     ;
 
     bbl::Class<PXR_NS::VtDictionary::const_iterator>("DictionaryConstIterator")
-        .m(&PXR_NS::VtDictionary::const_iterator::operator->, "op_deref")
+        .m(
+            (PXR_NS::VtDictionary::const_iterator& (PXR_NS::VtDictionary::const_iterator::*)())
+            &PXR_NS::VtDictionary::const_iterator::operator++
+        )
         /// XXX: Need to revisit this. Naming the types necessary for operator==
         /// is very hard due to their... interesting implementation
         .ignore_all_unbound()
     ;
+
+    bbl::fn([](PXR_NS::VtDictionary::iterator& _this) -> PXR_NS::VtDictionary::iterator::value_type::first_type& {
+        return _this->first;
+    }, "DictionaryIterator_first");
+
+    bbl::fn([](PXR_NS::VtDictionary::iterator& _this) -> PXR_NS::VtDictionary::iterator::value_type::second_type& {
+        return _this->second;
+    }, "DictionaryIterator_second");
+
+    bbl::fn([](PXR_NS::VtDictionary::const_iterator& _this) -> PXR_NS::VtDictionary::const_iterator::value_type::first_type const& {
+        return _this->first;
+    }, "DictionaryConstIterator_first");
+
+    bbl::fn([](PXR_NS::VtDictionary::const_iterator& _this) -> PXR_NS::VtDictionary::const_iterator::value_type::second_type const& {
+        return _this->second;
+    }, "DictionaryConstIterator_second");
+
+    BBL_STD_PAIR((std::pair<std::string, PXR_NS::VtValue>), StringValuePair);
+
 }
 
 

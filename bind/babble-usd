@@ -16,4 +16,13 @@
     .m((bbl::detail::argument_type<void(TY)>::type const& (PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::*)(size_t) const) \
         &PXR_NS::VtArray<bbl::detail::argument_type<void(TY)>::type>::operator[], "op_index_const")                     \
     .ignore_all_unbound()
-;
+
+
+#define TF_SMALLVECTOR_METHODS(TY) \
+    .m(&bbl::detail::argument_type<void(TY)>::type::empty) \
+    .m(&bbl::detail::argument_type<void(TY)>::type::size) \
+    .m((bbl::detail::argument_type<void(TY)>::type::reference (bbl::detail::argument_type<void(TY)>::type::*)(bbl::detail::argument_type<void(TY)>::type::size_type i)) \
+        &bbl::detail::argument_type<void(TY)>::type::operator[]) \
+    .m((bbl::detail::argument_type<void(TY)>::type::const_reference (bbl::detail::argument_type<void(TY)>::type::*)(bbl::detail::argument_type<void(TY)>::type::size_type i) const) \
+        &bbl::detail::argument_type<void(TY)>::type::operator[], "op_index_const") \
+    .ignore_all_unbound()
