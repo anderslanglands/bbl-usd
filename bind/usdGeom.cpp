@@ -777,7 +777,7 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomXformCache::GetTime)
         .m(&PXR_NS::UsdGeomXformCache::SetTime)
         .m(&PXR_NS::UsdGeomXformCache::Swap)
-        ;
+    ;
 
     bbl::Class<PXR_NS::UsdGeomXformCommonAPI>("XformCommonAPI")
         .ctor(bbl::Class<PXR_NS::UsdGeomXformCommonAPI>::Ctor<PXR_NS::UsdPrim const&>(), "new")
@@ -802,7 +802,7 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomXformCommonAPI::ConvertOpTypeToRotationOrder)
         .m(&PXR_NS::UsdGeomXformCommonAPI::CanConvertOpTypeToRotationOrder)
         .m(&PXR_NS::UsdGeomXformCommonAPI::GetRotationTransform)
-        ;
+    ;
 
     bbl::Class<PXR_NS::UsdGeomXformCommonAPI::Ops>("XformCommonAPIOps");
     bbl::Enum<PXR_NS::UsdGeomXformCommonAPI::RotationOrder>("XformCommonAPIRotationOrder");
@@ -818,31 +818,18 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomXformable::GetXformOp)
 #endif
         .m(&PXR_NS::UsdGeomXformable::AddTranslateOp)
-        .m(&PXR_NS::UsdGeomXformable::GetTranslateOp)
         .m(&PXR_NS::UsdGeomXformable::AddScaleOp)
-        .m(&PXR_NS::UsdGeomXformable::GetScaleOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateXOp)
-        .m(&PXR_NS::UsdGeomXformable::GetRotateXOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateYOp)
-        .m(&PXR_NS::UsdGeomXformable::GetRotateYOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateZOp)
-        .m(&PXR_NS::UsdGeomXformable::GetRotateZOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateXYZOp)
-        .m(&PXR_NS::UsdGeomXformable::GetRotateXYZOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateXZYOp)
-        .m(&PXR_NS::UsdGeomXformable::GetRotateXZYOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateYXZOp)
-        .m(&PXR_NS::UsdGeomXformable::GetRotateYXZOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateYZXOp)
-        .m(&PXR_NS::UsdGeomXformable::GetRotateYZXOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateZXYOp)
-        .m(&PXR_NS::UsdGeomXformable::GetRotateZXYOp)
         .m(&PXR_NS::UsdGeomXformable::AddRotateZYXOp)
-        .m(&PXR_NS::UsdGeomXformable::GetRotateZYXOp)
         .m(&PXR_NS::UsdGeomXformable::AddOrientOp)
-        .m(&PXR_NS::UsdGeomXformable::GetOrientOp)
         .m(&PXR_NS::UsdGeomXformable::AddTransformOp)
-        .m(&PXR_NS::UsdGeomXformable::GetTransformOp)
         .m(&PXR_NS::UsdGeomXformable::SetResetXformStack)
         .m(&PXR_NS::UsdGeomXformable::SetXformOpOrder)
         .m(&PXR_NS::UsdGeomXformable::GetOrderedXformOps)
@@ -869,6 +856,22 @@ BBL_MODULE(usdGeom) {
         .ignore((bool (*)(std::vector<PXR_NS::UsdGeomXformOp> const&, std::vector<double>* times))
             &PXR_NS::UsdGeomXformable::GetTimeSamples
         )
+
+#if PXR_VERSION >= 2311
+        .m(&PXR_NS::UsdGeomXformable::GetTranslateOp)
+        .m(&PXR_NS::UsdGeomXformable::GetScaleOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateXOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateYOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateZOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateXYZOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateXZYOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateYXZOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateYZXOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateZXYOp)
+        .m(&PXR_NS::UsdGeomXformable::GetRotateZYXOp)
+        .m(&PXR_NS::UsdGeomXformable::GetOrientOp)
+        .m(&PXR_NS::UsdGeomXformable::GetTransformOp)
+#endif
     ;
 
     bbl::Class<PXR_NS::UsdGeomXformOp>("XformOp")
@@ -922,7 +925,7 @@ BBL_MODULE(usdGeom) {
 
     bbl::Class<std::vector<PXR_NS::UsdGeomXformOp>>("XformOpVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::UsdGeomXformOp)
-        ;
+    ;
 }
 
 #endif

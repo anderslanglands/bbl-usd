@@ -33,6 +33,7 @@ bbl_translate_binding(
     BINDFILES 
         ${bindfiles}
     COMPILE_ARGS 
+        -Wno-deprecated
         -Wno-deprecated-builtins 
         "-Wno-#pragma-messages"
         -DNOMINMAX 

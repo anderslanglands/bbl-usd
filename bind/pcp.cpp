@@ -587,7 +587,6 @@ BBL_MODULE(pcp) {
     bbl::Class<PXR_NS::PcpNodeIterator>("NodeIterator")
         .ctor(bbl::Class<PXR_NS::PcpNodeIterator>::Ctor<>(), "default")
         .m(&PXR_NS::PcpNodeIterator::GetCompressedSdSite)
-        .m(&PXR_NS::PcpNodeIterator::operator==)
         .m(&PXR_NS::PcpNodeIterator::operator*, "op_deref")
         .m((PXR_NS::PcpNodeIterator& (PXR_NS::PcpNodeIterator::*)())
             &PXR_NS::PcpNodeIterator::operator++, "op_inc"
@@ -597,6 +596,9 @@ BBL_MODULE(pcp) {
         )
         .ignore_all_unbound()
     ;
+    bbl::fn([](PXR_NS::PcpNodeIterator const &l, PXR_NS::PcpNodeIterator const& r) -> bool {
+        return l == r;
+    }, "NodeIterator_op_eq");
 
     bbl::Class<PXR_NS::PcpNodeReverseIterator>("NodeReverseIterator")
         .ctor(bbl::Class<PXR_NS::PcpNodeReverseIterator>::Ctor<>(), "default")
@@ -608,7 +610,6 @@ BBL_MODULE(pcp) {
         .ctor(bbl::Class<PXR_NS::PcpPrimIterator>::Ctor<>(), "default")
         .m(&PXR_NS::PcpPrimIterator::GetNode)
         .m(&PXR_NS::PcpPrimIterator::_GetSiteRef)
-        .m(&PXR_NS::PcpPrimIterator::operator==)
         .m(&PXR_NS::PcpPrimIterator::operator*, "op_deref")
         .m((PXR_NS::PcpPrimIterator& (PXR_NS::PcpPrimIterator::*)())
             &PXR_NS::PcpPrimIterator::operator++, "op_inc"
@@ -618,6 +619,9 @@ BBL_MODULE(pcp) {
         )
         .ignore_all_unbound()
     ;
+    bbl::fn([](PXR_NS::PcpPrimIterator const &l, PXR_NS::PcpPrimIterator const& r) -> bool {
+        return l == r;
+    }, "PrimIterator_op_eq");
 
     bbl::Class<PXR_NS::PcpPrimReverseIterator>("PrimReverseIterator")
         .ctor(bbl::Class<PXR_NS::PcpPrimReverseIterator>::Ctor<>(), "default")
@@ -629,7 +633,6 @@ BBL_MODULE(pcp) {
         .ctor(bbl::Class<PXR_NS::PcpPropertyIterator>::Ctor<>(), "default")
         .m(&PXR_NS::PcpPropertyIterator::GetNode)
         .m(&PXR_NS::PcpPropertyIterator::IsLocal)
-        .m(&PXR_NS::PcpPropertyIterator::operator==)
         .m(&PXR_NS::PcpPropertyIterator::operator->, "op_deref")
         .m((PXR_NS::PcpPropertyIterator& (PXR_NS::PcpPropertyIterator::*)())
             &PXR_NS::PcpPropertyIterator::operator++, "op_inc"
@@ -639,6 +642,9 @@ BBL_MODULE(pcp) {
         )
         .ignore_all_unbound()
     ;
+    bbl::fn([](PXR_NS::PcpPropertyIterator const &l, PXR_NS::PcpPropertyIterator const& r) -> bool {
+        return l == r;
+    }, "PropertyIterator_op_eq");
 
     bbl::Class<PXR_NS::PcpPropertyReverseIterator>("PropertyReverseIterator")
         .ctor(bbl::Class<PXR_NS::PcpPropertyReverseIterator>::Ctor<>(), "default")
@@ -854,7 +860,6 @@ BBL_MODULE(pcp) {
         .m((PXR_NS::PcpNodeRef::child_const_iterator& (PXR_NS::PcpNodeRef::child_const_iterator::*)())
             &PXR_NS::PcpNodeRef::child_const_iterator::operator++
         )
-        .m(&PXR_NS::PcpNodeRef::child_const_iterator::operator==)
         .ignore_all_unbound()
     ;
 
@@ -862,12 +867,11 @@ BBL_MODULE(pcp) {
         return *_this;
     }, "NodeRef_child_const_iterator_op_deref");
 
-    // bbl::Class<PXR_NS::PcpNodeRef::child_const_reverse_iterator>("NodeRef_child_const_reverse_iterator")
-    //     BBL_STD_ITERATOR_METHODS(PXR_NS::PcpNodeRef::child_const_reverse_iterator)
-    // ;
+    bbl::fn([](PXR_NS::PcpNodeRef::child_const_iterator& l, PXR_NS::PcpNodeRef::child_const_iterator& r) -> bool {
+        return l == r;
+    }, "NodeRef_child_const_iterator_op_eq");
 
-    bbl::Class<PXR_NS::PcpNodeRef::child_const_range>("NodeRef_child_const_range")
-    ;
+    BBL_STD_PAIR(PXR_NS::PcpNodeRef::child_const_range, NodeRef_child_const_range);
 
     bbl::Class<PXR_NS::PcpPrimIndex>("PrimIndex")
         .ctor(bbl::Class<PXR_NS::PcpPrimIndex>::Ctor<>(), "default")
@@ -898,7 +902,9 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpPrimIndex::ComputePrimPropertyNames)
         .m(&PXR_NS::PcpPrimIndex::ComposeAuthoredVariantSelections)
         .m(&PXR_NS::PcpPrimIndex::GetSelectionAppliedForVariantSet)
+#if PXR_VERSION >= 2311
         .m(&PXR_NS::PcpPrimIndex::GetNodeSubtreeRange)
+#endif
     ;
 
     bbl::Class<PXR_NS::PcpPrimIndexOutputs>("PrimIndexOutputs")

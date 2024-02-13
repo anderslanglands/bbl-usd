@@ -287,6 +287,8 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdCollectionAPI::ResetCollection)
         .m(&PXR_NS::UsdCollectionAPI::BlockCollection)
         .m(&PXR_NS::UsdCollectionAPI::CanContainPropertyName)
+
+#if PXR_VERSION >= 2311
         .m(&PXR_NS::UsdCollectionAPI::GetMembershipExpressionAttr)
         .m(&PXR_NS::UsdCollectionAPI::CreateMembershipExpressionAttr)
         .m((PXR_NS::SdfPathExpression (PXR_NS::UsdCollectionAPI::*)() const)
@@ -295,6 +297,7 @@ BBL_MODULE(usd) {
         .ignore((PXR_NS::SdfPathExpression (*)(PXR_NS::SdfPathExpression, PXR_NS::UsdPrim const&))
             &PXR_NS::UsdCollectionAPI::ResolveCompleteMembershipExpression
         )
+#endif
     ;
 
     bbl::Class<std::vector<PXR_NS::UsdCollectionAPI>>("CollectionAPIVector")
@@ -314,11 +317,14 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdCollectionMembershipQuery::GetHash)
         .m(&PXR_NS::UsdCollectionMembershipQuery::GetAsPathExpansionRuleMap)
         .m(&PXR_NS::UsdCollectionMembershipQuery::GetIncludedCollections)
+
+#if PXR_VERSION >= 2311
         .m(&PXR_NS::UsdCollectionMembershipQuery::GetTopExpansionRule)
         .m(&PXR_NS::UsdCollectionMembershipQuery::HasExpression)
 
         .ignore(&PXR_NS::UsdCollectionMembershipQuery::operator!=, "op_neq")
         .ignore(&PXR_NS::UsdCollectionMembershipQuery::GetExpressionEvaluator)
+#endif
     ;
 
     bbl::Class<PXR_NS::UsdCollectionMembershipQuery::Hash>("CollectionMembershipQueryHash")
@@ -455,8 +461,6 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdNotice::ObjectsChanged::ResyncedObject)
         .m(&PXR_NS::UsdNotice::ObjectsChanged::ChangedInfoOnly)
         .m(&PXR_NS::UsdNotice::ObjectsChanged::GetResyncedPaths)
-        .m(&PXR_NS::UsdNotice::ObjectsChanged::GetResolvedAssetPathsResyncedPaths)
-        .m(&PXR_NS::UsdNotice::ObjectsChanged::ResolvedAssetPathsResynced)
         .m(&PXR_NS::UsdNotice::ObjectsChanged::GetChangedInfoOnlyPaths)
         .m((PXR_NS::TfTokenVector (PXR_NS::UsdNotice::ObjectsChanged::*)(const PXR_NS::UsdObject &) const)
             &PXR_NS::UsdNotice::ObjectsChanged::GetChangedFields, "GetChangedFields_00")
@@ -466,6 +470,11 @@ BBL_MODULE(usd) {
             &PXR_NS::UsdNotice::ObjectsChanged::HasChangedFields, "HasChangedFields_00")
         .m((bool (PXR_NS::UsdNotice::ObjectsChanged::*)(const PXR_NS::SdfPath &) const)
             &PXR_NS::UsdNotice::ObjectsChanged::HasChangedFields, "HasChangedFields_01")
+
+#if PXR_VERSION >= 2311
+        .m(&PXR_NS::UsdNotice::ObjectsChanged::GetResolvedAssetPathsResyncedPaths)
+        .m(&PXR_NS::UsdNotice::ObjectsChanged::ResolvedAssetPathsResynced)
+#endif
     ;
 
     bbl::Class<PXR_NS::UsdNotice::ObjectsChanged::PathRange>("ObjectsChangedPathRange")
@@ -484,9 +493,14 @@ BBL_MODULE(usd) {
         .ctor(bbl::Class<PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator>::Ctor<>(), "default")
         .m(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::GetChangedFields)
         .m(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::HasChangedFields)
-        
-        BBL_STD_ITERATOR_METHODS(PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator)
+        .m(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::operator*)
+        .m((PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator& (PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::*)())                         
+            &PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::operator++                                                                
+        )
     ;
+    bbl::fn([](PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator const& l, PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator const& r) -> bool {
+        return l == r;
+    }, "ObjectsChangedPathRangeIterator_op_eq");
 
     bbl::Class<PXR_NS::UsdNotice::StageEditTargetChanged>("StageEditTargetChanged")
         .ctor(bbl::Class<PXR_NS::UsdNotice::StageEditTargetChanged>::Ctor<const PXR_NS::UsdStageWeakPtr &>("stage"), "ctor_00")
@@ -935,10 +949,12 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdPrim::MakeResolveTargetUpToEditTarget)
         .m(&PXR_NS::UsdPrim::MakeResolveTargetStrongerThanEditTarget)
 
+#if PXR_VERSION >= 2311
         .m(&PXR_NS::UsdPrim::GetKind)
         .m(&PXR_NS::UsdPrim::SetKind)
         .m(&PXR_NS::UsdPrim::IsComponent)
         .m(&PXR_NS::UsdPrim::IsSubComponent)
+#endif
     ;
 
     bbl::Class<PXR_NS::UsdPrimTypeInfo>("PrimTypeInfo")
@@ -1229,15 +1245,7 @@ BBL_MODULE(usd) {
         .ignore_all_unbound()
     ;
 
-    bbl::Class<PXR_NS::UsdPrimSiblingIterator>("PrimSiblingIterator")
-        .m(&PXR_NS::UsdPrimSiblingIterator::operator==)
-        .m(&PXR_NS::UsdPrimSiblingIterator::operator*, "deref")
-        .m((PXR_NS::UsdPrimSiblingIterator & (PXR_NS::UsdPrimSiblingIterator::*)())
-            &PXR_NS::UsdPrimSiblingIterator::operator++, "op_inc"
-        )
-
-        .ignore_all_unbound()
-    ;
+    BBL_STD_ITERATOR(PXR_NS::UsdPrimSiblingIterator, PrimSiblingIterator);
 
     bbl::Class<PXR_NS::UsdPrimSubtreeRange>("PrimSubtreeRange")
         .m(&PXR_NS::UsdPrimSubtreeRange::empty)
@@ -1247,15 +1255,7 @@ BBL_MODULE(usd) {
         .ignore_all_unbound()
     ;
 
-    bbl::Class<PXR_NS::UsdPrimSubtreeRange::iterator>("PrimSubtreeRangeIterator")
-        .m(&PXR_NS::UsdPrimSubtreeRange::iterator::operator==)
-        .m((PXR_NS::UsdPrimSubtreeRange::iterator& (PXR_NS::UsdPrimSubtreeRange::iterator::*)())
-            &PXR_NS::UsdPrimSubtreeRange::iterator::operator++
-        )
-        .m(&PXR_NS::UsdPrimSubtreeRange::iterator::operator*)
-
-        .ignore_all_unbound()
-    ;
+    BBL_STD_ITERATOR(PXR_NS::UsdPrimSubtreeRange::iterator, PrimSubtreeRangeIterator);
 
     bbl::Class<PXR_NS::UsdReferences>("References")
         .m((bool (PXR_NS::UsdReferences::*)(PXR_NS::SdfReference const&, PXR_NS::UsdListPosition))

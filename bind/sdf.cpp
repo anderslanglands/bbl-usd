@@ -1190,10 +1190,12 @@ BBL_MODULE(sdf) {
         .m((PXR_NS::SdfTimeCode (PXR_NS::SdfLayerOffset::*)(const PXR_NS::SdfTimeCode &) const)
             &PXR_NS::SdfLayerOffset::operator*, "apply_to_time_code")
 
+        .ignore(&PXR_NS::SdfLayerOffset::operator<)
+#if PXR_VERSION >= 2311
+        .ignore(&PXR_NS::SdfLayerOffset::operator>=)
         .ignore(&PXR_NS::SdfLayerOffset::operator<=)
         .ignore(&PXR_NS::SdfLayerOffset::operator!=)
-        .ignore(&PXR_NS::SdfLayerOffset::operator<)
-        .ignore(&PXR_NS::SdfLayerOffset::operator>=)
+#endif
     ;
 
     bbl::Class<PXR_NS::SdfLayerOffsetVector>("LayerOffsetVector")
@@ -1377,9 +1379,7 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfNotice::BaseLayersDidChange::GetSerialNumber)
     ;
 
-    bbl::Class<PXR_NS::SdfNotice::BaseLayersDidChange::const_iterator>("NoticeBaseLayersDidChangeConstIterator")
-        BBL_STD_ITERATOR_METHODS(PXR_NS::SdfNotice::BaseLayersDidChange::const_iterator)
-    ;
+    BBL_STD_ITERATOR(PXR_NS::SdfNotice::BaseLayersDidChange::const_iterator, NoticeBaseLayersDidChangeConstIterator);
 
     bbl::Class<PXR_NS::SdfNotice::LayersDidChangeSentPerLayer>("NoticeLayersDidChangeSentPerLayer")
         .ctor(bbl::Class<PXR_NS::SdfNotice::LayersDidChangeSentPerLayer>::Ctor<const PXR_NS::SdfLayerChangeListVec &, size_t>("changeVec", "serialNumber"), "ctor")
@@ -1572,15 +1572,17 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfPathExpression::IsEmpty)
         .m(&PXR_NS::SdfPathExpression::operator bool, "op_bool")
         .m(&PXR_NS::SdfPathExpression::GetParseError)
+        .m(&PXR_NS::SdfPathExpression::ComposeOver)
+        .m(&PXR_NS::SdfPathExpression::IsAbsolute)
+        .m(&PXR_NS::SdfPathExpression::ContainsExpressionReferences)
+#if PXR_VERSION >= 2311
         .m(&PXR_NS::SdfPathExpression::Everything)
         .m(&PXR_NS::SdfPathExpression::EveryDescendant)
         .m(&PXR_NS::SdfPathExpression::Nothing)
         .m(&PXR_NS::SdfPathExpression::WeakerRef)
         .m(&PXR_NS::SdfPathExpression::ContainsWeakerExpressionReference)
         .m(&PXR_NS::SdfPathExpression::GetText)
-        .m(&PXR_NS::SdfPathExpression::ComposeOver)
-        .m(&PXR_NS::SdfPathExpression::IsAbsolute)
-        .m(&PXR_NS::SdfPathExpression::ContainsExpressionReferences)
+#endif
     ;
 
     bbl::Class<PXR_NS::SdfPathExpression::PathPattern>()
@@ -1617,8 +1619,10 @@ BBL_MODULE(sdf) {
         // .ignore((std::vector<PXR_NS::SdfPredicateExpression> (PXR_NS::SdfPathExpression::PathPattern::*)())
         //     &PXR_NS::SdfPathExpression::PathPattern::GetPredicateExprs, "GetPredicateExprs_01")
         .m(&PXR_NS::SdfPathExpression::PathPattern::IsProperty)
-        .m(&PXR_NS::SdfPathExpression::PathPattern::GetText)
         .m(&PXR_NS::SdfPathExpression::PathPattern::operator bool, "op_bool")
+#if PXR_VERSION >= 2311
+        .m(&PXR_NS::SdfPathExpression::PathPattern::GetText)
+#endif
     ;
 
     bbl::Class<std::vector<PXR_NS::SdfPathExpression::PathPattern>>("PathExpressionPathPatternVector")
@@ -1655,10 +1659,12 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfPayload::operator==, "op_eq")
         .m(&PXR_NS::SdfPayload::operator<, "op_lt")
 
+#if PXR_VERSION >= 2311
         .ignore(&PXR_NS::SdfPayload::operator>=)
         .ignore(&PXR_NS::SdfPayload::operator<=)
         .ignore(&PXR_NS::SdfPayload::operator>)
         .ignore(&PXR_NS::SdfPayload::operator!=)
+#endif
     ;
 
     bbl::fn(&bblext::Payload_from_asset_path);
@@ -2137,11 +2143,13 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfSite::operator==)
         .m(&PXR_NS::SdfSite::operator bool)
 
-        .ignore(&PXR_NS::SdfSite::operator!=)
         .ignore(&PXR_NS::SdfSite::operator<)
+#if PXR_VERSION >= 2311
+        .ignore(&PXR_NS::SdfSite::operator!=)
         .ignore(&PXR_NS::SdfSite::operator<=)
         .ignore(&PXR_NS::SdfSite::operator>)
         .ignore(&PXR_NS::SdfSite::operator>=)
+#endif
     ;
 
     bbl::Class<PXR_NS::SdfSpec>()
