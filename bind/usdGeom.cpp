@@ -213,7 +213,7 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomConstraintTarget::ComputeInWorldSpace)
         .m(&PXR_NS::UsdGeomConstraintTarget::GetConstraintAttrName)
 
-        .ignore(&PXR_NS::UsdGeomConstraintTarget::operator const pxrInternal_v0_23__pxrReserved__::UsdAttribute &)
+        .ignore(&PXR_NS::UsdGeomConstraintTarget::operator const PXR_NS::UsdAttribute &)
         .ignore(&PXR_NS::UsdGeomConstraintTarget::operator bool)
     ;
 
@@ -649,7 +649,7 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomPrimvar::GetIndicesAttr)
         .m(&PXR_NS::UsdGeomPrimvar::CreateIndicesAttr)
 
-        .ignore(&PXR_NS::UsdGeomPrimvar::operator const pxrInternal_v0_23__pxrReserved__::UsdAttribute &)
+        .ignore(&PXR_NS::UsdGeomPrimvar::operator const PXR_NS::UsdAttribute &)
     ;
 
     bbl::Class<std::vector<PXR_NS::UsdGeomPrimvar>>("PrimvarVector")
@@ -727,10 +727,21 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomSubset::GetGeomSubsets)
         .m(&PXR_NS::UsdGeomSubset::SetFamilyType)
         .m(&PXR_NS::UsdGeomSubset::GetFamilyType)
-        .m(&PXR_NS::UsdGeomSubset::GetUnassignedIndices)
         .m(&PXR_NS::UsdGeomSubset::ValidateSubsets)
         .m(&PXR_NS::UsdGeomSubset::ValidateFamily)
-        ;
+
+#if PXR_VERSION <= 2311
+        .m(&PXR_NS::UsdGeomSubset::GetUnassignedIndices)
+#else
+        .m((PXR_NS::VtIntArray (*)(PXR_NS::UsdGeomImageable const&, PXR_NS::TfToken const&, PXR_NS::TfToken const&, PXR_NS::UsdTimeCode const&))
+            &PXR_NS::UsdGeomSubset::GetUnassignedIndices, "GetUnassignedIndices_in_family"
+        )
+        .m((PXR_NS::VtIntArray (*)(std::vector<PXR_NS::UsdGeomSubset> const&, size_t const, PXR_NS::UsdTimeCode const&))
+            &PXR_NS::UsdGeomSubset::GetUnassignedIndices
+        )
+
+#endif
+    ;
 
     bbl::Class<std::vector<PXR_NS::UsdGeomSubset>>("SubsetVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::UsdGeomSubset)

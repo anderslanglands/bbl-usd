@@ -4,6 +4,7 @@
 #include <babble-std>
 
 #include <pxr/usd/sdf/pathExpression.h>
+#include <pxr/usd/sdf/predicateLibrary.h>
 #include <pxr/usd/usd/attributeQuery.h>
 #include <pxr/usd/usd/clipsAPI.h>
 #include <pxr/usd/usd/collectionAPI.h>
@@ -308,10 +309,17 @@ BBL_MODULE(usd) {
         .ctor(bbl::Class<PXR_NS::UsdCollectionMembershipQuery>::Ctor<>(), "default")
         /// XXX: this one fails to link
         // .ctor(bbl::Class<PXR_NS::UsdCollectionMembershipQuery>::Ctor<const PXR_NS::UsdCollectionMembershipQuery::PathExpansionRuleMap &, const PXR_NS::SdfPathSet &>("pathExpansionRuleMap", "includedCollections"), "ctor_01")
+#if PXR_VERSION <= 2311
         .m((bool (PXR_NS::UsdCollectionMembershipQuery::*)(const PXR_NS::SdfPath &, PXR_NS::TfToken *) const)
             &PXR_NS::UsdCollectionMembershipQuery::IsPathIncluded, "IsPathIncluded_00")
         .m((bool (PXR_NS::UsdCollectionMembershipQuery::*)(const PXR_NS::SdfPath &, const PXR_NS::TfToken &, PXR_NS::TfToken *) const)
             &PXR_NS::UsdCollectionMembershipQuery::IsPathIncluded, "IsPathIncluded_01")
+#else 
+        .m((PXR_NS::SdfPredicateFunctionResult (PXR_NS::UsdCollectionMembershipQuery::*)(const PXR_NS::SdfPath &, PXR_NS::TfToken *) const)
+            &PXR_NS::UsdCollectionMembershipQuery::IsPathIncluded)
+        .m((PXR_NS::SdfPredicateFunctionResult (PXR_NS::UsdCollectionMembershipQuery::*)(const PXR_NS::SdfPath &, const PXR_NS::TfToken &, PXR_NS::TfToken *) const)
+            &PXR_NS::UsdCollectionMembershipQuery::IsPathIncluded, "IsPathIncluded_with_parent_expansion")
+#endif
         .m(&PXR_NS::UsdCollectionMembershipQuery::HasExcludes)
         .m(&PXR_NS::UsdCollectionMembershipQuery::operator==, "op_eq")
         .m(&PXR_NS::UsdCollectionMembershipQuery::GetHash)
@@ -324,6 +332,10 @@ BBL_MODULE(usd) {
 
         .ignore(&PXR_NS::UsdCollectionMembershipQuery::operator!=, "op_neq")
         .ignore(&PXR_NS::UsdCollectionMembershipQuery::GetExpressionEvaluator)
+#endif
+
+#if PXR_VERSION >= 2403
+        .m(&PXR_NS::UsdCollectionMembershipQuery::UsesPathExpansionRuleMap)
 #endif
     ;
 
@@ -884,7 +896,14 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdPrim::GetAuthoredAttributes)
         .m(&PXR_NS::UsdPrim::GetAttribute)
         .m(&PXR_NS::UsdPrim::HasAttribute)
+#if PXR_VERSION <= 2311
         .m(&PXR_NS::UsdPrim::FindAllAttributeConnectionPaths)
+#else 
+        .m((PXR_NS::SdfPathVector (PXR_NS::UsdPrim::*)(PXR_NS::Usd_PrimFlagsPredicate const&, std::function<bool(PXR_NS::UsdAttribute const&)> const&, bool) const)
+            &PXR_NS::UsdPrim::FindAllAttributeConnectionPaths)
+        .ignore((PXR_NS::SdfPathVector (PXR_NS::UsdPrim::*)(std::function<bool(PXR_NS::UsdAttribute const&)> const&, bool) const)
+            &PXR_NS::UsdPrim::FindAllAttributeConnectionPaths)
+#endif
 
         // Relationships
         .m((PXR_NS::UsdRelationship(PXR_NS::UsdPrim::*)(PXR_NS::TfToken const&, bool) const) 
@@ -897,7 +916,14 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdPrim::GetAuthoredRelationships)
         .m(&PXR_NS::UsdPrim::GetRelationship)
         .m(&PXR_NS::UsdPrim::HasRelationship)
+#if PXR_VERSION <= 2311
         .m(&PXR_NS::UsdPrim::FindAllRelationshipTargetPaths)
+#else 
+        .m((PXR_NS::SdfPathVector (PXR_NS::UsdPrim::*)(PXR_NS::Usd_PrimFlagsPredicate const&, std::function<bool(PXR_NS::UsdRelationship const&)> const&, bool) const)
+            &PXR_NS::UsdPrim::FindAllRelationshipTargetPaths)
+        .ignore((PXR_NS::SdfPathVector (PXR_NS::UsdPrim::*)(std::function<bool(PXR_NS::UsdRelationship const&)> const&, bool) const)
+            &PXR_NS::UsdPrim::FindAllRelationshipTargetPaths)
+#endif
 
         // Payloads, load and unload
         .m(&PXR_NS::UsdPrim::GetPayloads)
@@ -1462,7 +1488,14 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdStage::SetLoadRules)
         .m(&PXR_NS::UsdStage::GetPopulationMask)
         .m(&PXR_NS::UsdStage::SetPopulationMask)
+#if PXR_VERSION <= 2311
         .m(&PXR_NS::UsdStage::ExpandPopulationMask) 
+#else
+        .m((void (PXR_NS::UsdStage::*)(PXR_NS::Usd_PrimFlagsPredicate const&, std::function<bool (PXR_NS::UsdRelationship const&)> const&, std::function<bool (PXR_NS::UsdAttribute const&)> const&))
+            &PXR_NS::UsdStage::ExpandPopulationMask) 
+        .ignore((void (PXR_NS::UsdStage::*)(std::function<bool (PXR_NS::UsdRelationship const&)> const&, std::function<bool (PXR_NS::UsdAttribute const&)> const&))
+            &PXR_NS::UsdStage::ExpandPopulationMask) 
+#endif
 
         // Layers and Edit Targets
         .m(&PXR_NS::UsdStage::GetSessionLayer)

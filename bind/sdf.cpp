@@ -32,6 +32,7 @@
 #include <pxr/usd/sdf/pathExpression.h>
 #include <pxr/usd/sdf/payload.h>
 #include <pxr/usd/sdf/primSpec.h>
+#include <pxr/usd/sdf/predicateLibrary.h>
 #include <pxr/usd/sdf/propertySpec.h>
 #include <pxr/usd/sdf/proxyTypes.h>
 #include <pxr/usd/sdf/reference.h>
@@ -614,7 +615,9 @@ BBL_MODULE(sdf) {
 
         .ignore(&PXR_NS::SdfAllowed::operator!)
         .ignore(&PXR_NS::SdfAllowed::operator!=)
+#if PXR_VERSION <= 2311
         .ignore(&PXR_NS::SdfAllowed::operator boost::optional<std::string> PXR_NS::SdfAllowed::*)
+#endif
     ;
 
     bbl::Class<PXR_NS::SdfAssetPath>("AssetPath")
@@ -1291,8 +1294,10 @@ BBL_MODULE(sdf) {
 
         .ignore((void (StringListOp::*)(StringListOp::ItemVector *, const StringListOp::ApplyCallback &) const)
             &StringListOp::ApplyOperations)
+#if PXR_VERSION <= 2311
         .ignore((boost::optional<PXR_NS::SdfListOp<std::string>> (PXR_NS::SdfListOp<std::string>::*)(PXR_NS::SdfListOp<std::string> const&) const)
             &PXR_NS::SdfListOp<std::string>::ApplyOperations)
+#endif
         .ignore(&StringListOp::ModifyOperations)
         .ignore(&StringListOp::operator!=)
     ;
@@ -1710,6 +1715,18 @@ BBL_MODULE(sdf) {
     bbl::Enum<PXR_NS::SdfPredicateExpression::FnCall::Kind>("PredicateExpressionFnCallKind");
 
     bbl::Enum<PXR_NS::SdfPredicateExpression::Op>("PredicateExpressionOp");
+
+    bbl::Class<PXR_NS::SdfPredicateFunctionResult>("PredicateFunctionResult")
+        .m(&PXR_NS::SdfPredicateFunctionResult::GetValue)
+        .m(&PXR_NS::SdfPredicateFunctionResult::GetConstancy)
+        .m(&PXR_NS::SdfPredicateFunctionResult::IsConstant)
+        .m(&PXR_NS::SdfPredicateFunctionResult::MakeConstant)
+        .m(&PXR_NS::SdfPredicateFunctionResult::MakeVarying)
+        .ignore(&PXR_NS::SdfPredicateFunctionResult::operator bool PXR_NS::SdfPredicateFunctionResult::*)
+        .ignore(&PXR_NS::SdfPredicateFunctionResult::operator!)
+    ;
+
+    bbl::Enum<PXR_NS::SdfPredicateFunctionResult::Constancy>("PredicateFunctionResultConstancy");
 
     bbl::Class<PXR_NS::SdfPrimSpec>("PrimSpec")
         // Namespace hierarchy
