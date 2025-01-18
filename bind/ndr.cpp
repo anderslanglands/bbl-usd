@@ -123,7 +123,11 @@ BBL_MODULE(ndr) {
         BBL_STD_VECTOR_METHODS(PXR_NS::NdrPropertyUniquePtr)
     ;
 
+#if PXR_VERSION < 2411
     BBL_STD_PAIR(PXR_NS::NdrSdfTypeIndicator, SdfTypeIndicator);
+#else
+    bbl::Class<PXR_NS::NdrSdfTypeIndicator>("SdfTypeIndicator");
+#endif
 
     bbl::Class<PXR_NS::NdrRegistry>("Registry")
         .m((void (PXR_NS::NdrRegistry::*)(PXR_NS::NdrRegistry::DiscoveryPluginRefPtrVec))

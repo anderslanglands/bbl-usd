@@ -295,9 +295,15 @@ BBL_MODULE(usd) {
         .m((PXR_NS::SdfPathExpression (PXR_NS::UsdCollectionAPI::*)() const)
             &PXR_NS::UsdCollectionAPI::ResolveCompleteMembershipExpression
         )
+#if PXR_VERSION < 2411
         .ignore((PXR_NS::SdfPathExpression (*)(PXR_NS::SdfPathExpression, PXR_NS::UsdPrim const&))
             &PXR_NS::UsdCollectionAPI::ResolveCompleteMembershipExpression
         )
+#else 
+        .ignore((PXR_NS::SdfPathExpression (PXR_NS::UsdCollectionAPI::*)())
+            &PXR_NS::UsdCollectionAPI::ResolveCompleteMembershipExpression
+        )
+#endif
 #endif
     ;
 

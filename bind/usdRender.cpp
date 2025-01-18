@@ -2,7 +2,6 @@
 
 #include "babble"
 
-#include <pxr/usd/usdRender/denoisePass.h>
 #include <pxr/usd/usdRender/pass.h>
 #include <pxr/usd/usdRender/product.h>
 #include <pxr/usd/usdRender/settings.h>
@@ -12,14 +11,6 @@
 
 BBL_MODULE(usdRender) {
     // clang-format off
-
-    bbl::Class<PXR_NS::UsdRenderDenoisePass>("DenoisePass")
-        .ctor(bbl::Class<PXR_NS::UsdRenderDenoisePass>::Ctor<const PXR_NS::UsdPrim &>("prim"), "from_prim")
-        .ctor(bbl::Class<PXR_NS::UsdRenderDenoisePass>::Ctor<const PXR_NS::UsdSchemaBase &>("schemaObj"), "from_schema")
-        .m(&PXR_NS::UsdRenderDenoisePass::GetSchemaAttributeNames)
-        .m(&PXR_NS::UsdRenderDenoisePass::Get)
-        .m(&PXR_NS::UsdRenderDenoisePass::Define)
-    ;
 
     bbl::Class<PXR_NS::UsdRenderPass>("Pass")
         .ctor(bbl::Class<PXR_NS::UsdRenderPass>::Ctor<const PXR_NS::UsdPrim &>("prim"), "from_prim")
@@ -39,8 +30,10 @@ BBL_MODULE(usdRender) {
         .m(&PXR_NS::UsdRenderPass::CreateRenderSourceRel)
         .m(&PXR_NS::UsdRenderPass::GetInputPassesRel)
         .m(&PXR_NS::UsdRenderPass::CreateInputPassesRel)
+#if PXR_VERSION < 2411
         .m(&PXR_NS::UsdRenderPass::GetDenoisePassRel)
         .m(&PXR_NS::UsdRenderPass::CreateDenoisePassRel)
+#endif
         .m(&PXR_NS::UsdRenderPass::GetRenderVisibilityCollectionAPI)
     ;
 

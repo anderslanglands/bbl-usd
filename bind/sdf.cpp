@@ -1592,6 +1592,9 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfPathExpression::PathPattern>()
         .ctor(bbl::Class<PXR_NS::SdfPathExpression::PathPattern>::Ctor<>(), "default")
+        .m((const PXR_NS::SdfPath & (PXR_NS::SdfPathExpression::PathPattern::*)() const&)
+            &PXR_NS::SdfPathExpression::PathPattern::GetPrefix)
+#if PXR_VERSION < 2411
         .m((void (PXR_NS::SdfPathExpression::PathPattern::*)(const std::string &, PXR_NS::SdfPredicateExpression &&))
             &PXR_NS::SdfPathExpression::PathPattern::AppendChild, "AppendChild_00")
         .m((void (PXR_NS::SdfPathExpression::PathPattern::*)(const std::string &, const PXR_NS::SdfPredicateExpression &))
@@ -1604,14 +1607,32 @@ BBL_MODULE(sdf) {
             &PXR_NS::SdfPathExpression::PathPattern::AppendProperty, "AppendProperty_01")
         .m((void (PXR_NS::SdfPathExpression::PathPattern::*)(const std::string &))
             &PXR_NS::SdfPathExpression::PathPattern::AppendProperty, "AppendProperty_02")
-        .m((const PXR_NS::SdfPath & (PXR_NS::SdfPathExpression::PathPattern::*)() const&)
-            &PXR_NS::SdfPathExpression::PathPattern::GetPrefix)
         // .ignore((PXR_NS::SdfPath (PXR_NS::SdfPathExpression::PathPattern::*)())
         //     &PXR_NS::SdfPathExpression::PathPattern::GetPrefix, "GetPrefix_01")
         .m((void (PXR_NS::SdfPathExpression::PathPattern::*)(PXR_NS::SdfPath &&))
             &PXR_NS::SdfPathExpression::PathPattern::SetPrefix, "SetPrefix_00")
         .m((void (PXR_NS::SdfPathExpression::PathPattern::*)(const PXR_NS::SdfPath &))
             &PXR_NS::SdfPathExpression::PathPattern::SetPrefix, "SetPrefix_01")
+#else
+        .m((PXR_NS::SdfPathPattern& (PXR_NS::SdfPathExpression::PathPattern::*)(const std::string &, PXR_NS::SdfPredicateExpression &&))
+            &PXR_NS::SdfPathExpression::PathPattern::AppendChild, "AppendChild_00")
+        .m((PXR_NS::SdfPathPattern& (PXR_NS::SdfPathExpression::PathPattern::*)(const std::string &, const PXR_NS::SdfPredicateExpression &))
+            &PXR_NS::SdfPathExpression::PathPattern::AppendChild, "AppendChild_01")
+        .m((PXR_NS::SdfPathPattern& (PXR_NS::SdfPathExpression::PathPattern::*)(const std::string &))
+            &PXR_NS::SdfPathExpression::PathPattern::AppendChild, "AppendChild_02")
+        .m((PXR_NS::SdfPathPattern& (PXR_NS::SdfPathExpression::PathPattern::*)(const std::string &, PXR_NS::SdfPredicateExpression &&))
+            &PXR_NS::SdfPathExpression::PathPattern::AppendProperty, "AppendProperty_00")
+        .m((PXR_NS::SdfPathPattern& (PXR_NS::SdfPathExpression::PathPattern::*)(const std::string &, const PXR_NS::SdfPredicateExpression &))
+            &PXR_NS::SdfPathExpression::PathPattern::AppendProperty, "AppendProperty_01")
+        .m((PXR_NS::SdfPathPattern& (PXR_NS::SdfPathExpression::PathPattern::*)(const std::string &))
+            &PXR_NS::SdfPathExpression::PathPattern::AppendProperty, "AppendProperty_02")
+        // .ignore((PXR_NS::SdfPath (PXR_NS::SdfPathExpression::PathPattern::*)())
+        //     &PXR_NS::SdfPathExpression::PathPattern::GetPrefix, "GetPrefix_01")
+        .m((PXR_NS::SdfPathPattern& (PXR_NS::SdfPathExpression::PathPattern::*)(PXR_NS::SdfPath &&))
+            &PXR_NS::SdfPathExpression::PathPattern::SetPrefix, "SetPrefix_00")
+        .m((PXR_NS::SdfPathPattern& (PXR_NS::SdfPathExpression::PathPattern::*)(const PXR_NS::SdfPath &))
+            &PXR_NS::SdfPathExpression::PathPattern::SetPrefix, "SetPrefix_01")
+#endif
 #if PXR_VERSION <= 2308
         .m(&PXR_NS::SdfPathExpression::PathPattern::GetDebugString)
 #endif
@@ -2079,7 +2100,13 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfSchemaBase::IsValidPayload)
         .m(&PXR_NS::SdfSchemaBase::IsValidReference)
         .m(&PXR_NS::SdfSchemaBase::IsValidRelationshipTargetPath)
+#if PXR_VERSION < 2411
         .m(&PXR_NS::SdfSchemaBase::IsValidRelocatesPath)
+#else 
+        .m(&PXR_NS::SdfSchemaBase::IsValidRelocatesSourcePath)
+        .m(&PXR_NS::SdfSchemaBase::IsValidRelocatesTargetPath)
+        .m(&PXR_NS::SdfSchemaBase::IsValidRelocate)
+#endif
         .m(&PXR_NS::SdfSchemaBase::IsValidSpecializesPath)
         .m(&PXR_NS::SdfSchemaBase::IsValidSubLayer)
         .m(&PXR_NS::SdfSchemaBase::IsValidVariantIdentifier)

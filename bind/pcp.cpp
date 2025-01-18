@@ -165,8 +165,14 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpChanges::DidChange)
         .m(&PXR_NS::PcpChanges::DidMaybeFixSublayer)
         .m(&PXR_NS::PcpChanges::DidMaybeFixAsset)
+#if PXR_VERSION < 2411
         .m(&PXR_NS::PcpChanges::DidMuteLayer)
         .m(&PXR_NS::PcpChanges::DidUnmuteLayer)
+#else
+        .m(&PXR_NS::PcpChanges::_DidMuteLayer)
+        .m(&PXR_NS::PcpChanges::_DidUnmuteLayer)
+        .m(&PXR_NS::PcpChanges::DidMuteAndUnmuteLayers)
+#endif
 #if PXR_VERSION <= 2308
         .m(&PXR_NS::PcpChanges::DidChangeLayers)
         .m(&PXR_NS::PcpChanges::DidChangeLayerOffsets)
@@ -189,6 +195,9 @@ BBL_MODULE(pcp) {
         .ignore(&PXR_NS::PcpChanges::GetLifeboat)
     ;
 
+    bbl::Enum<PXR_NS::PcpChanges::ChangeSpecsType>("PcpChangesChangeSpecsType")
+    ;
+
     bbl::Class<PXR_NS::PcpChanges::CacheChanges>("PcpChangesCacheChanges")
         BBL_STD_MAP_METHODS(PXR_NS::PcpChanges::CacheChanges)
     ;
@@ -205,12 +214,14 @@ BBL_MODULE(pcp) {
     bbl::Class<PXR_NS::Pcp_CompressedSdSite>("CompressedSdSite")
     ;
 
+#if PXR_VERSION < 2411
     bbl::Class<PXR_NS::PcpSourceArcInfo>("SourceArcInfo")
     ;
 
     bbl::Class<PXR_NS::PcpSourceArcInfoVector>("SourceArcInfoVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::PcpSourceArcInfo)
     ;
+#endif
 
     bbl::Class<PXR_NS::PcpDependency>("Dependency")
         .m(&PXR_NS::PcpDependency::operator==)

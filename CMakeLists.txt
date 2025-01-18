@@ -1,22 +1,26 @@
 cmake_minimum_required(VERSION 3.15)
 project(bbl-usd VERSION 0.1 LANGUAGES C CXX)
 
-find_package(babble 0.7 CONFIG REQUIRED)
+set(OpenGL_GL_PREFERENCE GLVND)
+# set(OpenGL_GL_PREFERENCE LEGACY)
+
+find_package(babble 0.9 CONFIG REQUIRED)
+find_package(OpenGL REQUIRED)
 find_package(pxr REQUIRED)
 
 option(BUILD_EXAMPLE "Build the example program" OFF)
 
 # The bindfile contains all our binding definitions
-set(bindfiles 
-    bind/ar.cpp 
-    bind/gf.cpp 
-    bind/js.cpp 
-    bind/ndr.cpp 
-    bind/pcp.cpp 
+set(bindfiles
+    bind/ar.cpp
+    bind/gf.cpp
+    bind/js.cpp
+    bind/ndr.cpp
+    bind/pcp.cpp
     bind/sdf.cpp
     bind/sdr.cpp
     bind/std.cpp
-    bind/tf.cpp 
+    bind/tf.cpp
     bind/usd.cpp
     bind/usdGeom.cpp
     bind/usdLux.cpp
@@ -30,21 +34,21 @@ set(bindfiles
 # libopenusd-c
 bbl_translate_binding(
     openusd
-    BINDFILES 
+    BINDFILES
         ${bindfiles}
-    COMPILE_ARGS 
+    COMPILE_ARGS
         -Wno-deprecated
-        -Wno-deprecated-builtins 
+        -Wno-deprecated-builtins
         "-Wno-#pragma-messages"
-        -DNOMINMAX 
-        -D_MT 
-        -DBOOST_ALL_NO_LIB 
-        -D__TBB_show_deprecation_message_task_H 
+        -DNOMINMAX
+        -D_MT
+        -DBOOST_ALL_NO_LIB
+        -D__TBB_show_deprecation_message_task_H
 )
 
 target_link_libraries(
-  openusd-c 
-    PUBLIC 
+  openusd-c
+    PUBLIC
       ${PXR_LIBRARIES}
 )
 
@@ -57,10 +61,10 @@ endif()
 
 # Compile a simple test program to exercise the generated library
 if (${BUILD_EXAMPLE})
-add_executable(usd-c-test01 usd-c-test01.c)
-target_link_libraries(usd-c-test01 PUBLIC openusd-c)
-target_include_directories(usd-c-test01 PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-set_property(TARGET usd-c-test01 PROPERTY C_STANDARD 99)
+    add_executable(usd-c-test01 usd-c-test01.c)
+    target_link_libraries(usd-c-test01 PUBLIC openusd-c)
+    target_include_directories(usd-c-test01 PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+    set_property(TARGET usd-c-test01 PROPERTY C_STANDARD 99)
 endif()
 
 # This is just here to trigger generation of compile commands for the bind file so we get LSP functionality in the bind file
@@ -71,14 +75,14 @@ target_compile_options(bind-dummy PRIVATE $<TARGET_PROPERTY:openusd-c,COMPILE_OP
 target_compile_definitions(bind-dummy PRIVATE $<TARGET_PROPERTY:openusd-c,COMPILE_DEFINITIONS>)
 
 install(
-  TARGETS 
+  TARGETS
     openusd-c
-  LIBRARY 
+  LIBRARY
     DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  ARCHIVE 
+  ARCHIVE
     DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  RUNTIME 
+  RUNTIME
     DESTINATION ${CMAKE_INSTALL_BINDIR}
-  INCLUDES 
+  INCLUDES
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
