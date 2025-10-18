@@ -407,6 +407,8 @@ BBL_MODULE(usdShade) {
         .m((PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache::mapped_type const& (PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache::*)(PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache::key_type const&) const)
             &PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache::at, "at_const"
         )
+
+        .ignore(&PXR_NS::UsdShadeMaterialBindingAPI::BindingsCache::operator[])
     ;
 
     bbl::Class<PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache>("MaterialBindingAPICollectionQueryCache")
@@ -416,6 +418,8 @@ BBL_MODULE(usdShade) {
         .m((PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache::mapped_type const& (PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache::*)(PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache::key_type const&) const)
             &PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache::at, "at_const"
         )
+
+        .ignore(&PXR_NS::UsdShadeMaterialBindingAPI::CollectionQueryCache::operator[])
     ;
 
     bbl::Class<PXR_NS::UsdShadeMaterialBindingAPI::DirectBinding>("MaterialBindingAPIDirectBinding")
@@ -554,6 +558,10 @@ BBL_MODULE(usdShade) {
         .m(&PXR_NS::UsdShadeOutput::ClearSource)
         .m(&PXR_NS::UsdShadeOutput::GetValueProducingAttributes)
         .m(&PXR_NS::UsdShadeOutput::operator bool, "op_bool")
+
+#if PXR_VERSION >= 2411
+        .ignore(&PXR_NS::UsdShadeOutput::operator PXR_NS::UsdAttribute)
+#endif
     ;
 
     bbl::Class<std::vector<PXR_NS::UsdShadeOutput>>("OutputVector")
@@ -600,6 +608,9 @@ BBL_MODULE(usdShade) {
         .m(&PXR_NS::UsdShadeShader::HasSdrMetadataByKey)
         .m(&PXR_NS::UsdShadeShader::ClearSdrMetadata)
         .m(&PXR_NS::UsdShadeShader::ClearSdrMetadataByKey)
+#if PXR_VERSION >= 2411
+        .m(&PXR_NS::UsdShadeShader::GetSourceTypes)
+#endif
     ;
 
     bbl::Class<PXR_NS::UsdShadeShaderDefParserPlugin>("ShaderDefParserPlugin")
@@ -643,9 +654,6 @@ BBL_MODULE(usdShade) {
 
     bbl::Class<std::pair<PXR_NS::TfToken, PXR_NS::UsdShadeAttributeType>>("TokenAttributeTypePair")
     ;
-
-
-
 }
 
 

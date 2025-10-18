@@ -479,6 +479,11 @@ auto define_file_format(char const* name,
                                             (ReadFn)fn_read));
 }
 
+struct TfSpanSdfPath {
+    PXR_NS::SdfPath* data;
+    size_t size;
+};
+
 } // namespace bblext
 
 BBL_MODULE(sdf) {
@@ -664,6 +669,21 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfAttributeSpec::ClearColorSpace)
         .m(&PXR_NS::SdfAttributeSpec::GetRoleName)
 
+#if PXR_VERSION >= 2411
+        .m(&PXR_NS::SdfAttributeSpec::EraseTimeSample)
+        .m(&PXR_NS::SdfAttributeSpec::ListTimeSamples)
+        .m((void (PXR_NS::SdfAttributeSpec::*)(double, PXR_NS::SdfAbstractDataConstValue const&))
+            &PXR_NS::SdfAttributeSpec::SetTimeSample, "SetTimeSamle_with_abstract_data")
+        .m((void (PXR_NS::SdfAttributeSpec::*)(double, PXR_NS::VtValue const&))
+            &PXR_NS::SdfAttributeSpec::SetTimeSample)
+        .m((bool (PXR_NS::SdfAttributeSpec::*)(double, PXR_NS::SdfAbstractDataValue*) const)
+            &PXR_NS::SdfAttributeSpec::QueryTimeSample, "QueryTimeSample_with_abstract_data")
+        .m((bool (PXR_NS::SdfAttributeSpec::*)(double, PXR_NS::VtValue*) const)
+            &PXR_NS::SdfAttributeSpec::QueryTimeSample)
+        .m(&PXR_NS::SdfAttributeSpec::GetBracketingTimeSamples)
+        .m(&PXR_NS::SdfAttributeSpec::GetNumTimeSamples)
+#endif
+
         // missing SdfListEditorProxy<SdfPathKeyPolicy>
         .ignore(&PXR_NS::SdfAttributeSpec::GetConnectionPathList)
     ;
@@ -723,9 +743,23 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfChangeList::Entry>("SdfChangeListEntry")
         .ctor(bbl::Class<PXR_NS::SdfChangeList::Entry>::Ctor<>(), "default")
-        // .m(&PXR_NS::SdfChangeList::Entry::FindInfoChange)
         .m(&PXR_NS::SdfChangeList::Entry::HasInfoChange)
+
+        /// XXX: ignoring this because we can't bind the TfSmallVec iterator as a type as it's just a pointer
+        .ignore(&PXR_NS::SdfChangeList::Entry::FindInfoChange)
     ;
+
+    // bbl::Class<PXR_NS::SdfChangeList::Entry::InfoChangeVec::const_iterator>("ChangeListEntryInfoVec_const_iterator")
+    // ;
+
+    bbl::Class<PXR_NS::SdfChangeList::Entry::InfoChange>("SdfChangeListEntryInfoChange")
+    ;
+
+    bbl::Class<PXR_NS::SdfChangeList::Entry::InfoChangeVec>("SdfChangeListEntryInfoChangeVec")
+        TF_SMALLVECTOR_METHODS(PXR_NS::SdfChangeList::Entry::InfoChangeVec)
+    ;
+
+    BBL_STD_PAIR((std::pair<PXR_NS::TfToken, PXR_NS::SdfChangeList::Entry::InfoChange>), SdfChangeListEntryInfoChangeVecElement);
 
     bbl::Class<PXR_NS::SdfChangeList::EntryList>("ChangeListEntryList")
         TF_SMALLVECTOR_METHODS(PXR_NS::SdfChangeList::EntryList)
@@ -745,7 +779,10 @@ BBL_MODULE(sdf) {
         // editfunction missing a type
         // .ctor(bbl::Class<PXR_NS::SdfCopySpecsValueEdit>::Ctor<const PXR_NS::SdfCopySpecsValueEdit::EditFunction &>("edit"), "ctor_00")
         // Need to return a function here... not possible?
-        // .m(&PXR_NS::SdfCopySpecsValueEdit::GetEditFunction)
+        .ignore(&PXR_NS::SdfCopySpecsValueEdit::GetEditFunction)
+
+        .m(&PXR_NS::SdfCopySpecsValueEdit::operator==)
+        .ignore(&PXR_NS::SdfCopySpecsValueEdit::operator==)
     ;
 
     bbl::Class<PXR_NS::SdfCopySpecsValueEdit::EditFunction>("SdfCopySpecsValueEditEditFunction");
@@ -781,6 +818,10 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfData::GetBracketingTimeSamplesForPath)
         .m(&PXR_NS::SdfData::SetTimeSample)
         .m(&PXR_NS::SdfData::EraseTimeSample)
+#if PXR_VERSION >= 2411
+        .m((bool (PXR_NS::SdfData::*)(PXR_NS::SdfPath const&, double, PXR_NS::VtValue*) const)
+            &PXR_NS::SdfData::QueryTimeSample)
+#endif
     ;
 
     bbl::Class<PXR_NS::SdfDataRefPtr>("DataRefPtr")
@@ -812,7 +853,6 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfFileFormat::ReadDetached)
         .m(&PXR_NS::SdfFileFormat::WriteToFile)
         .m(&PXR_NS::SdfFileFormat::ReadFromString)
-        // .m(&PXR_NS::SdfFileFormat::WriteToStream)
         .m(&PXR_NS::SdfFileFormat::WriteToString)
         .m(&PXR_NS::SdfFileFormat::GetExternalAssetDependencies)
         .m(&PXR_NS::SdfFileFormat::SupportsReading)
@@ -829,6 +869,12 @@ BBL_MODULE(sdf) {
             &PXR_NS::SdfFileFormat::FindByExtension, "FindByExtension_00")
         .m((PXR_NS::SdfFileFormatConstPtr (*)(const std::string &, const PXR_NS::SdfFileFormat::FileFormatArguments &))
             &PXR_NS::SdfFileFormat::FindByExtension, "FindByExtension_01")
+#if PXR_VERSION >= 2411
+        .m(&PXR_NS::SdfFileFormat::SaveToFile)
+#endif
+
+        // std::ostream
+        .ignore(&PXR_NS::SdfFileFormat::WriteToStream)
     ;
 
     bbl::Superclass<bblext::FileFormatBase>()
@@ -851,6 +897,7 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfFileFormatConstPtr>("FileFormatConstPtr")
         .smartptr_to<PXR_NS::SdfFileFormat const>()
+        .m(&PXR_NS::SdfFileFormatConstPtr::IsExpired)
     ;
 
     bbl::Class<PXR_NS::SdfFileFormat::FileFormatArguments>("FileFormatFileFormatArguments")
@@ -1125,6 +1172,15 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfLayer::InsertInRootPrimOrder)
         .m(&PXR_NS::SdfLayer::SetRootPrimOrder)
         .m(&PXR_NS::SdfLayer::GetRootPrimOrder)
+
+#if PXR_VERSION >= 2411
+        .m(&PXR_NS::SdfLayer::CreateDiff)
+        .m(&PXR_NS::SdfLayer::GetDefaultPrimAsPath)
+        .m(&PXR_NS::SdfLayer::SetRelocates)
+        .m(&PXR_NS::SdfLayer::GetRelocates)
+        .m(&PXR_NS::SdfLayer::HasRelocates)
+        .m(&PXR_NS::SdfLayer::ClearRelocates)
+#endif
     ;
 
     bbl::fn(&bblext::Layer_CreateAnonymous);
@@ -1198,6 +1254,7 @@ BBL_MODULE(sdf) {
         .ignore(&PXR_NS::SdfLayerOffset::operator>=)
         .ignore(&PXR_NS::SdfLayerOffset::operator<=)
         .ignore(&PXR_NS::SdfLayerOffset::operator!=)
+        .ignore(&PXR_NS::SdfLayerOffset::operator>)
 #endif
     ;
 
@@ -1524,7 +1581,34 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfPath::operator>=)
         .m(&PXR_NS::SdfPath::operator>)
         .m(&PXR_NS::SdfPath::operator!=)
+
+#if PXR_VERSION >= 2411
+        .m((PXR_NS::TfSpan<PXR_NS::SdfPath> (PXR_NS::SdfPath::*)(PXR_NS::TfSpan<PXR_NS::SdfPath>) const)
+            &PXR_NS::SdfPath::GetPrefixes, "GetPrefixes_as_span")
+        .m(&PXR_NS::SdfPath::GetAncestorsRange)
+        .m((std::string (*)(PXR_NS::TfToken const&, PXR_NS::TfToken const&))
+            &PXR_NS::SdfPath::JoinIdentifier)
+        .m((PXR_NS::TfToken (*)(PXR_NS::TfToken const&))
+            &PXR_NS::SdfPath::StripNamespace, "StripNamespace_token")
+        .m((std::string (*)(std::string const&))
+            &PXR_NS::SdfPath::StripNamespace, "StripNamespace_string")
+#endif
     ;
+
+#if PXR_VERSION >= 2411
+    bbl::Class<PXR_NS::SdfPathAncestorsRange>("AncestorsRange")
+        .m(&PXR_NS::SdfPathAncestorsRange::begin)
+        .m(&PXR_NS::SdfPathAncestorsRange::end)
+        .m(&PXR_NS::SdfPathAncestorsRange::GetPath)
+    ;
+
+    bbl::Class<PXR_NS::SdfPathAncestorsRange::iterator>("AncestorsRange_iterator")
+        .m(&PXR_NS::SdfPathAncestorsRange::iterator::operator++, "op_inc")
+        .m(&PXR_NS::SdfPathAncestorsRange::iterator::operator*, "op_deref")
+        .m(&PXR_NS::SdfPathAncestorsRange::iterator::operator==, "op_eq")
+        .ignore_all_unbound()
+    ;
+#endif
 
     BBL_STD_SET(PXR_NS::SdfPathSet, PathSet);
 
@@ -1533,6 +1617,13 @@ BBL_MODULE(sdf) {
     ;
 
     BBL_STD_PAIR((std::pair<PXR_NS::SdfPath, PXR_NS::SdfPath>), PathPathPair);
+
+#if PXR_VERSION >= 2411
+    bbl::Class<PXR_NS::TfSpan<PXR_NS::SdfPath>>("PathSpan")
+        .replace_with<bblext::TfSpanSdfPath>()
+        .ignore_all_unbound()
+    ;
+#endif
 
     bbl::Class<PXR_NS::SdfPathExpression>()
         .ctor(bbl::Class<PXR_NS::SdfPathExpression>::Ctor<>(), "default")
@@ -1549,9 +1640,14 @@ BBL_MODULE(sdf) {
             &PXR_NS::SdfPathExpression::MakeAtom, "MakeAtom_01")
         .m((PXR_NS::SdfPathExpression (*)(const PXR_NS::SdfPathExpression::PathPattern &))
             &PXR_NS::SdfPathExpression::MakeAtom, "MakeAtom_03")
+        .m((PXR_NS::SdfPathExpression (*)(PXR_NS::SdfPath const&))
+            &PXR_NS::SdfPathExpression::MakeAtom)
         .ignore((PXR_NS::SdfPathExpression (*)(PXR_NS::SdfPathExpression::PathPattern &&))
             &PXR_NS::SdfPathExpression::MakeAtom)
-        // .m(&PXR_NS::SdfPathExpression::Walk)
+        .ignore((PXR_NS::SdfPathExpression (*)(PXR_NS::SdfPath&&))
+            &PXR_NS::SdfPathExpression::MakeAtom)
+        .ignore(&PXR_NS::SdfPathExpression::Walk)
+        .ignore(&PXR_NS::SdfPathExpression::WalkWithOpStack)
         .m((PXR_NS::SdfPathExpression (PXR_NS::SdfPathExpression::*)(const PXR_NS::SdfPath &, const PXR_NS::SdfPath &) const&)
             &PXR_NS::SdfPathExpression::ReplacePrefix)
         // .ignore((PXR_NS::SdfPathExpression (PXR_NS::SdfPathExpression::*)(const PXR_NS::SdfPath &, const PXR_NS::SdfPath &)&&)
@@ -1562,9 +1658,9 @@ BBL_MODULE(sdf) {
         // .ignore((PXR_NS::SdfPathExpression (PXR_NS::SdfPathExpression::*)(const PXR_NS::SdfPath &))
         //     &PXR_NS::SdfPathExpression::MakeAbsolute, "MakeAbsolute_01")
         // .m(&PXR_NS::SdfPathExpression::ContainsExpressionReferences)
-        // .ignore((PXR_NS::SdfPathExpression (PXR_NS::SdfPathExpression::*)(PXR_NS::TfFunctionRef<PXR_NS::SdfPathExpression (const PXR_NS::SdfPathExpression::ExpressionReference &)>) const)
-        //     &PXR_NS::SdfPathExpression::ResolveReferences)
-        // .ignore((PXR_NS::SdfPathExpression (PXR_NS::SdfPathExpression::*)(PXR_NS::TfFunctionRef<PXR_NS::SdfPathExpression (const PXR_NS::SdfPathExpression::ExpressionReference &)>))
+        .ignore((PXR_NS::SdfPathExpression (PXR_NS::SdfPathExpression::*)(PXR_NS::TfFunctionRef<PXR_NS::SdfPathExpression (const PXR_NS::SdfPathExpression::ExpressionReference &)>) const& )
+            &PXR_NS::SdfPathExpression::ResolveReferences)
+        // .ignore((PXR_NS::SdfPathExpression (PXR_NS::SdfPathExpression::*)(PXR_NS::TfFunctionRef<PXR_NS::SdfPathExpression (const PXR_NS::SdfPathExpression::ExpressionReference &)>) && )
         //     &PXR_NS::SdfPathExpression::ResolveReferences)
         // .m((PXR_NS::SdfPathExpression (PXR_NS::SdfPathExpression::*)(const PXR_NS::SdfPathExpression &) const)
         //     &PXR_NS::SdfPathExpression::ComposeOver, "ComposeOver_00")
@@ -1626,12 +1722,31 @@ BBL_MODULE(sdf) {
             &PXR_NS::SdfPathExpression::PathPattern::AppendProperty, "AppendProperty_01")
         .m((PXR_NS::SdfPathPattern& (PXR_NS::SdfPathExpression::PathPattern::*)(const std::string &))
             &PXR_NS::SdfPathExpression::PathPattern::AppendProperty, "AppendProperty_02")
-        // .ignore((PXR_NS::SdfPath (PXR_NS::SdfPathExpression::PathPattern::*)())
+        /// XXX: how to cast && methods
+        // .ignore((PXR_NS::SdfPath (PXR_NS::SdfPathExpression::PathPattern::*)() &&)
         //     &PXR_NS::SdfPathExpression::PathPattern::GetPrefix, "GetPrefix_01")
         .m((PXR_NS::SdfPathPattern& (PXR_NS::SdfPathExpression::PathPattern::*)(PXR_NS::SdfPath &&))
             &PXR_NS::SdfPathExpression::PathPattern::SetPrefix, "SetPrefix_00")
         .m((PXR_NS::SdfPathPattern& (PXR_NS::SdfPathExpression::PathPattern::*)(const PXR_NS::SdfPath &))
             &PXR_NS::SdfPathExpression::PathPattern::SetPrefix, "SetPrefix_01")
+        .m(&PXR_NS::SdfPathPattern::Everything)
+        .m(&PXR_NS::SdfPathPattern::EveryDescendant)
+        .m(&PXR_NS::SdfPathPattern::Nothing)
+        .m((bool (PXR_NS::SdfPathPattern::*)(std::string const&, std::string*) const)
+            &PXR_NS::SdfPathPattern::CanAppendChild)
+        .m((bool (PXR_NS::SdfPathPattern::*)(std::string const&, PXR_NS::SdfPredicateExpression const&, std::string*) const)
+            &PXR_NS::SdfPathPattern::CanAppendChild, "CanAppendChild_with_predicate")
+        .m(&PXR_NS::SdfPathPattern::HasLeadingStretch)
+        .m(&PXR_NS::SdfPathPattern::GetPredicateExprs)
+        .m(&PXR_NS::SdfPathPattern::HasTrailingStretch)
+        .m((bool (PXR_NS::SdfPathPattern::*)(std::string const&, std::string*) const)
+            &PXR_NS::SdfPathPattern::CanAppendProperty)
+        .m((bool (PXR_NS::SdfPathPattern::*)(std::string const&, PXR_NS::SdfPredicateExpression const&, std::string*) const)
+            &PXR_NS::SdfPathPattern::CanAppendProperty, "CanAppendProperty_with_predicate")
+        .m(&PXR_NS::SdfPathPattern::GetComponents)
+        .m(&PXR_NS::SdfPathPattern::AppendStretchIfPossible)
+        .m(&PXR_NS::SdfPathPattern::RemoveTrailingComponent)
+        .m(&PXR_NS::SdfPathPattern::RemoveTrailingStretch)
 #endif
 #if PXR_VERSION <= 2308
         .m(&PXR_NS::SdfPathExpression::PathPattern::GetDebugString)
@@ -1666,6 +1781,9 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfPathExpression::ExpressionReference>("PathExpressionExpressionReference")
         .ctor(bbl::Class<PXR_NS::SdfPathExpression::ExpressionReference>::Ctor<>(), "default")
+#if PXR_VERSION >= 2411
+        .m(&PXR_NS::SdfPathExpression::ExpressionReference::Weaker)
+#endif
     ;
 
     bbl::Class<std::vector<PXR_NS::SdfPathExpression::ExpressionReference>>("PathExpressionExpressionReferenceVector")
@@ -1715,6 +1833,7 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfPredicateExpression::operator bool, "op_bool")
         .m((const std::string & (PXR_NS::SdfPredicateExpression::*)() const &)
             &PXR_NS::SdfPredicateExpression::GetParseError)
+        /// XXX: figure out how to cast these
         // .ignore((std::string (PXR_NS::SdfPredicateExpression::*)() const &&)
         //     &PXR_NS::SdfPredicateExpression::GetParseError)
     ;
@@ -1745,6 +1864,9 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfPredicateFunctionResult::MakeVarying)
         .ignore(&PXR_NS::SdfPredicateFunctionResult::operator bool PXR_NS::SdfPredicateFunctionResult::*)
         .ignore(&PXR_NS::SdfPredicateFunctionResult::operator!)
+#if PXR_VERSION >= 2411
+        .m(&PXR_NS::SdfPredicateFunctionResult::SetAndPropagateConstancy)
+#endif
     ;
 
     bbl::Enum<PXR_NS::SdfPredicateFunctionResult::Constancy>("PredicateFunctionResultConstancy");
@@ -2024,6 +2146,21 @@ BBL_MODULE(sdf) {
     SDF_MAPEDIT_PROXY(PXR_NS::SdfRelocatesMapProxy, RelocatesMapProxy);
 
     bbl::Class<PXR_NS::SdfVariantSetsProxy>("VariantSetsProxy")
+        .m((PXR_NS::SdfVariantSetsProxy::iterator (PXR_NS::SdfVariantSetsProxy::*)())
+            &PXR_NS::SdfVariantSetsProxy::begin)
+        .m((PXR_NS::SdfVariantSetsProxy::iterator (PXR_NS::SdfVariantSetsProxy::*)())
+            &PXR_NS::SdfVariantSetsProxy::end)
+        .ignore_all_unbound()
+    ;
+
+    bbl::Class<PXR_NS::SdfVariantSetsProxy::iterator>("VariantSetsProxy_iterator")
+        /// XXX: wtf is this type...
+        .ignore(&PXR_NS::SdfVariantSetsProxy::iterator::operator*, "op_deref")
+        .m((PXR_NS::SdfVariantSetsProxy::iterator& (PXR_NS::SdfVariantSetsProxy::iterator::*)())
+            &PXR_NS::SdfVariantSetsProxy::iterator::operator++, "op_inc")
+        .m((bool (PXR_NS::SdfVariantSetsProxy::iterator::*)(PXR_NS::SdfVariantSetsProxy::iterator const&) const)
+            &PXR_NS::SdfVariantSetsProxy::iterator::operator==, "op_eq")
+        .ignore_all_unbound()
     ;
 
     bbl::Class<PXR_NS::SdfReference>("Reference")
@@ -2042,6 +2179,11 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfReference::IsInternal)
         .m(&PXR_NS::SdfReference::operator==, "op_eq")
         .m(&PXR_NS::SdfReference::operator<, "op_lt")
+
+        .ignore(&PXR_NS::SdfReference::operator>=)
+        .ignore(&PXR_NS::SdfReference::operator<=)
+        .ignore(&PXR_NS::SdfReference::operator>)
+        .ignore(&PXR_NS::SdfReference::operator!=)
         ;
 
     bbl::fn(&bblext::Reference_from_asset_path);
@@ -2066,6 +2208,13 @@ BBL_MODULE(sdf) {
 
     bbl::Class<PXR_NS::SdfRelationshipSpecHandle>("RelationshipSpecHandle")
         .smartptr_to<PXR_NS::SdfRelationshipSpec>()
+
+        .m(&PXR_NS::SdfRelationshipSpecHandle::operator!, "op_not")
+
+        .ignore(&PXR_NS::SdfRelationshipSpecHandle::operator->)
+        .ignore(&PXR_NS::SdfRelationshipSpecHandle::GetSpec)
+        .ignore(&PXR_NS::SdfRelationshipSpecHandle::Reset)
+        .ignore(&PXR_NS::SdfRelationshipSpecHandle::operator PXR_NS::SdfRelationshipSpecHandle::UnspecifiedBoolType)
     ;
 
     bbl::Class<PXR_NS::SdfRelationshipSpecHandleVector>("RelationshipSpecHandleVector")
@@ -2079,6 +2228,16 @@ BBL_MODULE(sdf) {
     bbl::Class<std::vector< std::pair<PXR_NS::SdfRelationshipSpecHandle, PXR_NS::SdfLayerOffset>>>( "RelationshipSpecHandleOffsetPairVector") 
         BBL_STD_VECTOR_METHODS((std::pair<PXR_NS::SdfRelationshipSpecHandle, PXR_NS::SdfLayerOffset>))
     ;
+
+#if PXR_VERSION >= 2411
+    BBL_STD_PAIR((std::pair<PXR_NS::SdfPath, PXR_NS::SdfPath>), Relocate);
+
+    bbl::Class<std::vector< std::pair<PXR_NS::SdfPath, PXR_NS::SdfPath>>>( "Relocates") 
+        BBL_STD_VECTOR_METHODS((std::pair<PXR_NS::SdfPath, PXR_NS::SdfPath>))
+    ;
+#endif
+
+    BBL_STD_MAP(PXR_NS::SdfRelocatesMap, RelocatesMap);
 
     bbl::Class<PXR_NS::SdfSchemaBase>()
         .m(&PXR_NS::SdfSchemaBase::GetFieldDefinition)
@@ -2215,25 +2374,14 @@ BBL_MODULE(sdf) {
         .m(&PXR_NS::SdfSpec::GetTypeForInfo)
         .m(&PXR_NS::SdfSpec::GetFallbackForInfo)
         // need std::ostream for this
-        // .m(&PXR_NS::SdfSpec::WriteToStream)
+        .ignore(&PXR_NS::SdfSpec::WriteToStream)
         .m(&PXR_NS::SdfSpec::IsInert)
         .m(&PXR_NS::SdfSpec::ListFields)
         .m((bool (PXR_NS::SdfSpec::*)(const PXR_NS::TfToken &) const)
-            &PXR_NS::SdfSpec::HasField, "HasField_00")
-        /** TODO: instantiate this template
-        .m((bool (PXR_NS::SdfSpec::*)(const PXR_NS::TfToken &, T *) const)
-            &PXR_NS::SdfSpec::HasField, "HasField_01")
-        */
+            &PXR_NS::SdfSpec::HasField)
         .m(&PXR_NS::SdfSpec::GetField)
-        /** TODO: instantiate this template
-        .m(&PXR_NS::SdfSpec::GetFieldAs)
-        */
         .m((bool (PXR_NS::SdfSpec::*)(const PXR_NS::TfToken &, const PXR_NS::VtValue &))
-            &PXR_NS::SdfSpec::SetField, "SetField_00")
-        /** TODO: instantiate this template
-        .m((bool (PXR_NS::SdfSpec::*)(const PXR_NS::TfToken &, const T &))
-            &PXR_NS::SdfSpec::SetField, "SetField_01")
-        */
+            &PXR_NS::SdfSpec::SetField, "SetField")
         .m(&PXR_NS::SdfSpec::ClearField)
         .m(&PXR_NS::SdfSpec::operator==, "op_eq")
         .m(&PXR_NS::SdfSpec::operator<, "op_lt")
@@ -2254,8 +2402,6 @@ BBL_MODULE(sdf) {
 
     bbl::Enum<PXR_NS::SdfPermission>("Permission");
 
-    BBL_STD_MAP(PXR_NS::SdfRelocatesMap, RelocatesMap);
-
     bbl::Enum<PXR_NS::SdfSpecifier>("Specifier");
     bbl::Enum<PXR_NS::SdfSpecType>("SpecType");
 
@@ -2263,7 +2409,10 @@ BBL_MODULE(sdf) {
     BBL_STD_MAP(PXR_NS::SdfTimeSampleMap, TimeSampleMap);
 
     bbl::Enum<PXR_NS::SdfVariability>("Variability");
-    bbl::Class<PXR_NS::SdfValueBlock>("ValueBlock");
+    bbl::Class<PXR_NS::SdfValueBlock>("ValueBlock")
+        .m(&PXR_NS::SdfValueBlock::operator==, "op_eq")
+        .ignore(&PXR_NS::SdfValueBlock::operator!=)
+    ;
 
     bbl::Class<PXR_NS::SdfValueTypeName>("ValueTypeName")
         .ctor(bbl::Class<PXR_NS::SdfValueTypeName>::Ctor<>(), "new")

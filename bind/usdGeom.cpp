@@ -66,6 +66,10 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomBasisCurves::ComputeVertexDataSize)
         .m(&PXR_NS::UsdGeomBasisCurves::ComputeVaryingDataSize)
         .m(&PXR_NS::UsdGeomBasisCurves::ComputeUniformDataSize)
+
+#if PXR_VERSION >= 2411
+        .m(&PXR_NS::UsdGeomBasisCurves::ComputeSegmentCounts)
+#endif
     ;
 
     bbl::Class<PXR_NS::UsdGeomBasisCurves::ComputeInterpolationInfo>("BasisCurvesComputeInterpolationInfo")
@@ -116,7 +120,7 @@ BBL_MODULE(usdGeom) {
 
         .m(&PXR_NS::UsdGeomBoundable::GetExtentAttr)
         .m(&PXR_NS::UsdGeomBoundable::CreateExtentAttr)
-        // .m(&PXR_NS::UsdGeomBoundable::ComputeExtent, "ComputeExtent_boundable")
+        .ignore(&PXR_NS::UsdGeomBoundable::ComputeExtent)
         .m(&PXR_NS::UsdGeomBoundable::Get)
         .m((bool (*)(PXR_NS::UsdGeomBoundable const&, PXR_NS::UsdTimeCode const&, PXR_NS::GfMatrix4d const&, PXR_NS::VtVec3fArray*))
             &PXR_NS::UsdGeomBoundable::ComputeExtentFromPlugins, "ComputeExtentFromPlugins_with_transform"
@@ -537,6 +541,7 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomPointInstancer::GetPositionsAttr)
         .m(&PXR_NS::UsdGeomPointInstancer::CreatePositionsAttr)
         .m(&PXR_NS::UsdGeomPointInstancer::CreateOrientationsAttr)
+        .m(&PXR_NS::UsdGeomPointInstancer::CreateOrientationsfAttr)
         .m(&PXR_NS::UsdGeomPointInstancer::GetOrientationsAttr)
         .m(&PXR_NS::UsdGeomPointInstancer::GetScalesAttr)
         .m(&PXR_NS::UsdGeomPointInstancer::CreateScalesAttr)
@@ -574,6 +579,19 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomPointInstancer::ComputeMaskAtTime)
         .m(&PXR_NS::UsdGeomPointInstancer::InvisId)
         .m(&PXR_NS::UsdGeomPointInstancer::InvisIds)
+
+#if PXR_VERSION >= 2411
+        .m(&PXR_NS::UsdGeomPointInstancer::GetOrientationsfAttr)
+        .m(&PXR_NS::UsdGeomPointInstancer::ActivateAllIds)
+        .m((bool (PXR_NS::UsdGeomPointInstancer::*)(PXR_NS::TfToken*) const)
+            &PXR_NS::UsdGeomPointInstancer::UsesOrientationsf, "UsesOrientationsf_with_token")
+        .m((bool (PXR_NS::UsdGeomPointInstancer::*)(PXR_NS::UsdAttribute*) const)
+            &PXR_NS::UsdGeomPointInstancer::UsesOrientationsf, "UsesOrientationsf_with_attribute")
+        .ignore((bool (*)(PXR_NS::VtArray<PXR_NS::GfMatrix4d>*, PXR_NS::UsdStageWeakPtr&, PXR_NS::UsdTimeCode, PXR_NS::VtIntArray const&, PXR_NS::VtVec3fArray const&, PXR_NS::VtVec3fArray const&, PXR_NS::UsdTimeCode, PXR_NS::VtVec3fArray const&, PXR_NS::VtVec3fArray const&, PXR_NS::VtQuatfArray const&, PXR_NS::VtVec3fArray const&, PXR_NS::UsdTimeCode, PXR_NS::SdfPathVector const&, std::vector<bool> const&, float))
+            &PXR_NS::UsdGeomPointInstancer::ComputeInstanceTransformsAtTime)
+        .ignore((bool (*)(PXR_NS::VtArray<PXR_NS::GfMatrix4d>*, PXR_NS::UsdStageWeakPtr&, PXR_NS::UsdTimeCode, PXR_NS::VtIntArray const&, PXR_NS::VtVec3fArray const&, PXR_NS::VtVec3fArray const&, PXR_NS::UsdTimeCode, PXR_NS::VtVec3fArray const&, PXR_NS::VtVec3fArray const&, PXR_NS::VtQuathArray const&, PXR_NS::VtVec3fArray const&, PXR_NS::UsdTimeCode, PXR_NS::SdfPathVector const&, std::vector<bool> const&, float))
+            &PXR_NS::UsdGeomPointInstancer::ComputeInstanceTransformsAtTime)
+#endif
     ;
     
     bbl::Enum<PXR_NS::UsdGeomPointInstancer::ProtoXformInclusion>("ProtoXformInclusion");
@@ -648,6 +666,13 @@ BBL_MODULE(usdGeom) {
         .m(&PXR_NS::UsdGeomPrimvar::IsIndexed)
         .m(&PXR_NS::UsdGeomPrimvar::GetIndicesAttr)
         .m(&PXR_NS::UsdGeomPrimvar::CreateIndicesAttr)
+
+#if PXR_VERSION >= 2411
+        .m((bool (*)(PXR_NS::VtValue*, PXR_NS::VtValue const&, PXR_NS::VtIntArray const&, int, std::string*))
+            &PXR_NS::UsdGeomPrimvar::ComputeFlattened, "ComputeFlattened_attribute")
+        .ignore((bool (*)(PXR_NS::VtValue*, PXR_NS::VtValue const&, PXR_NS::VtIntArray const&, std::string*))
+            &PXR_NS::UsdGeomPrimvar::ComputeFlattened)
+#endif
 
         .ignore(&PXR_NS::UsdGeomPrimvar::operator const PXR_NS::UsdAttribute &)
     ;

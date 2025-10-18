@@ -54,6 +54,9 @@ BBL_MODULE(tf) {
         .m((std::vector<std::string> (*)(std::type_info const&))
             &PXR_NS::TfEnum::GetAllNames, "GetAllNames_from_type_info"
         )
+#if PXR_VERSION >= 2411
+        .m(&PXR_NS::TfEnum::_NameIdent)
+#endif
     ;
 
     bbl::Class<PXR_NS::TfToken>("Token")
@@ -124,10 +127,51 @@ BBL_MODULE(tf) {
         .m(&PXR_NS::TfType::GetSizeof)
         .m((const PXR_NS::TfType & (*)(const std::string &))
             &PXR_NS::TfType::Declare, "Declare")
+
         .ignore((PXR_NS::TfType const& (PXR_NS::TfType::*)(std::unique_ptr<PXR_NS::TfType::FactoryBase>) const)
             &PXR_NS::TfType::Factory
         )
+        .ignore((void (PXR_NS::TfType::*)(std::unique_ptr<PXR_NS::TfType::FactoryBase>) const)
+            &PXR_NS::TfType::SetFactory)
+
+        .m((void const* (PXR_NS::TfType::*)(PXR_NS::TfType, void const*) const)
+            &PXR_NS::TfType::CastFromAncestor, "CastFromAncestor_const")
+
+        .m((void* (PXR_NS::TfType::*)(PXR_NS::TfType, void*) const)
+            &PXR_NS::TfType::CastFromAncestor, "CastFromAncestor")
+
+        .m((void const* (PXR_NS::TfType::*)(PXR_NS::TfType, void const*) const)
+            &PXR_NS::TfType::CastToAncestor, "CastToAncestor_const")
+
+        .m((void* (PXR_NS::TfType::*)(PXR_NS::TfType, void*) const)
+            &PXR_NS::TfType::CastToAncestor, "CastToAncestor")
+
+        .m(&PXR_NS::TfType::Alias)
+        .m((void (PXR_NS::TfType::*)(PXR_NS::TfType, std::string const&) const)
+            &PXR_NS::TfType::AddAlias, "AddAlias_under_base")
+
+        .ignore(&PXR_NS::TfType::operator PXR_NS::TfType::UnspecifiedBoolType)
+        .ignore((PXR_NS::TfType const& (*)(std::type_info const&))
+            &PXR_NS::TfType::Find)
+        .ignore(&PXR_NS::TfType::FindByTypeid)
+        .ignore(&PXR_NS::TfType::GetTypeid)
+        .ignore(&PXR_NS::TfType::GetCanonicalTypeName)
+        .ignore(&PXR_NS::TfType::DefinePythonClass)
+        .ignore(&PXR_NS::TfType::FindByPythonClass)
+        .ignore(&PXR_NS::TfType::GetPythonClass)
+        .ignore((PXR_NS::TfType const& (*)(std::string const&, std::vector<PXR_NS::TfType> const&, PXR_NS::TfType::DefinitionCallback))
+            &PXR_NS::TfType::Declare)
     ;
+
+    bbl::Class<PXR_NS::TfType::FactoryBase>("TypeFactoryBase")
+    ;
+
+    // bbl::Class<std::unique_ptr<PXR_NS::TfType::FactoryBase>>("TypeFactoryBaseUniquePtr")
+    //     .smartptr_to<PXR_NS::TfType::FactoryBase>()
+
+    //     .m(&std::unique_ptr<PXR_NS::TfType::FactoryBase>::get)
+    // ;
+    
 
     BBL_STD_SET(std::set<PXR_NS::TfType>, TypeSet);
 

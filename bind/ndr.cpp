@@ -126,7 +126,13 @@ BBL_MODULE(ndr) {
 #if PXR_VERSION < 2411
     BBL_STD_PAIR(PXR_NS::NdrSdfTypeIndicator, SdfTypeIndicator);
 #else
-    bbl::Class<PXR_NS::NdrSdfTypeIndicator>("SdfTypeIndicator");
+    bbl::Class<PXR_NS::NdrSdfTypeIndicator>("SdfTypeIndicator")
+        .m(&PXR_NS::NdrSdfTypeIndicator::GetNdrType)
+        .m(&PXR_NS::NdrSdfTypeIndicator::HasSdfType)
+        .m(&PXR_NS::NdrSdfTypeIndicator::GetSdfType)
+        .m(&PXR_NS::NdrSdfTypeIndicator::operator==, "op_eq")
+        .ignore(&PXR_NS::NdrSdfTypeIndicator::operator!=)
+    ;
 #endif
 
     bbl::Class<PXR_NS::NdrRegistry>("Registry")

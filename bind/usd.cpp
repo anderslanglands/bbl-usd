@@ -303,6 +303,8 @@ BBL_MODULE(usd) {
         .ignore((PXR_NS::SdfPathExpression (PXR_NS::UsdCollectionAPI::*)())
             &PXR_NS::UsdCollectionAPI::ResolveCompleteMembershipExpression
         )
+        .m(&PXR_NS::UsdCollectionAPI::IsInExpressionMode)
+        .m(&PXR_NS::UsdCollectionAPI::IsInRelationshipsMode)
 #endif
 #endif
     ;
@@ -343,6 +345,28 @@ BBL_MODULE(usd) {
 #if PXR_VERSION >= 2403
         .m(&PXR_NS::UsdCollectionMembershipQuery::UsesPathExpansionRuleMap)
 #endif
+
+#if PXR_VERSION >= 2411
+        .m((void (PXR_NS::UsdCollectionMembershipQuery::*)(PXR_NS::UsdCollectionMembershipQuery::ExpressionEvaluator const&))
+            &PXR_NS::UsdCollectionMembershipQuery::SetExpressionEvaluator)
+        .ignore((void (PXR_NS::UsdCollectionMembershipQuery::*)(PXR_NS::UsdCollectionMembershipQuery::ExpressionEvaluator &&))
+            &PXR_NS::UsdCollectionMembershipQuery::SetExpressionEvaluator)
+#endif
+    ;
+
+    bbl::Class<PXR_NS::UsdCollectionMembershipQuery::ExpressionEvaluator>("CollectionMembershipQueryExpressionEvaluator")
+        .m(&PXR_NS::UsdCollectionMembershipQuery::ExpressionEvaluator::IsEmpty)
+        .m(&PXR_NS::UsdCollectionMembershipQuery::ExpressionEvaluator::GetStage)
+        .m(&PXR_NS::UsdCollectionMembershipQuery::ExpressionEvaluator::MakeIncrementalSearcher)
+        .m((PXR_NS::SdfPredicateFunctionResult (PXR_NS::UsdCollectionMembershipQuery::ExpressionEvaluator::*)(PXR_NS::SdfPath const&) const)
+            &PXR_NS::UsdCollectionMembershipQuery::ExpressionEvaluator::Match, "Match_path")
+        .m((PXR_NS::SdfPredicateFunctionResult (PXR_NS::UsdCollectionMembershipQuery::ExpressionEvaluator::*)(PXR_NS::UsdObject const&) const)
+            &PXR_NS::UsdCollectionMembershipQuery::ExpressionEvaluator::Match, "Match_object")
+    ;
+
+    bbl::Class<PXR_NS::UsdCollectionMembershipQuery::ExpressionEvaluator::IncrementalSearcher>("CollectionMembershipQueryExpressionEvaluatorIncrementalSearcher")
+        .m(&PXR_NS::UsdCollectionMembershipQuery::ExpressionEvaluator::IncrementalSearcher::Next)
+        .m(&PXR_NS::UsdCollectionMembershipQuery::ExpressionEvaluator::IncrementalSearcher::Reset)
     ;
 
     bbl::Class<PXR_NS::UsdCollectionMembershipQuery::Hash>("CollectionMembershipQueryHash")
@@ -406,6 +430,7 @@ BBL_MODULE(usd) {
         .m((PXR_NS::SdfLayerHandle const& (PXR_NS::UsdEditTarget::*)() const&)
             &PXR_NS::UsdEditTarget::GetLayer, "GetLayer_const"
         )
+        /// XXX: how to cast this
         // .ignore((PXR_NS::SdfLayerHandle (PXR_NS::UsdEditTarget::*)()&&)
         //     &PXR_NS::UsdEditTarget::GetLayer
         // )
@@ -416,6 +441,11 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdEditTarget::GetMapFunction)
         .m(&PXR_NS::UsdEditTarget::ComposeOver)
         .m(&PXR_NS::UsdEditTarget::ForLocalDirectVariant)
+
+#if PXR_VERSION >= 2411
+        .m(&PXR_NS::UsdEditTarget::GetAttributeSpecForScenePath)
+        .m(&PXR_NS::UsdEditTarget::GetRelationshipSpecForScenePath)
+#endif
 
         .ignore(&PXR_NS::UsdEditTarget::operator!=)
     ;
@@ -505,6 +535,7 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::cend)
         .m(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::find)
         .ignore(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::operator PXR_NS::SdfPathVector)
+
     ;
 
     bbl::Class<PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator>("ObjectsChangedPathRangeIterator")
@@ -515,6 +546,18 @@ BBL_MODULE(usd) {
         .m((PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator& (PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::*)())                         
             &PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::operator++                                                                
         )
+
+        .ignore(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::operator->)
+        .ignore((PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator (PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::*)(int))                         
+            &PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::operator++                                                                
+        )
+        .ignore(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::operator==)
+        .ignore(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::operator!=)
+        .ignore(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::GetBase)
+
+#if PXR_VERSION >= 2411
+        .ignore(&PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator::base)
+#endif
     ;
     bbl::fn([](PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator const& l, PXR_NS::UsdNotice::ObjectsChanged::PathRange::iterator const& r) -> bool {
         return l == r;
@@ -577,6 +620,12 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdAttribute::Block)                                                        
         .m(&PXR_NS::UsdAttribute::GetUnionedTimeSamples)                                        
         .m(&PXR_NS::UsdAttribute::GetUnionedTimeSamplesInInterval)
+
+#if PXR_VERSION >= 2411
+        .ignore(&PXR_NS::UsdAttribute::GetSpline)
+        .ignore(&PXR_NS::UsdAttribute::HasSpline)
+        .ignore(&PXR_NS::UsdAttribute::SetSpline)
+#endif
     ;
 
     bbl::Class<std::vector<PXR_NS::UsdAttribute>>("AttributeVector")
@@ -1601,9 +1650,9 @@ BBL_MODULE(usd) {
             &PXR_NS::UsdStage::CreateInMemory, "CreateInMemory_with_session_layer_and_resolver_context"
         )
         // we'll override this to take a char* instead
-        // .m((PXR_NS::UsdStageRefPtr(*)(std::string const&, PXR_NS::UsdStage::InitialLoadSet))
-        //     &PXR_NS::UsdStage::Open
-        // )
+        .ignore((PXR_NS::UsdStageRefPtr(*)(std::string const&, PXR_NS::UsdStage::InitialLoadSet))
+            &PXR_NS::UsdStage::Open
+        )
         .m((PXR_NS::UsdStageRefPtr(*)(std::string const&, PXR_NS::ArResolverContext const&, PXR_NS::UsdStage::InitialLoadSet))
             &PXR_NS::UsdStage::Open, "Open_with_resolver_context"
         )
@@ -1670,6 +1719,13 @@ BBL_MODULE(usd) {
         .m(&PXR_NS::UsdStage::DefinePrim)
         .m(&PXR_NS::UsdStage::CreateClassPrim)
         .m(&PXR_NS::UsdStage::RemovePrim)
+
+
+        .ignore(&PXR_NS::UsdStage::ExportToString)
+
+#if PXR_VERSION >= 2411
+        .m(&PXR_NS::UsdStage::GetCompositionErrors)
+#endif
     ;
 
     bbl::fn(&bblext::Stage_Open);

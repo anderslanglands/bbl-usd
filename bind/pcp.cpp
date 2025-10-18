@@ -269,13 +269,13 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpErrorBase::ToString)
     ;
 
+    bbl::Class<std::vector<PXR_NS::PcpErrorBasePtr>>("ErrorVector")
+        BBL_STD_VECTOR_METHODS(PXR_NS::PcpErrorBasePtr)
+    ;
+
     bbl::Class<std::shared_ptr<PXR_NS::PcpErrorBase>>("ErrorBaseSharedPtr")
         .smartptr_to<PXR_NS::PcpErrorBase>()
         .ignore_all_unbound()
-    ;
-
-    bbl::Class<std::vector<std::shared_ptr<PXR_NS::PcpErrorBase>>>("ErrorBaseSharedPtrVector")
-        BBL_STD_VECTOR_METHODS((std::shared_ptr<PXR_NS::PcpErrorBase>))
     ;
 
     bbl::Class<PXR_NS::PcpErrorArcCycle>("ErrorArcCycle")
@@ -689,6 +689,9 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpLayerStack::GetIncrementalRelocatesTargetToSource)
         .m(&PXR_NS::PcpLayerStack::GetPathsToPrimsWithRelocates)
         .m(&PXR_NS::PcpLayerStack::GetExpressionForRelocatesAtPath)
+        .m(&PXR_NS::PcpLayerStack::HasRelocates)
+        .m(&PXR_NS::PcpLayerStack::IsUsd)
+        .m(&PXR_NS::PcpLayerStack::GetSessionLayerTree)
 
         /// XXX: lifeboat doesn't link
         .ignore(&PXR_NS::PcpLayerStack::Apply)
@@ -861,6 +864,14 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpNodeRef::SetHasSpecs)
         .m(&PXR_NS::PcpNodeRef::HasSpecs)
         .m(&PXR_NS::PcpNodeRef::GetCompressedSdSite)
+#if PXR_VERSION >= 2411
+        .m(&PXR_NS::PcpNodeRef::GetSpecContributionRestrictedDepth)
+        .m(&PXR_NS::PcpNodeRef::SetSpecContributionRestrictedDepth)
+        .m(&PXR_NS::PcpNodeRef::GetChildrenReverseRange)
+        .m(&PXR_NS::PcpNodeRef::GetPathAtOriginRootIntroduction)
+#endif
+
+        .ignore(&PXR_NS::PcpNodeRef::operator PXR_NS::PcpNodeRef::UnspecifiedBoolType)
     ;
 
     bbl::Class<PXR_NS::PcpNodeRange>("NodeRange")
@@ -872,6 +883,9 @@ BBL_MODULE(pcp) {
             &PXR_NS::PcpNodeRef::child_const_iterator::operator++
         )
         .ignore_all_unbound()
+    ;
+
+    bbl::Class<PXR_NS::PcpNodeRef::child_const_reverse_range>("NodeRef_child_const_reverse_range")
     ;
 
     bbl::fn([](PXR_NS::PcpNodeRef::child_const_iterator& _this) -> PXR_NS::PcpNodeRef {
@@ -915,6 +929,11 @@ BBL_MODULE(pcp) {
         .m(&PXR_NS::PcpPrimIndex::GetSelectionAppliedForVariantSet)
 #if PXR_VERSION >= 2311
         .m(&PXR_NS::PcpPrimIndex::GetNodeSubtreeRange)
+#endif
+#if PXR_VERSION >= 2411
+        .m(&PXR_NS::PcpPrimIndex::ComputePrimChildNamesInSubtree)
+        // XXX: rvalue ref
+        .ignore(&PXR_NS::PcpPrimIndex::AddChildPrimIndex)
 #endif
     ;
 

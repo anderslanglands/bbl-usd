@@ -41,10 +41,18 @@ BBL_MODULE(sdr) {
         .m(&PXR_NS::SdrShaderNode::GetImplementationName)
         .m(&PXR_NS::SdrShaderNode::GetPropertyNamesForPage)
         .m(&PXR_NS::SdrShaderNode::GetAllVstructNames)
+
+#if PXR_VERSION >= 2411
+        .m(&PXR_NS::SdrShaderNode::CheckPropertyCompliance)
+#endif
         
         // doesn't link
         .ignore(&PXR_NS::SdrShaderNode::_PostProcessProperties)
     ;
+
+#if PXR_VERSION >= 2411
+    BBL_STD_MAP(PXR_NS::SdrShaderNode::ComplianceResults, SdrShaderNodeComplianceResults);
+#endif
 
     bbl::Class<std::vector<PXR_NS::SdrShaderNode>>("ShaderNodeVector")
         BBL_STD_VECTOR_METHODS(PXR_NS::SdrShaderNode)
