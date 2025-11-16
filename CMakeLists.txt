@@ -4,7 +4,7 @@ project(bbl-usd VERSION 0.1 LANGUAGES C CXX)
 set(OpenGL_GL_PREFERENCE GLVND)
 # set(OpenGL_GL_PREFERENCE LEGACY)
 
-find_package(babble 0.9 CONFIG REQUIRED)
+find_package(babble 0.10 CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(pxr REQUIRED)
 
